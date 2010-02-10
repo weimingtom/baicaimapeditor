@@ -21,6 +21,7 @@ package org.baicaix.file {
 		
 		private var _fileStream:FileStream;
 		private var _currentFile : File;
+		private var _fileName : String;
 		private var _content : *;
 		public var onOpen : Function;
 		public var onSave : Function;
@@ -40,9 +41,10 @@ package org.baicaix.file {
 		
 		//将打开文件内容写入文本框
 		private function openSelectHandle(e:Event):void{
-			var currentFile : File = e.target as File;
+			//var currentFile : File = e.target as File;
+			_currentFile = e.target as File;
 			
-			onOpen(currentFile.url);
+			onOpen(_currentFile.url);
 //			_fileStream.open(_currentFile, FileMode.READ);
 //			var txt : String = fileStream.readUTFBytes(fileStream.bytesAvailable);
 //			content = txt; //只读方式打开文件，将内容放到TextArea
@@ -53,8 +55,6 @@ package org.baicaix.file {
 //			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
 //			loader.load(request);
 		}
-		
-		
 		
 		//打开文件选择器
 		public function saveFileTo(event : Event):void{
@@ -69,9 +69,16 @@ package org.baicaix.file {
 			saveFile(e);
 		}
 		
+		private static const REGEX_SUBFIX : RegExp = new RegExp('[/\\\\]\\w+?\\.(\\w+?)$');
 		//用文本框内容更新文件
 		public function saveFile(event : Event):void{
-			_fileStream.open(_currentFile, FileMode.WRITE); //Write方式打开
+			var saveFile : File = _currentFile;
+			if(_fileName != null) {
+				var targetURL : String = _currentFile.nativePath.replace(REGEX_SUBFIX, "/"+_fileName);
+				saveFile = new File(targetURL);
+				_fileName = null;
+			}
+			_fileStream.open(saveFile, FileMode.WRITE); //Write方式打开
 			_fileStream.writeUTFBytes(content);  //将内容写入文件
 			_fileStream.close();
 		}
@@ -82,6 +89,10 @@ package org.baicaix.file {
 		
 		public function set content(cont : *) : void {
 			_content = cont;
+		}
+
+		public function set fileName(name : String) : void {
+			this._fileName = name;
 		}
 	}
 }

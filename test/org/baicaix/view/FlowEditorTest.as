@@ -26,7 +26,6 @@ package org.baicaix.view {
 	import org.baicaix.flow.resouece.ResourceImgLoader;
 	import org.baicaix.map.Map;
 
-	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -207,6 +206,7 @@ package org.baicaix.view {
 			for each (var data : Map in datas) {
 				var cont : String = dataConvertor.saveMap(data);
 				fileManager.content = cont;
+				fileManager.fileName = data.index+".txt";
 				fileManager.saveFile(e);
 			}
 		}
