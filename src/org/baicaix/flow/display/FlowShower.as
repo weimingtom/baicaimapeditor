@@ -15,6 +15,7 @@ package org.baicaix.flow.display {
 	import org.baicaix.flow.resouece.ResourceDataLoader;
 	import org.baicaix.flow.resouece.ResourceImgLoader;
 	import org.baicaix.map.Map;
+	import org.baicaix.map.MapLayer;
 
 	import flash.display.Sprite;
 	import flash.geom.Point;
@@ -53,8 +54,8 @@ package org.baicaix.flow.display {
 //			flowBrowser.showLayer(layer);
 //		}
 //		
-//		public function showLayer(layer : MapLayer) : void {
-//			flowBrowser.showLayer(layer);
-//		}
+		public function showLayer(layer : MapLayer) : void {
+			flowBrowser.showLayer(layer);
+		}
 	}
 }

@@ -159,6 +159,8 @@ package org.baicaix.view {
 			layerVBox.layers.splice(index -1, 2, temp.pop(), temp.pop());
 		}
 		
+		private var mapWidth : int;
+		private var mapHeight : int;
 		private function buildCreateMapWindow() : void {
 			window = new Window(this, 250, 250, "create new Map");
 			window.width = 250;
@@ -174,8 +176,12 @@ package org.baicaix.view {
 			var inputVBox : HBox = HBox(window.addChild(new HBox(window)));
 			inputVBox.y = 30;
 			inputVBox.x = 30;
-			inputVBox.addChild(new InputText(windowHBox, 0, 0, "width"));
-			inputVBox.addChild(new InputText(windowHBox, 0, 0, "height"));
+			var inputWidth : InputText = InputText(inputVBox.addChild(new InputText(windowHBox, 0, 0, "width", function(event : Event) : void {
+				mapWidth = int(inputWidth.text);
+			})));
+			var inputHeight : InputText = InputText(inputVBox.addChild(new InputText(windowHBox, 0, 0, "height", function(event : Event) : void {
+				mapHeight = int(inputHeight.text);
+			})));
 		}
 
 		private function newMap(event : Event) : void {
@@ -183,7 +189,8 @@ package org.baicaix.view {
 		}
 		
 		private function createNewMap(event : Event) : void {
-			//TODO 实现新建地图
+			map = new Map(mapWidth, mapHeight);
+			mapFlowShower.showLayer(map.createTemptyLayer());
 		}
 
 		private function closeWindow(event : Event) : void {
@@ -204,9 +211,9 @@ package org.baicaix.view {
 			mapFlowShower.x = 410;
 			mapFlowShower.y = 30;
 			//加载新地图
-			map = new Map();
-			map.createResourceLayer(0);
-			loadMap();
+//			map = new Map();
+//			map.createResourceLayer(0);
+//			loadMap();
 			
 			fileManager = new FileManager();
 			

@@ -64,7 +64,7 @@ package org.baicaix.map {
 		public function paste(tile : MapTile) : void {
 			if(tile == null) return;
 			setSource(tile.src, tile.srcX, tile.srcY, tile.type);
-			if(_parent.ress.indexOf(tile.src) < 0)
+			if(_parent != null && _parent.ress.indexOf(tile.src) < 0)
 				_parent.ress.push(tile.src);
 		}
 
