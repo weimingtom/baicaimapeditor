@@ -42,7 +42,11 @@ package org.baicaix.flow.resouece {
 			
 			loader.dataFormat = URLLoaderDataFormat.TEXT;
 			loader.addEventListener(Event.COMPLETE, onComplete);
-			loader.load(m_request);
+			try {
+				loader.load(m_request);
+			} catch (e:Error) {
+			
+			}
 		}
 		
 		override protected function onComplete(event : Event) : void {

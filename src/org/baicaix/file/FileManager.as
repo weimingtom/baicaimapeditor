@@ -31,11 +31,11 @@ package org.baicaix.file {
 		}
 
 		public function openFile(event : Event):void{
-			var file:File = File.documentsDirectory;
-			var openFileFilter: FileFilter = new FileFilter("Resource", "*.jpeg;*.jpg;*.gif;*.png");
+			var file:File = File.applicationDirectory;//documentsDirectory;
+//			var openFileFilter: FileFilter = new FileFilter("Resource", "*.jpeg;*.jpg;*.gif;*.png");
 			//new FileFilter("Images", "*.jpeg;*.jpg;*.gif;*.png");  //过滤文件
 			//new FileFilter("Text/XML", "*.map");
-	        file.browseForOpen("请选择要打开的文件",[openFileFilter, new FileFilter("Map", "*.txt")]); //打开文件选择器
+	        file.browseForOpen("请选择要打开的文件", [new FileFilter("any", "*.*")]);//[openFileFilter, new FileFilter("Map", "*.txt")]); //打开文件选择器
 	        file.addEventListener(Event.SELECT, openSelectHandle);   //监听文件选择事件
 		}
 		
