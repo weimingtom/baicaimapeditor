@@ -36,8 +36,11 @@ package org.baicaix.flow.resouece {
 		
 		override protected function onComplete(event : Event) : void {
 			_datas[_loaders[LoaderInfo(event.target).loader]] = Bitmap(event.target.content).bitmapData;
+			var func : Function = _callbackFuncs[_loaders[LoaderInfo(event.target).loader]];
+			if(func != null) 
+				func();
 		}
-		
+
 		public function load(index : int, x : int, y : int) : DisplayObject {
 			var copyRange : Rectangle = createResourceRange(index, x, y);
 			return getPieceOfResourceFromRange(copyRange, index);

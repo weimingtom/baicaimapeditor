@@ -34,10 +34,11 @@ package org.baicaix.flow.resouece {
 			_dataConverter = new DataConvertor();
 		}
 		
-		override public function loadResource(url : String) : void {
+		override public function loadResource(url : String, callBack : Function = null) : void {
 			var loader : URLLoader = new URLLoader();
 			var result : Object = REGEX_INDEX.exec(url);
 			_loaders[loader] = result[1];
+			_callbackFuncs[result[1]] = callBack;
 			var m_request : URLRequest = new URLRequest(url);//sanguoxin.jpg");
 			
 			loader.dataFormat = URLLoaderDataFormat.TEXT;
@@ -51,8 +52,11 @@ package org.baicaix.flow.resouece {
 		
 		override protected function onComplete(event : Event) : void {
 			var index : String = _loaders[event.target];
+			var func : Function = _callbackFuncs[index];
 			if(event.target.data == null) return;
 			_datas[index] = _dataConverter.convertToMap(event.target.data);
+			if(func != null) 
+				func();
 		}
 		
 		public static function getInstance() : ResourceDataLoader {
@@ -84,7 +88,7 @@ package org.baicaix.flow.resouece {
 		
 		public function get datas() : Array {
 			var datas : Array = [];
-			for each (var data : * in Array) {
+			for each (var data : * in _datas) {
 				datas.push(data);
 			}
 			return datas;

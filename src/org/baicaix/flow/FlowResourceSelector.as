@@ -32,7 +32,7 @@ package org.baicaix.flow {
 		}
 		
 		private function selectDefaultCell() : void {
-			selectRange(new Rectangle(1, 1, 1, 1));
+			selectRange(new Rectangle(0, 0, 0, 0));
 		}
 
 		protected function selectRange(range : Rectangle) : void {
