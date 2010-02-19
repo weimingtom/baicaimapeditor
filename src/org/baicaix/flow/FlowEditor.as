@@ -81,5 +81,13 @@ package org.baicaix.flow {
 		public function get mapManager() :  EditMapManager {
 			return _mapMnger;
 		}
+		
+		private var _zuobiaoChange : Function;
+		public function onOverCell(event : FlowCellEvent) : void {
+			_zuobiaoChange(event);
+		}
+		public function set zuobiaoChange(zuobiaoChange : Function) : void {
+			_zuobiaoChange = zuobiaoChange;
+		}
 	}
 }

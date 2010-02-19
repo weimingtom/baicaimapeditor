@@ -9,8 +9,10 @@
  * @updatedate 2010-2-3
  */   
 package org.baicaix.flow {
-	import org.baicaix.flow.display.FlowCell;
 	import org.baicaix.flow.display.FlowBrowser;
+	import org.baicaix.flow.display.FlowCell;
+	import org.baicaix.flow.events.FlowCellEvent;
+
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 
@@ -57,6 +59,8 @@ package org.baicaix.flow {
 			
 			var startCell : FlowCell = FlowCell(event.target);
 			select(startCell);
+			
+			dispatchEvent(new FlowCellEvent(FlowCellEvent.OVER_CELL, {x:startCell.logicX, y:startCell.logicY}));
 			
 			if(inPaste) paste();
 		}

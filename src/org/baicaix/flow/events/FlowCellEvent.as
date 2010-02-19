@@ -23,6 +23,8 @@ package org.baicaix.flow.events {
 		
 		public static const DRAW_TYPE : String = "DRAW_TYPE";
 		
+		public static const OVER_CELL : String = "OVER_CELL";
+		
 		public function FlowCellEvent(type : String, data : Object, bubbles : Boolean = false, cancelable : Boolean = false) {
 			super(type, data, bubbles, cancelable);
 		}

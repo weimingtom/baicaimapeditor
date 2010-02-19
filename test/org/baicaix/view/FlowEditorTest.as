@@ -13,10 +13,10 @@ package org.baicaix.view {
 	import com.bit101.components.CheckBox;
 	import com.bit101.components.HBox;
 	import com.bit101.components.InputText;
+	import com.bit101.components.Label;
 	import com.bit101.components.PushButton;
 	import com.bit101.components.RadioButton;
 	import com.bit101.components.VBox;
-	import com.bit101.components.WheelMenu;
 	import com.bit101.components.Window;
 
 	import org.baicaix.file.FileManager;
@@ -24,6 +24,7 @@ package org.baicaix.view {
 	import org.baicaix.flow.FlowMapSelector;
 	import org.baicaix.flow.FlowResourceSelector;
 	import org.baicaix.flow.display.FlowShower;
+	import org.baicaix.flow.events.FlowCellEvent;
 	import org.baicaix.flow.resouece.DataConvertor;
 	import org.baicaix.flow.resouece.ResourceCreator;
 	import org.baicaix.flow.resouece.ResourceDataLoader;
@@ -34,7 +35,6 @@ package org.baicaix.view {
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
 
 	/**
 	 * @author dengyang
@@ -53,8 +53,6 @@ package org.baicaix.view {
 		private var dataConvertor : DataConvertor;
 		
 		private var resourceCreator : ResourceCreator;
-		
-		private var wheelMene : WheelMenu;
 		
 		private var window : Window; 
 		private var selectedLayer : RadioButton;
@@ -91,7 +89,8 @@ package org.baicaix.view {
 		 	menuHBox.addChild(new PushButton(editMenu, 0, 0, "saveMap", saveMap));
 		 	menuHBox.addChild(new PushButton(editMenu, 0, 0, "saveImg", saveImg));
 		}
-
+		
+		private var zuobiao : Label;
 		private function buildResMenu() : void {
 			var resMenu : Sprite = new Sprite();
 			this.addChild(resMenu);
@@ -106,8 +105,9 @@ package org.baicaix.view {
 			resVBox.addChild(new PushButton(resMenu, 0, 0, "water", water));
 			resVBox.addChild(new PushButton(resMenu, 0, 0, "tizi", tizi));
 			resVBox.addChild(new PushButton(resMenu, 0, 0, "door", door));
+			zuobiao = Label(resVBox.addChild(new Label(resMenu, 0, 0, "(0,0)")));
 		}
-		
+
 		private function buildLayerMenu() : void {
 			var layerMenu : Sprite = new Sprite();
 			this.addChild(layerMenu);
@@ -199,6 +199,7 @@ package org.baicaix.view {
 		
 		private function test(event : Event = null) : void {
 			editor = new FlowEditor();
+			editor.zuobiaoChange = zuobiaoChange;
 			
 			resFlowShower = new FlowShower(imgLoader, 400, 400, FlowResourceSelector);
 			resFlowShower.register(editor);
@@ -210,16 +211,16 @@ package org.baicaix.view {
 			this.addChild(mapFlowShower);
 			mapFlowShower.x = 410;
 			mapFlowShower.y = 30;
-			//加载新地图
-//			map = new Map();
-//			map.createResourceLayer(0);
-//			loadMap();
 			
 			fileManager = new FileManager();
 			
 			dataConvertor = new DataConvertor();
 			
 			buildUI();
+		}
+		
+		private function zuobiaoChange(event : FlowCellEvent) : void {
+			zuobiao.text = "("+event.data.x+","+event.data.y+")";
 		}
 
 		private function loadMap() : void {

@@ -9,6 +9,7 @@
  * @updatedate 2010-1-28
  */   
 package org.baicaix.flow.display {
+	import flash.events.EventDispatcher;
 	import org.baicaix.flow.FlowEditor;
 	import org.baicaix.flow.FlowPosition;
 	import org.baicaix.flow.events.FlowCellEvent;
@@ -122,7 +123,8 @@ package org.baicaix.flow.display {
 			this._editor.addEventListener(FlowCellEvent.RELOAD_CELL, reloadCell);
 			this._editor.addEventListener(FlowCellEvent.DRAW_LINE, drawLine);
 			this._editor.addEventListener(FlowCellEvent.DRAW_TYPE, drawType);
-			new Selector(this);
+			var selector : EventDispatcher = new Selector(this);
+			selector.addEventListener(FlowCellEvent.OVER_CELL, _editor.onOverCell);
 		}
 
 		public function showLayer(layer : MapLayer) : void {
