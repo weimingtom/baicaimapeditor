@@ -21,13 +21,15 @@ package org.baicaix.map {
 		 */
 		public var z : int;
 		public var name : String ;
+		private var _parent : Map;
 		
 		public static const DEFAULT_TILE : MapTile = new MapTile();
 		public var tiles : Object = {};
 		
-		public function MapLayer(z : int = -2000, name : String = "default name") {
+		public function MapLayer(parent : Map=null, z : int = -2000, name : String = "default name") {
 			this.z = z;
 			this.name = name;
+			this._parent = parent;
 //			test();
 		}
 		
@@ -58,7 +60,7 @@ package org.baicaix.map {
 		
 		private function createTile(x : int, y : int) : MapTile {
 			var key : String = createKey(x, y);
-			var tile : MapTile = new MapTile();
+			var tile : MapTile = new MapTile(_parent);
 			tile.x = x;
 			tile.y = y;
 			tiles[key] = tile;
@@ -89,6 +91,10 @@ package org.baicaix.map {
 				tile = createTile(tileObj.x, tileObj.y);
 				tile.setSource(tileObj.src, tileObj.srcX, tileObj.srcY);
 			}
+		}
+		
+		public function get map() : Map {
+			return _parent;
 		}
 	}
 }

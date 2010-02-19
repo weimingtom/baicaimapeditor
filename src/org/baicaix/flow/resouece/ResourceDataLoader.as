@@ -66,6 +66,7 @@ package org.baicaix.flow.resouece {
 		}
 		
 		public function load(key : String, x : int, y : int) : MapTile {
+			if(key == "-1") return null;
 			var layer : MapLayer = getResourceByIndex(key);
 			return layer.getTile(x, y);
 		}

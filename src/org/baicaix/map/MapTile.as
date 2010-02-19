@@ -41,13 +41,15 @@ package org.baicaix.map {
 		public var src : int;
 		public var srcX : int;
 		public var srcY : int;
+		private var _parent : Map;
 		
 		private var _rim : int;
 		
-		public function MapTile(src : int = -1, srcX : int = -1, srcY : int = -1) {
+		public function MapTile(parent : Map=null, src : int = -1, srcX : int = -1, srcY : int = -1) {
 			setSource(src, srcX, srcY);
+			this._parent = parent;
 		}
-		
+
 		public function setSource(src : int, srcX : int, srcY : int, type : int = DEFAULT_TILE_TYPE) : void {
 			this.src = src;
 			this.srcX = srcX;
@@ -60,11 +62,18 @@ package org.baicaix.map {
 		}
 
 		public function paste(tile : MapTile) : void {
+			if(tile == null) return;
 			setSource(tile.src, tile.srcX, tile.srcY, tile.type);
+			if(_parent.ress.indexOf(tile.src) < 0)
+				_parent.ress.push(tile.src);
 		}
 
 		public function get rim() : int {
 			return _rim;
+		}
+		
+		public function get map() : Map {
+			return _parent;
 		}
 		
 		public function set rim(value : int) : void {

@@ -20,6 +20,7 @@ package org.baicaix.map {
 		public var height : int = 16;
 		//地图层
 		public var layers : Array;
+		public var ress : Array;
 		//背景层
 //		public var backLayers : Array;
 		
@@ -32,6 +33,7 @@ package org.baicaix.map {
 		
 		private function init() : void {
 			layers = [];
+			ress = [];
 //			backLayers = [];
 		}
 		
@@ -41,7 +43,7 @@ package org.baicaix.map {
 		}
 		
 		private function loadLayer(obj : Object) : MapLayer {
-			var layer : MapLayer = new MapLayer();
+			var layer : MapLayer = new MapLayer(this);
 			layer.convertObjToTiles(obj);
 			layers.push(layer);
 			return layer;
@@ -50,6 +52,7 @@ package org.baicaix.map {
 		private function copyProperty(obj : Object) : void {
 			width = obj.width;
 			height = obj.height;
+			ress = obj.ress;
 		}
 
 		public function createResourceLayer(index : int) : MapLayer {
@@ -58,7 +61,7 @@ package org.baicaix.map {
 		}
 		
 		public function createTemptyLayer(index : int = 0, z : int = -2000, name : String = "default name") : MapLayer {
-			var layer : MapLayer = new MapLayer(z, name);
+			var layer : MapLayer = new MapLayer(this, z, name);
 			layer.initTiles(index, width, height);
 			layers.push(layer);
 			return layer;

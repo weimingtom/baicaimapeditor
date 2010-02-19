@@ -58,7 +58,7 @@ package org.baicaix.file {
 		
 		//打开文件选择器
 		public function saveFileTo(event : Event):void{
-			var file:File = File.documentsDirectory; //默认为文档文件夹
+			var file:File = File.applicationDirectory; //默认为文档文件夹
 			file.browseForSave("请选择保存路径");  //打开文件夹选择器
 			file.addEventListener(Event.SELECT, fileSaveHandle)  //监听文件夹选择事件
 		}

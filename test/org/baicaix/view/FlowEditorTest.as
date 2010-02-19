@@ -86,10 +86,10 @@ package org.baicaix.view {
 			var menuHBox : HBox  = new HBox(editMenu);
 			menuHBox.addChild(new PushButton(editMenu, 0, 0, "new", newMap));
 			menuHBox.addChild(new PushButton(editMenu, 0, 0, "refresh", refresh));
-		 	menuHBox.addChild(new PushButton(this, 0, 0, "openImg", openImg));
-		 	menuHBox.addChild(new PushButton(this, 0, 0, "openMap", openMap));
-		 	menuHBox.addChild(new PushButton(this, 0, 0, "saveMap", saveMap));
-		 	menuHBox.addChild(new PushButton(this, 0, 0, "saveImg", saveImg));
+		 	menuHBox.addChild(new PushButton(editMenu, 0, 0, "openImg", openImg));
+		 	menuHBox.addChild(new PushButton(editMenu, 0, 0, "openMap", openMap));
+		 	menuHBox.addChild(new PushButton(editMenu, 0, 0, "saveMap", saveMap));
+		 	menuHBox.addChild(new PushButton(editMenu, 0, 0, "saveImg", saveImg));
 		}
 
 		private function buildResMenu() : void {
@@ -98,13 +98,14 @@ package org.baicaix.view {
 			resMenu.y = 450;
 			var resVBox : VBox  = new VBox(resMenu);
 			resVBox.addChild(new CheckBox(resMenu, 0, 0, "drawLine", drawLine));
-			resVBox.addChild(new CheckBox(this, 0, 0, "drawType", drawType));
-		 	resVBox.addChild(new PushButton(this, 0, 0, "none", none));
-			resVBox.addChild(new PushButton(this, 0, 0, "zudang", zudang));
-			resVBox.addChild(new PushButton(this, 0, 0, "cloud", cloud));
-			resVBox.addChild(new PushButton(this, 0, 0, "water", water));
-			resVBox.addChild(new PushButton(this, 0, 0, "tizi", tizi));
-			resVBox.addChild(new PushButton(this, 0, 0, "door", door));
+			var check : CheckBox = CheckBox(resVBox.addChild(new CheckBox(resMenu, 0, 0, "drawType", drawType)));
+			check.selected = true;
+			resVBox.addChild(new PushButton(resMenu, 0, 0, "none", none));
+			resVBox.addChild(new PushButton(resMenu, 0, 0, "zudang", zudang));
+			resVBox.addChild(new PushButton(resMenu, 0, 0, "cloud", cloud));
+			resVBox.addChild(new PushButton(resMenu, 0, 0, "water", water));
+			resVBox.addChild(new PushButton(resMenu, 0, 0, "tizi", tizi));
+			resVBox.addChild(new PushButton(resMenu, 0, 0, "door", door));
 		}
 		
 		private function buildLayerMenu() : void {
@@ -113,7 +114,7 @@ package org.baicaix.view {
 			layerMenu.x = 115;
 			layerMenu.y = 450;
 			var resVBox : VBox  = new VBox(layerMenu);
-			resVBox.x = 50;
+			resVBox.x = 100;
 			resVBox.addChild(new PushButton(layerMenu, 0, 0, "GotoTop", gotoTop));
 			resVBox.addChild(new PushButton(layerMenu, 0, 0, "GoUp", goUp));
 			resVBox.addChild(new PushButton(layerMenu, 0, 0, "GoDown", goingDown));
@@ -223,15 +224,11 @@ package org.baicaix.view {
         private function onOpenImg(url : String) : void {
         	imgLoader.loadResource(url, function() : void {
         		layerVBox.addChild(new RadioButton(layerVBox, 0, 0, "load Layer "+key, false, loadmap));
+        		dataLoader.loadResource(url.replace(REGEX_SUBFIX, ".txt"));
         	});
         	//only for test
         	var keystr : String = REGEX_INDEX.exec(url)[1];
         	var key : int = int(keystr);
-			try {
-				dataLoader.loadResource(url.replace(REGEX_SUBFIX, ".txt"), loadmap);
-			} catch (e:Error) {
-			
-			}
 			
 			function loadmap(event:Event = null):void {
         		//实际中应该是读取
@@ -248,17 +245,18 @@ package org.baicaix.view {
         }
         
         private static const REGEX_INDEX : RegExp = new RegExp('(\\w+?)\\.');
+        private static const REGEX_FILENAME : RegExp = new RegExp('(\\w+?)\\.\\w+$');
         private function onOpenMap(url : String) : void {
         	dataLoader.loadResource(url, function():void {
+        		var name : String = REGEX_INDEX.exec(url)[1];
 				map = dataLoader.getResourceMap(name);
+				for each (var key : String in map.ress) {
+					//FIXME only for test
+					onOpenImg(url.replace(REGEX_FILENAME, key+".jpeg"));
+				}
 				loadMap();
+				refresh();
 			});
-        	var name : String = REGEX_INDEX.exec(url)[1];
-        	
-//        	layerVBox.addChild(new PushButton(this, 0, 0, "load map "+name, function(e:Event):void {
-//				map = dataLoader.getResourceMap(name);
-//				loadMap();
-//			}));
         }
 		
 		private function openImg(e:Event):void {
@@ -322,14 +320,8 @@ package org.baicaix.view {
 			editor.drawType(CheckBox(e.target.parent).selected);
 		}
 		
-		private function refresh(e:Event):void {
+		private function refresh(e:Event=null):void {
 			editor.refreshMap();
-		}
-		
-		private function onClick(e:MouseEvent):void {
-			if(e.altKey) {
-				wheelMene.show();
-			}
 		}
 	}
 }
