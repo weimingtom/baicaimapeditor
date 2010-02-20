@@ -201,6 +201,7 @@ package org.baicaix.view {
 		private function createNewMap(event : Event) : void {
 			map = new Map(mapWidth, mapHeight);
 			mapFlowShower.showLayer(map.createTemptyLayer());
+			closeWindow(event);
 		}
 
 		private function closeWindow(event : Event) : void {
