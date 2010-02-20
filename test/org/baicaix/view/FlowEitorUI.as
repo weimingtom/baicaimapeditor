@@ -19,7 +19,8 @@ package org.baicaix.view {
 	 * 3 保存、打开
 	 * 4 多层
 	 * 5 整体bitmap
-	 * 6 
+	 * 6 资源转换
+	 * 7 flex ui
 	 * @author Poplar
 	 */
 	public class FlowEitorUI extends Sprite {
