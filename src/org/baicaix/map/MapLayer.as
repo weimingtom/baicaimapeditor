@@ -92,9 +92,5 @@ package org.baicaix.map {
 				tile.setSource(tileObj.src, tileObj.srcX, tileObj.srcY);
 			}
 		}
-		
-		public function get map() : Map {
-			return _parent;
-		}
 	}
 }

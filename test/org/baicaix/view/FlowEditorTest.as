@@ -35,6 +35,8 @@ package org.baicaix.view {
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 
 	/**
 	 * @author dengyang
@@ -56,6 +58,7 @@ package org.baicaix.view {
 		
 		private var window : Window; 
 		private var selectedLayer : RadioButton;
+		private var resListVBox : VBox;
 		private var layerVBox : LayerBox;
 		
 		public function FlowEditorTest() {
@@ -121,6 +124,13 @@ package org.baicaix.view {
 			resVBox.addChild(new PushButton(layerMenu, 0, 0, "GotoBottom"));
 			
 			layerVBox = new LayerBox(layerMenu);
+			layerVBox.addChild(new RadioButton(layerVBox, 0, 0, "Layer 1"));
+			layerVBox.addChild(new RadioButton(layerVBox, 0, 0, "Layer 2"));
+			layerVBox.addChild(new RadioButton(layerVBox, 0, 0, "Layer 3"));
+			
+			resListVBox = new VBox(layerMenu);
+			resListVBox.x = 100;
+			resListVBox.y = 110;
 		}
 		
 		private function gotoTop(event : Event) : void {
@@ -230,13 +240,14 @@ package org.baicaix.view {
         
         private static const REGEX_SUBFIX : RegExp = new RegExp('\\.(\\w+?)$');
         private function onOpenImg(url : String) : void {
-        	imgLoader.loadResource(url, function() : void {
-        		layerVBox.addChild(new RadioButton(layerVBox, 0, 0, "load Layer "+key, false, loadmap));
-        		dataLoader.loadResource(url.replace(REGEX_SUBFIX, ".txt"));
-        	});
         	//only for test
         	var keystr : String = REGEX_INDEX.exec(url)[1];
         	var key : int = int(keystr);
+        	
+        	imgLoader.loadResource(url, function() : void {
+        		resListVBox.addChild(new RadioButton(layerVBox, 0, 0, "load Layer "+key, false, loadmap));
+        		dataLoader.loadResource(url.replace(REGEX_SUBFIX, ".txt"));
+        	});
 			
 			function loadmap(event:Event = null):void {
         		//实际中应该是读取
@@ -259,11 +270,18 @@ package org.baicaix.view {
         		var name : String = REGEX_INDEX.exec(url)[1];
 				map = dataLoader.getResourceMap(name);
 				for each (var key : String in map.ress) {
-					//FIXME only for test
-					onOpenImg(url.replace(REGEX_FILENAME, key+".jpeg"));
+					onOpenImg(url.replace(REGEX_FILENAME, key+".png"));
 				}
-				loadMap();
-				refresh();
+				//延迟加载
+				var timer : Timer = new Timer(2000, 1);
+				timer.addEventListener(TimerEvent.TIMER, loadMapAndRefresh);
+				timer.start();
+				function loadMapAndRefresh(event : Event) : void {
+					timer.removeEventListener(TimerEvent.TIMER, loadMapAndRefresh);
+					timer.stop();
+					loadMap();
+					refresh();
+				}
 			});
         }
 		

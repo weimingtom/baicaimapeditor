@@ -72,10 +72,6 @@ package org.baicaix.map {
 			return _rim;
 		}
 		
-		public function get map() : Map {
-			return _parent;
-		}
-		
 		public function set rim(value : int) : void {
 			this._rim = _rim | value;
 		}
