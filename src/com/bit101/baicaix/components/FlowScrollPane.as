@@ -9,7 +9,7 @@
  * @updatedate 2010-2-1
  */   
 package com.bit101.baicaix.components {
-	import org.baicaix.flow.display.FlowBrowser;
+	import org.baicaix.single.display.FlowBrowser;
 
 	import flash.display.DisplayObjectContainer;
 	import flash.events.Event;

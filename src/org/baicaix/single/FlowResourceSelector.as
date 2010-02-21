@@ -10,11 +10,11 @@
  */   
 package org.baicaix.single {
 	import org.baicaix.single.display.FlowBrowser;
-	import org.baicaix.single.display.FlowCell;
 	import org.baicaix.single.events.FlowCellEvent;
 
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
 	/**
@@ -67,8 +67,8 @@ package org.baicaix.single {
 			_selectRange.drawRim();
 		}
 		
-		protected var _startCell : FlowCell;
-		protected var _endCell : FlowCell;
+		protected var _startPos : Point;
+		protected var _endPos : Point;
 		
 		private var _isInSelect : Boolean;
 		
@@ -77,42 +77,48 @@ package org.baicaix.single {
 		}
 				
 		protected function onMouseDown(event : MouseEvent) : void {
-			_base.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+			_base.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_base.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			var startCell : FlowCell = FlowCell(event.target);
-			selectStart(startCell);
-			selectEnd(startCell);
+			var browser : FlowBrowser = FlowBrowser(event.target);
+			var pos : Point = getPos(event.localX, event.localY, browser);
+			selectStart(pos);
+			selectEnd(pos);
 		}
 		
-		private function selectStart(startCell : FlowCell) : void {
-			_startCell = startCell;
+		protected function getPos(x : int, y : int, browser : FlowBrowser) : Point {
+			return new Point(x - browser.focusLayer.x, y - browser.focusLayer.y);
+		}
+		
+		private function selectStart(pos : Point) : void {
+			_startPos = pos;
 			_isInSelect = true;
 		}
 		
-		private function selectEnd(endCell : FlowCell) : void {
-			if(_startCell == null || !_isInSelect) return;
-			_endCell = endCell;
+		private function selectEnd(pos : Point) : void {
+			if(_startPos == null || !_isInSelect) return;
+			_endPos = pos;
 			selectRange(buildRectangle());
 			copyEditorRange();
 		}
-
+		
 		protected function onMouseUp(event : MouseEvent) : void {
-			_base.removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+			_base.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_base.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			_isInSelect = false;
 		}
 
-		protected function onMouseOver(event : MouseEvent) : void {
-			if(!(event.target is FlowCell)) return;
-			var endCell : FlowCell = FlowCell(event.target);
-			selectEnd(endCell);
+		protected function onMouseMove(event : MouseEvent) : void {
+			if(!(event.target is FlowBrowser)) return;
+			var browser : FlowBrowser = FlowBrowser(event.target);
+			selectEnd(getPos(event.localX, event.localY, browser));
 		}
 
+
 		private function buildRectangle() : Rectangle {
-			var fromX : int = Math.min(_startCell.x, _endCell.x) / _base.cellWidth;
-			var fromY : int = Math.min(_startCell.y, _endCell.y) / _base.cellHeight;
-			var width : int = Math.max(_startCell.x, _endCell.x) / _base.cellWidth - fromX;
-			var height : int = Math.max(_startCell.y, _endCell.y) / _base.cellHeight - fromY;
+			var fromX : int = Math.min(_startPos.x, _endPos.x) / _base.cellWidth;
+			var fromY : int = Math.min(_startPos.y, _endPos.y) / _base.cellHeight;
+			var width : int = Math.max(_startPos.x, _endPos.x) / _base.cellWidth - fromX;
+			var height : int = Math.max(_startPos.y, _endPos.y) / _base.cellHeight - fromY;
 			return new Rectangle(fromX, fromY, width, height);
 		}
 	}

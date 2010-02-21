@@ -40,6 +40,10 @@ package org.baicaix.single.resource {
 			if(func != null) 
 				func();
 		}
+		
+		public function loadRes(index : int) : BitmapData {
+			return getResourceByIndex(index);
+		}
 
 		public function load(index : int, x : int, y : int) : BitmapData {
 			var copyRange : Rectangle = createResourceRange(index, x, y);

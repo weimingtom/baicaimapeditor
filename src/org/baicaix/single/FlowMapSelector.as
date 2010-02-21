@@ -10,10 +10,10 @@
  */   
 package org.baicaix.single {
 	import org.baicaix.single.display.FlowBrowser;
-	import org.baicaix.single.display.FlowCell;
 	import org.baicaix.single.events.FlowCellEvent;
 
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
 	/**
@@ -22,18 +22,17 @@ package org.baicaix.single {
 	public class FlowMapSelector extends FlowResourceSelector {
 		
 		private var inPaste : Boolean;
-		private var _pasteStartCell : FlowCell;
+		private var _pasteStartPos : Point;
 		
 		public function FlowMapSelector(base : FlowBrowser) {
 			super(base);
-			_base.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+			_base.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		}
 		
 		override protected function onMouseDown(event : MouseEvent) : void {
 			_base.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			var startCell : FlowCell = FlowCell(event.target);
-			
-			_pasteStartCell = startCell;
+			var browser : FlowBrowser = FlowBrowser(event.target);
+			_pasteStartPos = getPos(event.localX, event.localY, browser);
 			
 			setbaseRange();
 			paste();
@@ -53,27 +52,28 @@ package org.baicaix.single {
 			inPaste = false;
 		}
 
-		override protected function onMouseOver(event : MouseEvent) : void {
-			if(!(event.target is FlowCell)) return;
+		override protected function onMouseMove(event : MouseEvent) : void {
+			if(!(event.target is FlowBrowser)) return;
 			if(_base.editor.backupRange == null) return;
 			
-			var startCell : FlowCell = FlowCell(event.target);
-			select(startCell);
+			var browser : FlowBrowser = FlowBrowser(event.target);
+			var pos : Point = getPos(event.localX, event.localY, browser);
+			select(pos);
 			
-			dispatchEvent(new FlowCellEvent(FlowCellEvent.OVER_CELL, {x:startCell.logicX, y:startCell.logicY}));
+			dispatchEvent(new FlowCellEvent(FlowCellEvent.OVER_CELL, {x:_startPos.x, y:_startPos.y}));
 			
 			if(inPaste) paste();
 		}
 		
-		private function select(startCell : FlowCell) : void {
-			_startCell = startCell;
+		private function select(pos : Point) : void {
+			_startPos = pos;
 			selectRange(buildRectangle());
 			_selectRange.drawRim();
 		}
 
 		private function buildRectangle() : Rectangle {
 			var backupRange : Rectangle = _base.editor.backupRange.range;
-			return new Rectangle(_startCell.x / _base.cellWidth, _startCell.y / _base.cellHeight, backupRange.width, backupRange.height);
+			return new Rectangle(int(_startPos.x / _base.cellWidth), int(_startPos.y / _base.cellHeight), backupRange.width, backupRange.height);
 		}
 		
 	}

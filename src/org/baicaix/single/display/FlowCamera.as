@@ -9,11 +9,10 @@
  * @updatedate 2010-2-2
  */   
 package org.baicaix.single.display {
-	
-	import flash.events.EventDispatcher;
-	import org.baicaix.flow.events.FlowEvent;
+	import org.baicaix.single.events.FlowEvent;
 
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.geom.Rectangle;
 
 	/**

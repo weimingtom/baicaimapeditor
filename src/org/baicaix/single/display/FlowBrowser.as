@@ -44,6 +44,7 @@ package org.baicaix.single.display {
 		private var _lineLayer : Bitmap;
 		private var _typeLayer : Bitmap;
 		private var _canvasLayer : Bitmap;
+		private var _focusLayer : Bitmap;
 		
 		public function FlowBrowser(camera : FlowCamera, actualSize : Point, loader : ResourceImgLoader, Selector : Class) {
 			
@@ -54,10 +55,10 @@ package org.baicaix.single.display {
 			this.camera.regester(this);
 			initEvent();
 			
-			_typeLayer = Bitmap(this.addChild(new Bitmap()));
 			_canvasLayer = Bitmap(this.addChild(new Bitmap()));
+			_typeLayer = Bitmap(this.addChild(new Bitmap()));
 			_lineLayer = Bitmap(this.addChild(new Bitmap()));
-			
+			_focusLayer = Bitmap(this.addChild(new Bitmap()));
 			
 			colRow = new FlowColRow(camera.cellPosLogicRange.width, camera.cellPosLogicRange.height);
 			createDemoLayer();
@@ -98,7 +99,7 @@ package org.baicaix.single.display {
 		private function createCell(x : int, y : int) : void {
 			var cell : FlowCell = new FlowCell(this, x-camera.cache, y-camera.cache, 
 										camera.cellWidth, camera.cellHeight, resourceLoader);
-			cell.setCanvas(_canvasLayer, _typeLayer);
+			cell.setCanvas(_canvasLayer, _typeLayer, _focusLayer);
 			colRow.addCell(x, y, cell);
 		}
 
@@ -147,9 +148,10 @@ package org.baicaix.single.display {
 			var canvaWidth : int = map.width * 32;
 			var convaHeight : int = map.height * 32;
 			
-			_typeLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true);
-			_canvasLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true);
-			_lineLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true);
+			_typeLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true, 0x00000000);
+			_canvasLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true, 0x00000000);
+			_lineLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true, 0x00000000);
+			_focusLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true, 0x00000000);
 			
 			//根据camera更新cell的tile
 			loopAllCell(function(cell : FlowCell) : void {
@@ -166,7 +168,7 @@ package org.baicaix.single.display {
 //			if(range == null) {
 				loopAllCell(function(cell : FlowCell) : void {
 					cell.redrawResource();
-//					cell.drawType();
+					cell.drawType();
 				});
 //			}
 		}
@@ -183,7 +185,7 @@ package org.baicaix.single.display {
 			var range : Rectangle = event.data["range"];
 			var cellsInRange : Array = _position.getCellsByRange(range);
 			for each (var cell : FlowCell in cellsInRange) {
-//				cell.drawRim();
+				cell.drawRim();
 			}
 		}
 		
@@ -192,12 +194,23 @@ package org.baicaix.single.display {
 			if(drawLine) {
 				for (var x : int = 0; x < _lineLayer.bitmapData.width; x += cellWidth) {
 					for (var y : int = 0; y < _lineLayer.bitmapData.height; y++) {
-						_lineLayer.bitmapData.setPixel(x, y, 0x43CD80);
+						_lineLayer.bitmapData.setPixel32(x, y, 0xff43CD80);
 					}
 				}
 				for (y = 0; y < _lineLayer.bitmapData.height; y += cellHeight) {
 					for (x = 0; x < _lineLayer.bitmapData.width; x++) {
-						_lineLayer.bitmapData.setPixel(x, y, 0x43CD80);
+						_lineLayer.bitmapData.setPixel32(x, y, 0xff43CD80);
+					}
+				}
+			} else {
+				for (x = 0; x < _lineLayer.bitmapData.width; x += cellWidth) {
+					for (y = 0; y < _lineLayer.bitmapData.height; y++) {
+						_lineLayer.bitmapData.setPixel32(x, y, 0x0043CD80);
+					}
+				}
+				for (y = 0; y < _lineLayer.bitmapData.height; y += cellHeight) {
+					for (x = 0; x < _lineLayer.bitmapData.width; x++) {
+						_lineLayer.bitmapData.setPixel32(x, y, 0x0043CD80);
 					}
 				}
 			}
@@ -211,13 +224,13 @@ package org.baicaix.single.display {
 		}
 		
 		public function drawType(event : FlowCellEvent) : void {
-			var drawLine : Boolean = event.data["drawType"];
+			var drawType : Boolean = event.data["drawType"];
 			loopAllCell(function(cell : FlowCell) : void {
-//				if(drawLine) {
-//					cell.drawType();
-//				} else {
-//					cell.clearType();
-//				}
+				if(drawType) {
+					cell.drawType();
+				} else {
+					cell.clearType();
+				}
 			});
 		}
 
@@ -253,6 +266,10 @@ package org.baicaix.single.display {
 		
 		public function get cellHeight() : int {
 			return camera.cellHeight;
+		}
+		
+		public function get focusLayer() : Bitmap {
+			return _focusLayer;
 		}
 	}
 }

@@ -23,7 +23,7 @@ package org.baicaix.single.display {
 	public class FlowCell {
 		
 		public static const TILE_TYPE_COLOR : Array = [
-			0x0, 0x363636, 0xB0E2FF, 0x00688B, 0x8B0A50, 0x9400D3 
+			0x00000000, 0xA6363636, 0xA6B0E2FF, 0xA600688B, 0xA68B0A50, 0xA69400D3 
 		];
 		
 		//------------------------------------
@@ -46,12 +46,13 @@ package org.baicaix.single.display {
 		
 		private var _typeLayer : Bitmap;
 		private var _canvasLayer : Bitmap;
+		private var _focusLayer : Bitmap;
 		
 		//------------------------------------
 		// public properties
 		//------------------------------------
 
-		public static const FOCUS_RIM_COLOR : uint = 0x00BFFF;
+		public static const FOCUS_RIM_COLOR : uint = 0xFF00BFFF;
 		public static const FOCUS_RIM_LENGTH : uint = 2;
 
 		//------------------------------------
@@ -85,9 +86,10 @@ package org.baicaix.single.display {
 			reload();
 		}
 		
-		public function setCanvas(canvasLayer : Bitmap, typeLayer : Bitmap) : void {
+		public function setCanvas(canvasLayer : Bitmap, typeLayer : Bitmap, focusLayer : Bitmap) : void {
 			_canvasLayer = canvasLayer;
 			_typeLayer = typeLayer;
+			_focusLayer = focusLayer;
 		}
 		
 		public function reload() : void {
@@ -113,39 +115,43 @@ package org.baicaix.single.display {
 //			_canvasLayer.setPixel32(x, y, color)
 			//copy
 			var res : BitmapData = _resourceLoader.load(_tile.src, _tile.srcX, _tile.srcY);
-			_canvasLayer.bitmapData.copyPixels(res, new Rectangle(_tile.srcX * cellWidth, _tile.srcY * cellHeight, cellWidth, cellHeight), new Point(x, y));
+			_canvasLayer.bitmapData.copyPixels(res, new Rectangle(0, 0, cellWidth, cellHeight), new Point(_logicX * cellWidth, _logicY * cellHeight));
 //			if(showResource != null) {
 //				_lastResource = this.addChildAt(showResource, 0);
 //			}
 		}
 		
-//		private function drawTopRim(color : int = FOCUS_RIM_COLOR) : void {
-//			drawRect(_focusLayer, 0, 0, cellWidth, FOCUS_RIM_LENGTH, color);
-//		}
-//		
-//		private function drawBottomRim(color : int = FOCUS_RIM_COLOR) : void {
-//			drawRect(_focusLayer, 0, cellHeight - FOCUS_RIM_LENGTH, cellWidth, FOCUS_RIM_LENGTH, color);
-//		}
-//		
-//		private function drawLeftRim(color : int = FOCUS_RIM_COLOR) : void {
-//			drawRect(_focusLayer, 0, 0, FOCUS_RIM_LENGTH, cellHeight, color);
-//		}
-//		
-//		private function drawRightRim(color : int = FOCUS_RIM_COLOR) : void {
-//			drawRect(_focusLayer, cellWidth - FOCUS_RIM_LENGTH, 0, FOCUS_RIM_LENGTH, cellHeight, color);
-//		}
-//		
-//		private function drawRect(layer : Shape, x : Number, y : Number, width : Number, height : Number, color : uint, alpha : Number = 1) : void {
-//			with(layer) {
-//				graphics.beginFill(color, alpha);
-//				graphics.drawRect(x, y, width, height);
-//				graphics.endFill();
-//			}
-//		}
-//		
-//		private function clearRim() : void {
-//			_focusLayer.graphics.clear();
-//		}
+		private function drawTopRim(color : uint = FOCUS_RIM_COLOR) : void {
+			drawRect(_focusLayer, 0, 0, cellWidth, FOCUS_RIM_LENGTH, color);
+		}
+		
+		private function drawBottomRim(color : uint = FOCUS_RIM_COLOR) : void {
+			drawRect(_focusLayer, 0, cellHeight - FOCUS_RIM_LENGTH, cellWidth, FOCUS_RIM_LENGTH, color);
+		}
+		
+		private function drawLeftRim(color : uint = FOCUS_RIM_COLOR) : void {
+			drawRect(_focusLayer, 0, 0, FOCUS_RIM_LENGTH, cellHeight, color);
+		}
+		
+		private function drawRightRim(color : uint = FOCUS_RIM_COLOR) : void {
+			drawRect(_focusLayer, cellWidth - FOCUS_RIM_LENGTH, 0, FOCUS_RIM_LENGTH, cellHeight, color);
+		}
+		
+		private function drawRect(layer : Bitmap, x : int, y : int, width : int, height : int, color : uint) : void {
+			for (var offsetX : int = x; offsetX < x + width; offsetX++) {
+				for (var offsetY : int = y; offsetY < y + height; offsetY++) {
+					layer.bitmapData.setPixel32(this.x + offsetX, this.y + offsetY, color);
+				}
+			}
+		}
+		
+		private function clearRim() : void {
+			for (var offsetX : int = 0;offsetX < cellWidth; offsetX++) {
+				for (var offsetY : int = 0; offsetY < cellHeight; offsetY++) {
+					_focusLayer.bitmapData.setPixel32(this.x + offsetX, this.y + offsetY, 0x00000000);
+				}
+			}
+		}
 		
 		// PUBLIC
 		//________________________________________________________________________________________________
@@ -158,24 +164,24 @@ package org.baicaix.single.display {
 			return _logicY;
 		}
 		
-//		public function drawRim() : void {
-//			if(_tile.isRimBySide(MapTile.TOP_RIM)) {
-//				drawTopRim();
-//			}
-//			if(_tile.isRimBySide(MapTile.BOTTOM_RIM)) {
-//				drawBottomRim();
-//			}
-//			if(_tile.isRimBySide(MapTile.LEFT_RIM)) {
-//				drawLeftRim();
-//			}
-//			if(_tile.isRimBySide(MapTile.RIGHT_RIM)) {
-//				drawRightRim();
-//			}
-//			
-//			if(_tile.rim == MapTile.NONE_RIM) {
-//				clearRim();
-//			}
-//		}
+		public function drawRim() : void {
+			if(_tile.isRimBySide(MapTile.TOP_RIM)) {
+				drawTopRim();
+			}
+			if(_tile.isRimBySide(MapTile.BOTTOM_RIM)) {
+				drawBottomRim();
+			}
+			if(_tile.isRimBySide(MapTile.LEFT_RIM)) {
+				drawLeftRim();
+			}
+			if(_tile.isRimBySide(MapTile.RIGHT_RIM)) {
+				drawRightRim();
+			}
+			
+			if(_tile.rim == MapTile.NONE_RIM) {
+				clearRim();
+			}
+		}
 //		
 //		public function drawLine() : void {
 ////			if(!contains(_lineLayer)) {
@@ -192,20 +198,27 @@ package org.baicaix.single.display {
 //			}
 //		}
 		
-//		public function drawType() : void {
+		public function drawType() : void {
 //			if(!contains(_typeLayer)) {
 //				addChild(_typeLayer);
 //			}
 //			
 //			_typeLayer.graphics.clear();
-//			if(_tile.type == MapTile.DEFAULT_TILE_TYPE) return;
+			if(_tile.type == MapTile.DEFAULT_TILE_TYPE) return;
+			for (var x : int = 0; x < cellWidth; x++) {
+				for (var y : int = 0; y < cellHeight;y++) {
+					_typeLayer.bitmapData.setPixel32(this.x + x, this.y + y, TILE_TYPE_COLOR[_tile.type]);
+				}
+			}
 //			drawRect(_typeLayer, 0, 0, cellWidth, cellHeight, TILE_TYPE_COLOR[_tile.type], .7);
-//		}
+		}
 //		
-//		public function clearType() : void {
-//			if(contains(_typeLayer)) {
-//				removeChild(_typeLayer);
-//			}
-//		}
+		public function clearType() : void {
+			for (var x : int = 0; x < cellWidth; x++) {
+				for (var y : int = 0; y < cellHeight;y++) {
+					_typeLayer.bitmapData.setPixel32(this.x + x, this.y + y, 0x00000000);
+				}
+			}
+		}
 	}
 }

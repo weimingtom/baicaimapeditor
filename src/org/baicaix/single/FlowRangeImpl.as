@@ -9,9 +9,9 @@
  * @updatedate 2010-2-2
  */   
 package org.baicaix.single {
-	import org.baicaix.flow.events.FlowCellEvent;
 	import org.baicaix.map.MapLayer;
 	import org.baicaix.map.MapTile;
+	import org.baicaix.single.events.FlowCellEvent;
 
 	import flash.events.EventDispatcher;
 	import flash.geom.Rectangle;
