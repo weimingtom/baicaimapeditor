@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+	layout="absolute">
+
+	<mx:Model id="prodModel">
+		<groceries>
+			<catName>Dairy</catName>
+			<prodName>Milk</prodName>
+			<imageName>assets/dairy_milk.jpg</imageName>
+			<cost>1.20</cost>
+			<listPrice>1.99</listPrice>
+			<isOrganic>true</isOrganic>
+			<isLowFat>true</isLowFat>
+			<description>Direct from California where cows are happiest!</description>
+		</groceries>
+	</mx:Model>
+
+<mx:Script>
+	<![CDATA[
+		import flash.net.FileReference;
+
+		public function fileBrowse():void{
+			var myFileRef:FileReferenceList = new FileReferenceList();
+			myFileRef.browse();
+		}
+	]]>
+</mx:Script>
+
+	<mx:Form>
+		<mx:FormHeading label="{prodModel.catName}"/>
+		<mx:FormItem label="Product Name">
+			<mx:TextInput id="product" text="{prodModel.prodName}"/>
+		</mx:FormItem>
+		<mx:FormItem label="ProductNameUnit" direction="horizontal">
+			<mx:ComboBox/>
+			<mx:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Cost">
+			<mx:TextInput id="cost" text="{prodModel.cost}"/>
+		</mx:FormItem>
+		<mx:FormItem label="List Price">
+			<mx:TextInput id="listPrice" text="{prodModel.listPrice}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Description">
+			<mx:TextInput id="Description" text="{prodModel.description}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Organic">
+			<mx:CheckBox id="isOrganic" selected="{prodModel.isOrganic}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Is Low Fat?">
+			<mx:CheckBox id="isLowFat" selected="{prodModel.isLowFat}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Image Path">
+			<mx:TextInput id="imageName" text="{prodModel.imageName}"/>
+			<mx:Button label="Browse" click="fileBrowse()"/>
+		</mx:FormItem>
+		<mx:FormItem>
+			<mx:HBox>
+			<mx:Button label="Update"/>
+			<mx:Button label="Delete"/>
+			</mx:HBox>
+		</mx:FormItem>
+	</mx:Form>
+	
+</mx:Application>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="horizontal">
+	<mx:ApplicationControlBar dock="true">
+		<mx:LinkButton label="All"
+			click="this.currentState=''"/>
+		<mx:LinkButton label="Sales"
+			click="this.currentState='fullSales'"/>
+		<mx:LinkButton label="Categories"
+			click="this.currentState='fullType'"/>
+		<mx:LinkButton label="Comparison"
+			click="this.currentState='fullComp'"/>
+		<mx:Spacer width="100%"/>
+		<mx:Label text="Start Date"/>
+		<mx:DateField id="startDate"/>
+		
+		<mx:Label text="End Date"/>
+		<mx:DateField id="endDate"/>
+		
+		<mx:RadioButtonGroup id="grossOrNetGroup"/>
+		
+		<mx:RadioButton id="gross"
+			groupName="grossOrNetGroup"
+			label="Gross Sales"
+			data="GROSS"
+			selected="true"/>
+		<mx:RadioButton id="net"
+			groupName="grossOrNetGroup"
+			label="Net Sales"
+			data="NET"/>
+	</mx:ApplicationControlBar>
+
+	<mx:states>
+		<mx:State name="fullSales">
+			<mx:SetProperty target="{rightCharts}"
+				name="width" value="0"/>
+			<mx:SetProperty target="{rightCharts}"
+				name="height" value="0"/>
+		</mx:State>
+
+		<mx:State name="fullType">
+			<mx:SetProperty target="{sales}"
+				name="width"
+				value="0"/>
+			<mx:SetProperty target="{sales}"
+				name="height"
+				value="0"/>
+			<mx:SetProperty target="{comp}"
+				name="width"
+				value="0"/>
+			<mx:SetProperty target="{comp}"
+				name="height"
+				value="0"/>
+		</mx:State>
+		<mx:State name="fullComp">
+			<mx:SetProperty target="{sales}"
+				name="width"
+				value="0"/>
+			<mx:SetProperty target="{sales}"
+				name="height"
+				value="0"/>
+			<mx:SetProperty target="{type}"
+				name="width"
+				value="0"/>
+			<mx:SetProperty target="{type}"
+				name="height"
+				value="0"/>
+		</mx:State>
+	</mx:states>
+
+	<mx:Panel id="sales"
+		width="100%" height="100%"
+		title="Sales Chart">
+		<mx:ControlBar>
+		</mx:ControlBar>
+	</mx:Panel>
+	<mx:VBox id="rightCharts"
+		width="100%" height="100%" >
+		<mx:Panel id="type"
+			width="100%" height="100%"
+			title="Category Chart">
+			<mx:ControlBar>
+			</mx:ControlBar>
+		</mx:Panel>
+		<mx:Panel id="comp"
+			width="100%" height="100%"
+			title="Comparison Chart">
+			<mx:ControlBar>
+			</mx:ControlBar>
+		</mx:Panel>
+	</mx:VBox>
+</mx:Application>

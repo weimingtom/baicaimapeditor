@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute">
+	<mx:Model id="groceryInventory">
+		<groceries>
+			<catName>Dairy</catName>
+			<prodName>Milk</prodName>
+			<imageName>assets/dairy_milk.jpg</imageName>
+			<cost>1.20</cost>
+			<listPrice>1.99</listPrice>
+			<isOrganic>true</isOrganic>
+			<isLowFat>true</isLowFat>
+			<description>Direct from California where cows are happiest!</description>
+		</groceries>
+	</mx:Model>
+
+	<mx:states>
+		<mx:State name="cartView">
+			<mx:SetProperty target="{products}" name="width" value="0"/>
+			<mx:SetProperty target="{products}" name="height" value="0"/>
+			<mx:SetProperty target="{cartBox}" name="width" value="100%"/>
+			<mx:AddChild relativeTo="{cartBox}" position="lastChild">
+				<mx:DataGrid id="dgCart" width="100%">
+					<mx:columns>
+						<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
+						<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
+						<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
+					</mx:columns>
+				</mx:DataGrid>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{cartBox}" position="lastChild">
+				<mx:LinkButton label="Continue Shopping" click="this.currentState=''"/>
+			</mx:AddChild>
+			<mx:RemoveChild target="{linkbutton1}"/>
+		</mx:State>
+		<mx:State name="expanded">
+			<mx:AddChild>
+				<mx:VBox x="200" width="100%">
+					<mx:Text text="{groceryInventory.description}" width="50%"/>
+					<mx:Label text="Certified Organic"/>
+					<mx:Label text="Low Fat"/>
+				
+				</mx:VBox>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+	<mx:ApplicationControlBar dock="true" width="100%" height="90">
+		<mx:Canvas width="100%" height="100%">
+			<mx:Label x="0" y="0" text="Flex"/>
+			<mx:Label x="0" y="41" text="GROCER"/>
+			<mx:Button label="View Cart" id="btnViewCart" right="90" y="0"/>
+			<mx:Button label="Checkout" id="btnCheckout" right="10" y="0"/>
+		</mx:Canvas>
+	</mx:ApplicationControlBar>
+	<mx:Label text="(c) 2006, FlexGrocer" bottom="10" right="10"/>
+	<mx:HBox x="0" y="0" width="100%" height="100%" id="bodyBox">
+		<mx:VBox width="100%" height="100%" id="products">
+			<mx:Label text="Milk" id="prodName"/>
+			<mx:Image source="@Embed('assets/dairy_milk.jpg')" scaleContent="true"
+				mouseOver="this.currentState='expanded'"
+				mouseOut="this.currentState=''"/>
+			<mx:Label text="$1.99" id="price"/>
+			<mx:Button label="Add To Cart" id="add"/>
+		</mx:VBox>
+		<mx:VBox height="100%" id="cartBox">
+			<mx:Label text="Your Cart Total: $"/>
+			<mx:LinkButton label="View Cart" click="this.currentState='cartView'" id="linkbutton1"/>
+		</mx:VBox>
+	</mx:HBox>
+	
+</mx:Application>
