@@ -45,8 +45,8 @@ package org.baicaix.flow.display {
 		private var _resourceLoader : ResourceImgLoader;
 //		private var _lastResource : DisplayObject;
 		
-		private var _typeLayer : BitmapData;
-		private var _canvasLayer : BitmapData;
+		private var _typeLayer : Bitmap;
+		private var _canvasLayer : Bitmap;
 		
 		//------------------------------------
 		// public properties
@@ -86,7 +86,7 @@ package org.baicaix.flow.display {
 			reload();
 		}
 		
-		public function setCanvas(canvasLayer : BitmapData, typeLayer : BitmapData) : void {
+		public function setCanvas(canvasLayer : Bitmap, typeLayer : Bitmap) : void {
 			_canvasLayer = canvasLayer;
 			_typeLayer = typeLayer;
 		}
@@ -105,6 +105,7 @@ package org.baicaix.flow.display {
 		}
 
 		public function redrawResource() : void {
+			if(_canvasLayer == null) return;
 //			if(_lastResource != null) {
 //				this.removeChild(_lastResource);
 //				_lastResource = null;
@@ -113,7 +114,7 @@ package org.baicaix.flow.display {
 //			_canvasLayer.setPixel32(x, y, color)
 			//copy
 			var res : BitmapData = _resourceLoader.load(_tile.src, _tile.srcX, _tile.srcY);
-			_canvasLayer.copyPixels(res, new Rectangle(), new Point(x, y));
+			_canvasLayer.bitmapData.copyPixels(res, new Rectangle(_tile.srcX * cellWidth, _tile.srcY * cellHeight, cellWidth, cellHeight), new Point(x, y));
 //			if(showResource != null) {
 //				_lastResource = this.addChildAt(showResource, 0);
 //			}

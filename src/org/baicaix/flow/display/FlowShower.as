@@ -47,7 +47,7 @@ package org.baicaix.flow.display {
 			//TODO 需要支持多层
 			//测试期间 注册到loader中
 			ResourceDataLoader.getInstance().put(map.index, map);
-			flowBrowser.showLayer(map.layers[0]);
+			flowBrowser.showLayer(map);
 		}
 
 //		public function loadLayer(layer : MapLayer) : void {

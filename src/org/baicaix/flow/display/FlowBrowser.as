@@ -17,6 +17,7 @@ package org.baicaix.flow.display {
 	import org.baicaix.map.Map;
 	import org.baicaix.map.MapLayer;
 
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -42,8 +43,8 @@ package org.baicaix.flow.display {
 		private var colRow : FlowColRow;
 		private var _lineLayer : BitmapData;
 		private var _focusLayer : BitmapData;
-		private var _typeLayer : BitmapData;
-		private var _canvasLayer : BitmapData;
+		private var _typeLayer : Bitmap;
+		private var _canvasLayer : Bitmap;
 		
 		public function FlowBrowser(camera : FlowCamera, actualSize : Point, loader : ResourceImgLoader, Selector : Class) {
 			
@@ -53,6 +54,9 @@ package org.baicaix.flow.display {
 			this.camera = camera;
 			this.camera.regester(this);
 			initEvent();
+			
+			_typeLayer = Bitmap(this.addChild(new Bitmap()));
+			_canvasLayer = Bitmap(this.addChild(new Bitmap()));
 			
 			colRow = new FlowColRow(camera.cellPosLogicRange.width, camera.cellPosLogicRange.height);
 			createDemoLayer();
@@ -140,8 +144,8 @@ package org.baicaix.flow.display {
 			this._position = new FlowPosition(_layer);
 			var canvaWidth : int = map.width * 32;
 			var convaHeight : int = map.height * 32;
-			_typeLayer = new BitmapData(canvaWidth, convaHeight);
-			_canvasLayer = new BitmapData(canvaWidth, convaHeight);
+			_typeLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true);
+			_canvasLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true);
 			//根据camera更新cell的tile
 			loopAllCell(function(cell : FlowCell) : void {
 				cell.reload();
