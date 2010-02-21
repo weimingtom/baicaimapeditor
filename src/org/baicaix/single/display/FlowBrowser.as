@@ -1,0 +1,258 @@
+/**
+ * @file FlowBrowser.as
+ * @link poplaryy@gmail.com
+ * @author dengyang
+ * @playerversion flash player 9+
+ * @asversion 3.0
+ * @version 0.1
+ * @builddate  2010-1-28
+ * @updatedate 2010-1-28
+ */   
+package org.baicaix.single.display {
+	import org.baicaix.map.Map;
+	import org.baicaix.map.MapLayer;
+	import org.baicaix.single.FlowEditor;
+	import org.baicaix.single.FlowPosition;
+	import org.baicaix.single.events.FlowCellEvent;
+	import org.baicaix.single.events.FlowEvent;
+	import org.baicaix.single.resource.ResourceImgLoader;
+
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+
+	/**
+	 * @author dengyang
+	 */
+	public class FlowBrowser extends Sprite {
+		
+		//TODO 将来使用ioc来代替这种做法
+		private var Selector : Class;
+		private var _layer : MapLayer;
+		private var _position : FlowPosition;
+		
+		private var resourceLoader : ResourceImgLoader;
+		
+		private var _editor : FlowEditor;
+		private var camera : FlowCamera;
+		
+		private var colRow : FlowColRow;
+		private var _lineLayer : Bitmap;
+		private var _typeLayer : Bitmap;
+		private var _canvasLayer : Bitmap;
+		
+		public function FlowBrowser(camera : FlowCamera, actualSize : Point, loader : ResourceImgLoader, Selector : Class) {
+			
+			this.Selector = Selector;
+			this.resourceLoader = loader;
+			
+			this.camera = camera;
+			this.camera.regester(this);
+			initEvent();
+			
+			_typeLayer = Bitmap(this.addChild(new Bitmap()));
+			_canvasLayer = Bitmap(this.addChild(new Bitmap()));
+			_lineLayer = Bitmap(this.addChild(new Bitmap()));
+			
+			
+			colRow = new FlowColRow(camera.cellPosLogicRange.width, camera.cellPosLogicRange.height);
+			createDemoLayer();
+			drawActualRange(actualSize);
+			createCellsBySize();
+		}
+		
+		private function createDemoLayer() : void {
+			var map : Map = new Map();
+			var layer : MapLayer = map.createTemptyLayer(0);
+			layer.initTiles(0, 16, 16);
+			this.showLayer(map);
+		}
+
+		private function drawActualRange(actualSize : Point) : void {
+			this.graphics.lineStyle(0x00);
+			this.graphics.lineTo(actualSize.x * camera.cellWidth, actualSize.y * camera.cellHeight);
+			this.graphics.endFill();
+		}
+		
+		private function initEvent() : void {
+			camera.addEventListener(FlowEvent.GOTO_TOP, gotoTop);
+			camera.addEventListener(FlowEvent.GOTO_BOTTOM, gotoBottom);
+			camera.addEventListener(FlowEvent.GOTO_LEFT, gotoLeft);
+			camera.addEventListener(FlowEvent.GOTO_RIGHT, gotoRight);
+			addEventListener(FlowCellEvent.RELOAD_CELL, reloadCell);
+		}
+		
+		private function createCellsBySize() : void {
+			//多_cache个单元格缓冲,但目前只有右边和下边
+			for (var x : int = 0; x < camera.cellPosLogicRange.width;x++) {
+				for (var y : int = 0; y < camera.cellPosLogicRange.height;y++) {
+					createCell(x, y);
+				}
+			}
+		}
+		
+		private function createCell(x : int, y : int) : void {
+			var cell : FlowCell = new FlowCell(this, x-camera.cache, y-camera.cache, 
+										camera.cellWidth, camera.cellHeight, resourceLoader);
+			cell.setCanvas(_canvasLayer, _typeLayer);
+			colRow.addCell(x, y, cell);
+		}
+
+		private function gotoTop(event : FlowEvent) : void {
+			var topRow : Array = colRow.bottomRowGotoTop();
+			for each (var cell : FlowCell in topRow) {
+				cell.setCellPosition(cell.x / camera.cellWidth, camera.cellPosLogicRange.top);
+			}
+		}
+		
+		private function gotoBottom(event : FlowEvent) : void {
+			var bottomRow : Array = colRow.topRowGotoBottom();
+			for each (var cell : FlowCell in bottomRow) {
+				cell.setCellPosition(cell.x / camera.cellWidth, camera.cellPosLogicRange.bottom - 1);
+			}
+		}
+		
+		private function gotoLeft(event : FlowEvent) : void {
+			var leftCol : Array = colRow.rightColGotoLeft();
+			for each (var cell : FlowCell in leftCol) {
+				cell.setCellPosition(camera.cellPosLogicRange.left, cell.y / camera.cellHeight);
+			}
+		}
+		
+		private function gotoRight(event : FlowEvent) : void {
+			var rightCol : Array = colRow.leftColGotoRight();
+			for each (var cell : FlowCell in rightCol) {
+				cell.setCellPosition(camera.cellPosLogicRange.right - 1, cell.y / camera.cellHeight);
+			}
+		}
+		
+		public function register(editor :FlowEditor) : void {
+			this._editor = editor;
+			this._editor.addEventListener(FlowCellEvent.RELOAD_CELL, reloadCell);
+			this._editor.addEventListener(FlowCellEvent.DRAW_LINE, drawLine);
+			this._editor.addEventListener(FlowCellEvent.DRAW_TYPE, drawType);
+			var selector : EventDispatcher = new Selector(this);
+			selector.addEventListener(FlowCellEvent.OVER_CELL, _editor.onOverCell);
+		}
+
+		public function showLayer(map : Map) : void {
+			//更新layer和pos
+			this._layer = map.layers[0];
+			this._position = new FlowPosition(_layer);
+			
+			var canvaWidth : int = map.width * 32;
+			var convaHeight : int = map.height * 32;
+			
+			_typeLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true);
+			_canvasLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true);
+			_lineLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true);
+			
+			//根据camera更新cell的tile
+			loopAllCell(function(cell : FlowCell) : void {
+				cell.reload();
+			});
+			//重新加载新的层内容
+			dispatchEvent(new FlowCellEvent(FlowCellEvent.RELOAD_CELL, {}));
+		}
+		
+		public function reloadCell(event : FlowCellEvent) : void {
+//			var range : Rectangle = event.data["range"];
+			//TODO 实现区域加载
+			//TODO rim 应该跟 tile 分离
+//			if(range == null) {
+				loopAllCell(function(cell : FlowCell) : void {
+					cell.redrawResource();
+//					cell.drawType();
+				});
+//			}
+		}
+
+		private function loopAllCell(func : Function) : void {
+			for each (var row : Array in colRow.getRows()) {
+				for each (var cell : FlowCell in row) {
+					func(cell);
+				}
+			}
+		}
+		
+		public function drawRim(event : FlowCellEvent) : void {
+			var range : Rectangle = event.data["range"];
+			var cellsInRange : Array = _position.getCellsByRange(range);
+			for each (var cell : FlowCell in cellsInRange) {
+//				cell.drawRim();
+			}
+		}
+		
+		public function drawLine(event : FlowCellEvent) : void {
+			var drawLine : Boolean = event.data["drawLine"];
+			if(drawLine) {
+				for (var x : int = 0; x < _lineLayer.bitmapData.width; x += cellWidth) {
+					for (var y : int = 0; y < _lineLayer.bitmapData.height; y++) {
+						_lineLayer.bitmapData.setPixel(x, y, 0x43CD80);
+					}
+				}
+				for (y = 0; y < _lineLayer.bitmapData.height; y += cellHeight) {
+					for (x = 0; x < _lineLayer.bitmapData.width; x++) {
+						_lineLayer.bitmapData.setPixel(x, y, 0x43CD80);
+					}
+				}
+			}
+//			loopAllCell(function(cell : FlowCell) : void {
+//				if(drawLine) {
+////					cell.drawLine();
+////				} else {
+////					cell.clearLine();
+//				}
+//			});
+		}
+		
+		public function drawType(event : FlowCellEvent) : void {
+			var drawLine : Boolean = event.data["drawType"];
+			loopAllCell(function(cell : FlowCell) : void {
+//				if(drawLine) {
+//					cell.drawType();
+//				} else {
+//					cell.clearType();
+//				}
+			});
+		}
+
+		override public function set x(value : Number) : void {
+			super.x = value;
+			dispatchEvent(new Event(Event.CHANGE));
+		}
+		
+		override public function set y(value : Number) : void {
+			super.y = value;
+			dispatchEvent(new Event(Event.CHANGE));
+		}
+		
+		public function resize(pixelWidth : int, pixelHeight : int) : void {
+			//TODO 实现
+		}
+		
+		public function get layer() : MapLayer {
+			return _layer;
+		}
+
+		public function get position() : FlowPosition {
+			return _position;
+		}
+		
+		public function get editor() : FlowEditor {
+			return _editor;
+		}
+
+		public function get cellWidth() : int {
+			return camera.cellWidth;
+		}
+		
+		public function get cellHeight() : int {
+			return camera.cellHeight;
+		}
+	}
+}
