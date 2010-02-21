@@ -9,19 +9,20 @@
  * @updatedate 2010-1-26
  */   
 package org.baicaix.flow.display {
-	import flash.geom.Rectangle;
-	import flash.geom.Point;
 	import org.baicaix.flow.resouece.ResourceImgLoader;
 	import org.baicaix.map.MapTile;
 
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Shape;
+	import flash.display.Sprite;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 
 	/**
 	 * @author dengyang
 	 */
-	public class FlowCell {
+	public class FlowCell extends Sprite {
 		
 		public static const TILE_TYPE_COLOR : Array = [
 			0x0, 0x363636, 0xB0E2FF, 0x00688B, 0x8B0A50, 0x9400D3 
@@ -37,8 +38,8 @@ package org.baicaix.flow.display {
 		private var cellWidth : int;
 		private var cellHeight : int;
 		
-		public var x : int;
-		public var y : int;
+//		public var x : int;
+//		public var y : int;
 		private var _logicX : int;
 		private var _logicY : int;
 		
@@ -47,6 +48,7 @@ package org.baicaix.flow.display {
 		
 		private var _typeLayer : Bitmap;
 		private var _canvasLayer : Bitmap;
+		private var _focusLayer : Shape;
 		
 		//------------------------------------
 		// public properties
@@ -68,7 +70,7 @@ package org.baicaix.flow.display {
 			
 			this._resourceLoader = loader;
 			
-//			_focusLayer = Shape(addChild(new Shape()));
+			_focusLayer = Shape(addChild(new Shape()));
 //			_typeLayer = new Shape();
 //			_lineLayer = new Shape();
 			setCellPosition(logicX, logicY);
@@ -97,7 +99,7 @@ package org.baicaix.flow.display {
 //				drawType();
 //			}
 			redrawResource();
-//			drawRim();
+			drawRim();
 		}
 		
 		private function registerPosition() : void {
@@ -120,33 +122,33 @@ package org.baicaix.flow.display {
 //			}
 		}
 		
-//		private function drawTopRim(color : int = FOCUS_RIM_COLOR) : void {
-//			drawRect(_focusLayer, 0, 0, cellWidth, FOCUS_RIM_LENGTH, color);
-//		}
-//		
-//		private function drawBottomRim(color : int = FOCUS_RIM_COLOR) : void {
-//			drawRect(_focusLayer, 0, cellHeight - FOCUS_RIM_LENGTH, cellWidth, FOCUS_RIM_LENGTH, color);
-//		}
-//		
-//		private function drawLeftRim(color : int = FOCUS_RIM_COLOR) : void {
-//			drawRect(_focusLayer, 0, 0, FOCUS_RIM_LENGTH, cellHeight, color);
-//		}
-//		
-//		private function drawRightRim(color : int = FOCUS_RIM_COLOR) : void {
-//			drawRect(_focusLayer, cellWidth - FOCUS_RIM_LENGTH, 0, FOCUS_RIM_LENGTH, cellHeight, color);
-//		}
+		private function drawTopRim(color : int = FOCUS_RIM_COLOR) : void {
+			drawRect(_focusLayer, 0, 0, cellWidth, FOCUS_RIM_LENGTH, color);
+		}
 		
-//		private function drawRect(layer : Shape, x : Number, y : Number, width : Number, height : Number, color : uint, alpha : Number = 1) : void {
-//			with(layer) {
-//				graphics.beginFill(color, alpha);
-//				graphics.drawRect(x, y, width, height);
-//				graphics.endFill();
-//			}
-//		}
+		private function drawBottomRim(color : int = FOCUS_RIM_COLOR) : void {
+			drawRect(_focusLayer, 0, cellHeight - FOCUS_RIM_LENGTH, cellWidth, FOCUS_RIM_LENGTH, color);
+		}
 		
-//		private function clearRim() : void {
-//			_focusLayer.graphics.clear();
-//		}
+		private function drawLeftRim(color : int = FOCUS_RIM_COLOR) : void {
+			drawRect(_focusLayer, 0, 0, FOCUS_RIM_LENGTH, cellHeight, color);
+		}
+		
+		private function drawRightRim(color : int = FOCUS_RIM_COLOR) : void {
+			drawRect(_focusLayer, cellWidth - FOCUS_RIM_LENGTH, 0, FOCUS_RIM_LENGTH, cellHeight, color);
+		}
+		
+		private function drawRect(layer : Shape, x : Number, y : Number, width : Number, height : Number, color : uint, alpha : Number = 1) : void {
+			with(layer) {
+				graphics.beginFill(color, alpha);
+				graphics.drawRect(x, y, width, height);
+				graphics.endFill();
+			}
+		}
+		
+		private function clearRim() : void {
+			_focusLayer.graphics.clear();
+		}
 		
 		// PUBLIC
 		//________________________________________________________________________________________________
@@ -159,24 +161,24 @@ package org.baicaix.flow.display {
 			return _logicY;
 		}
 		
-//		public function drawRim() : void {
-//			if(_tile.isRimBySide(MapTile.TOP_RIM)) {
-//				drawTopRim();
-//			}
-//			if(_tile.isRimBySide(MapTile.BOTTOM_RIM)) {
-//				drawBottomRim();
-//			}
-//			if(_tile.isRimBySide(MapTile.LEFT_RIM)) {
-//				drawLeftRim();
-//			}
-//			if(_tile.isRimBySide(MapTile.RIGHT_RIM)) {
-//				drawRightRim();
-//			}
-//			
-//			if(_tile.rim == MapTile.NONE_RIM) {
-//				clearRim();
-//			}
-//		}
+		public function drawRim() : void {
+			if(_tile.isRimBySide(MapTile.TOP_RIM)) {
+				drawTopRim();
+			}
+			if(_tile.isRimBySide(MapTile.BOTTOM_RIM)) {
+				drawBottomRim();
+			}
+			if(_tile.isRimBySide(MapTile.LEFT_RIM)) {
+				drawLeftRim();
+			}
+			if(_tile.isRimBySide(MapTile.RIGHT_RIM)) {
+				drawRightRim();
+			}
+			
+			if(_tile.rim == MapTile.NONE_RIM) {
+				clearRim();
+			}
+		}
 		
 //		public function drawLine() : void {
 ////			if(!contains(_lineLayer)) {
