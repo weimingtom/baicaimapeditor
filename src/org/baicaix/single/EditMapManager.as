@@ -9,11 +9,11 @@
  * @updatedate 2010-1-27
  */   
 package org.baicaix.single {
-	import org.baicaix.flow.events.LayerEvent;
-	import org.baicaix.flow.resouece.ResourceDataLoader;
 	import org.baicaix.map.Map;
 	import org.baicaix.map.MapLayer;
 	import org.baicaix.map.MapTile;
+	import org.baicaix.single.events.LayerEvent;
+	import org.baicaix.single.resource.ResourceDataLoader;
 
 	import flash.events.EventDispatcher;
 

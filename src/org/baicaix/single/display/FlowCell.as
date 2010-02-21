@@ -204,7 +204,10 @@ package org.baicaix.single.display {
 //			}
 //			
 //			_typeLayer.graphics.clear();
-			if(_tile.type == MapTile.DEFAULT_TILE_TYPE) return;
+			if(_tile.type == MapTile.DEFAULT_TILE_TYPE) {
+//				clearType();
+				return;
+			}
 			for (var x : int = 0; x < cellWidth; x++) {
 				for (var y : int = 0; y < cellHeight;y++) {
 					_typeLayer.bitmapData.setPixel32(this.x + x, this.y + y, TILE_TYPE_COLOR[_tile.type]);
@@ -214,9 +217,11 @@ package org.baicaix.single.display {
 		}
 //		
 		public function clearType() : void {
+			var touming : uint = 0x00000000;
+			if(_typeLayer.bitmapData.getPixel32(this.x, this.y) == touming) return;
 			for (var x : int = 0; x < cellWidth; x++) {
 				for (var y : int = 0; y < cellHeight;y++) {
-					_typeLayer.bitmapData.setPixel32(this.x + x, this.y + y, 0x00000000);
+					_typeLayer.bitmapData.setPixel32(this.x + x, this.y + y, touming);
 				}
 			}
 		}
