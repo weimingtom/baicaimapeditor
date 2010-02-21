@@ -54,8 +54,8 @@ package org.baicaix.flow.display {
 //			flowBrowser.showLayer(layer);
 //		}
 //		
-		public function showLayer(layer : MapLayer) : void {
-			flowBrowser.showLayer(layer);
+		public function showLayer(map : Map) : void {
+			flowBrowser.showLayer(map);
 		}
 	}
 }

@@ -41,7 +41,7 @@ package org.baicaix.flow.resouece {
 				func();
 		}
 
-		public function load(index : int, x : int, y : int) : DisplayObject {
+		public function load(index : int, x : int, y : int) : BitmapData {
 			var copyRange : Rectangle = createResourceRange(index, x, y);
 			return getPieceOfResourceFromRange(copyRange, index);
 		}
@@ -63,13 +63,13 @@ package org.baicaix.flow.resouece {
 			}
 		}
 
-		private function getPieceOfResourceFromRange(copyRange : Rectangle, index : int) : Bitmap {
+		private function getPieceOfResourceFromRange(copyRange : Rectangle, index : int) : BitmapData {
 			var copy : BitmapData = new BitmapData(_cellWidth, _cellHeight);
 			var resource : BitmapData = getResourceByIndex(index);
 			if(resource != null) {
 				copy.copyPixels(resource, copyRange, DEFAULT_DRAW_TO_POINT);
 			}
-			return new Bitmap(copy);
+			return copy;
 		}
 		
 		public function getResourceByIndex(index : int) : BitmapData {

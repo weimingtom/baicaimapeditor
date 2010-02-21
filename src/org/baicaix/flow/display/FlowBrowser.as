@@ -9,16 +9,18 @@
  * @updatedate 2010-1-28
  */   
 package org.baicaix.flow.display {
-	import flash.events.EventDispatcher;
 	import org.baicaix.flow.FlowEditor;
 	import org.baicaix.flow.FlowPosition;
 	import org.baicaix.flow.events.FlowCellEvent;
 	import org.baicaix.flow.events.FlowEvent;
 	import org.baicaix.flow.resouece.ResourceImgLoader;
+	import org.baicaix.map.Map;
 	import org.baicaix.map.MapLayer;
 
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
@@ -38,6 +40,10 @@ package org.baicaix.flow.display {
 		private var camera : FlowCamera;
 		
 		private var colRow : FlowColRow;
+		private var _lineLayer : BitmapData;
+		private var _focusLayer : BitmapData;
+		private var _typeLayer : BitmapData;
+		private var _canvasLayer : BitmapData;
 		
 		public function FlowBrowser(camera : FlowCamera, actualSize : Point, loader : ResourceImgLoader, Selector : Class) {
 			
@@ -55,9 +61,10 @@ package org.baicaix.flow.display {
 		}
 		
 		private function createDemoLayer() : void {
-			var layer : MapLayer = new MapLayer();
+			var map : Map = new Map();
+			var layer : MapLayer = map.createTemptyLayer(0);
 			layer.initTiles(0, 16, 16);
-			this.showLayer(layer);
+			this.showLayer(map);
 		}
 
 		private function drawActualRange(actualSize : Point) : void {
@@ -86,7 +93,7 @@ package org.baicaix.flow.display {
 		private function createCell(x : int, y : int) : void {
 			var cell : FlowCell = new FlowCell(this, x-camera.cache, y-camera.cache, 
 										camera.cellWidth, camera.cellHeight, resourceLoader);
-			addChild(cell);
+			cell.setCanvas(_canvasLayer, _typeLayer);
 			colRow.addCell(x, y, cell);
 		}
 
@@ -127,10 +134,14 @@ package org.baicaix.flow.display {
 			selector.addEventListener(FlowCellEvent.OVER_CELL, _editor.onOverCell);
 		}
 
-		public function showLayer(layer : MapLayer) : void {
+		public function showLayer(map : Map) : void {
 			//更新layer和pos
-			this._layer = layer;
+			this._layer = map.layers[0];
 			this._position = new FlowPosition(_layer);
+			var canvaWidth : int = map.width * 32;
+			var convaHeight : int = map.height * 32;
+			_typeLayer = new BitmapData(canvaWidth, convaHeight);
+			_canvasLayer = new BitmapData(canvaWidth, convaHeight);
 			//根据camera更新cell的tile
 			loopAllCell(function(cell : FlowCell) : void {
 				cell.reload();
@@ -146,7 +157,7 @@ package org.baicaix.flow.display {
 //			if(range == null) {
 				loopAllCell(function(cell : FlowCell) : void {
 					cell.redrawResource();
-					cell.drawType();
+//					cell.drawType();
 				});
 //			}
 		}
@@ -163,7 +174,7 @@ package org.baicaix.flow.display {
 			var range : Rectangle = event.data["range"];
 			var cellsInRange : Array = _position.getCellsByRange(range);
 			for each (var cell : FlowCell in cellsInRange) {
-				cell.drawRim();
+//				cell.drawRim();
 			}
 		}
 		
@@ -171,9 +182,9 @@ package org.baicaix.flow.display {
 			var drawLine : Boolean = event.data["drawLine"];
 			loopAllCell(function(cell : FlowCell) : void {
 				if(drawLine) {
-					cell.drawLine();
-				} else {
-					cell.clearLine();
+//					cell.drawLine();
+//				} else {
+//					cell.clearLine();
 				}
 			});
 		}
@@ -182,9 +193,9 @@ package org.baicaix.flow.display {
 			var drawLine : Boolean = event.data["drawType"];
 			loopAllCell(function(cell : FlowCell) : void {
 				if(drawLine) {
-					cell.drawType();
-				} else {
-					cell.clearType();
+//					cell.drawType();
+//				} else {
+//					cell.clearType();
 				}
 			});
 		}

@@ -200,7 +200,8 @@ package org.baicaix.view {
 		
 		private function createNewMap(event : Event) : void {
 			map = new Map(mapWidth, mapHeight);
-			mapFlowShower.showLayer(map.createTemptyLayer());
+			map.createTemptyLayer();
+			mapFlowShower.showLayer(map);
 			closeWindow(event);
 		}
 
