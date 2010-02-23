@@ -183,42 +183,37 @@ package org.baicaix.single.display {
 		
 		public function drawRim(event : FlowCellEvent) : void {
 			var range : Rectangle = event.data["range"];
-			
-			var cellsInRange : Array = _position.getCellsByRange(range);
-			for each (var cell : FlowCell in cellsInRange) {
-				//边框的cell的选择移动到此处
-				if(cell.logicY == range.top) {
-					cell.drawTopRim();
-				}
-				if(cell.logicY == range.bottom) {
-					cell.drawBottomRim();
-				}
-				if(cell.logicX == range.left) {
-					cell.drawLeftRim();
-				}
-				if(cell.logicX == range.right) {
-					cell.drawRightRim();
-				}
-			}
+			rimAction2Range(range, 
+					function(cell : FlowCell) : void {cell.drawTopRim();},
+					function(cell : FlowCell) : void {cell.drawBottomRim();},
+					function(cell : FlowCell) : void {cell.drawLeftRim();},
+					function(cell : FlowCell) : void {cell.drawRightRim();});
 		}
 		
 		public function clearRim(event : FlowCellEvent) : void {
 			var range : Rectangle = event.data["range"];
-			
+			rimAction2Range(range, clear, clear, clear, clear);
+			function clear(cell : FlowCell) : void {
+				cell.clearRim();
+			}
+		}
+		
+		private function rimAction2Range(range : Rectangle, topFunc : Function, 
+				bottomFunc : Function, leftFunc : Function, rightFunc : Function) : void {
 			var cellsInRange : Array = _position.getCellsByRange(range);
 			for each (var cell : FlowCell in cellsInRange) {
 				//边框的cell的选择移动到此处
 				if(cell.logicY == range.top) {
-					cell.clearRim();
+					topFunc(cell);
 				}
 				if(cell.logicY == range.bottom) {
-					cell.clearRim();
+					bottomFunc(cell);
 				}
 				if(cell.logicX == range.left) {
-					cell.clearRim();
+					leftFunc(cell);
 				}
 				if(cell.logicX == range.right) {
-					cell.clearRim();
+					rightFunc(cell);
 				}
 			}
 		}
