@@ -74,5 +74,13 @@ package org.baicaix.map {
 				loadLayer(layer);
 			}
 		}
+		
+		public function getTiles(x : int, y : int) : Array {
+			var temp : Array = [];
+ 			for each (var layer : MapLayer in this.layers) {
+				temp.push(layer.getTile(x, y));
+			}
+			return temp;
+		}
 	}
 }

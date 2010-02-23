@@ -9,7 +9,7 @@
  * @updatedate 2010-2-8
  */   
 package org.baicaix.single {
-	import org.baicaix.map.MapLayer;
+	import org.baicaix.map.Map;
 
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
@@ -26,7 +26,7 @@ package org.baicaix.single {
 		/**
 		 * 選取區域
 		 */
-		function selectRange(layer: MapLayer, range : Rectangle) : void;
+		function selectRange(layer: Map, range : Rectangle) : void;
 		
 		/**
 		 * 粘贴区域

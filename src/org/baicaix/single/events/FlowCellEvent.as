@@ -17,7 +17,9 @@ package org.baicaix.single.events {
 		
 		public static const RELOAD_CELL : String = "RELOAD_CELL";
 		
-		public static const RELOAD_RIM : String = "RELOAD_RIM";
+		public static const DRAW_RIM : String = "DRAW_RIM";
+		
+		public static const CLEAR_RIM : String = "RELOAD_RIM";
 		
 		public static const DRAW_LINE : String = "DRAW_LINE";
 		

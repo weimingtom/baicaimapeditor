@@ -32,7 +32,7 @@ package org.baicaix.single.display {
 		
 		//TODO 将来使用ioc来代替这种做法
 		private var Selector : Class;
-		private var _layer : MapLayer;
+		private var _activtyMap : Map;
 		private var _position : FlowPosition;
 		
 		private var resourceLoader : ResourceImgLoader;
@@ -142,8 +142,8 @@ package org.baicaix.single.display {
 
 		public function showLayer(map : Map) : void {
 			//更新layer和pos
-			this._layer = map.layers[0];
-			this._position = new FlowPosition(_layer);
+			this._activtyMap = map;
+			this._position = new FlowPosition(_activtyMap);
 			
 			var canvaWidth : int = map.width * 32;
 			var convaHeight : int = map.height * 32;
@@ -183,9 +183,43 @@ package org.baicaix.single.display {
 		
 		public function drawRim(event : FlowCellEvent) : void {
 			var range : Rectangle = event.data["range"];
+			
 			var cellsInRange : Array = _position.getCellsByRange(range);
 			for each (var cell : FlowCell in cellsInRange) {
-				cell.drawRim();
+				//边框的cell的选择移动到此处
+				if(cell.logicY == range.top) {
+					cell.drawTopRim();
+				}
+				if(cell.logicY == range.bottom) {
+					cell.drawBottomRim();
+				}
+				if(cell.logicX == range.left) {
+					cell.drawLeftRim();
+				}
+				if(cell.logicX == range.right) {
+					cell.drawRightRim();
+				}
+			}
+		}
+		
+		public function clearRim(event : FlowCellEvent) : void {
+			var range : Rectangle = event.data["range"];
+			
+			var cellsInRange : Array = _position.getCellsByRange(range);
+			for each (var cell : FlowCell in cellsInRange) {
+				//边框的cell的选择移动到此处
+				if(cell.logicY == range.top) {
+					cell.clearRim();
+				}
+				if(cell.logicY == range.bottom) {
+					cell.clearRim();
+				}
+				if(cell.logicX == range.left) {
+					cell.clearRim();
+				}
+				if(cell.logicX == range.right) {
+					cell.clearRim();
+				}
 			}
 		}
 		
@@ -214,13 +248,6 @@ package org.baicaix.single.display {
 					}
 				}
 			}
-//			loopAllCell(function(cell : FlowCell) : void {
-//				if(drawLine) {
-////					cell.drawLine();
-////				} else {
-////					cell.clearLine();
-//				}
-//			});
 		}
 		
 		public function drawType(event : FlowCellEvent) : void {
@@ -248,8 +275,8 @@ package org.baicaix.single.display {
 			//TODO 实现
 		}
 		
-		public function get layer() : MapLayer {
-			return _layer;
+		public function get activityMap() : Map {
+			return _activtyMap;
 		}
 
 		public function get position() : FlowPosition {

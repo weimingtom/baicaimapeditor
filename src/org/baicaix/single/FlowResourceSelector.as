@@ -45,13 +45,15 @@ package org.baicaix.single {
 		private function clearOldRange() : void {
 			if(_selectRange == null) return;
 			_selectRange.clearRim();
-			_selectRange.removeEventListener(FlowCellEvent.RELOAD_RIM, _base.drawRim);
+			_selectRange.removeEventListener(FlowCellEvent.DRAW_RIM, _base.drawRim);
+			_selectRange.addEventListener(FlowCellEvent.CLEAR_RIM, _base.clearRim);
 			_selectRange.removeEventListener(FlowCellEvent.RELOAD_CELL, _base.reloadCell);
 		}
 		
 		private function updataSelectRange(range : Rectangle) : void {
-			_selectRange = new FlowRangeImpl(_base.layer, range);
-			_selectRange.addEventListener(FlowCellEvent.RELOAD_RIM, _base.drawRim);
+			_selectRange = new FlowRangeImpl(_base.activityMap, range);
+			_selectRange.addEventListener(FlowCellEvent.DRAW_RIM, _base.drawRim);
+			_selectRange.addEventListener(FlowCellEvent.CLEAR_RIM, _base.clearRim);
 			_selectRange.addEventListener(FlowCellEvent.RELOAD_CELL, _base.reloadCell);
 		}
 		

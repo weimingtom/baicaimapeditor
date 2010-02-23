@@ -9,7 +9,7 @@
  * @updatedate 2010-2-2
  */   
 package org.baicaix.single {
-	import org.baicaix.map.MapLayer;
+	import org.baicaix.map.Map;
 	import org.baicaix.map.MapTile;
 	import org.baicaix.single.events.FlowCellEvent;
 
@@ -25,7 +25,7 @@ package org.baicaix.single {
 		// private, protected properties
 		//------------------------------------
 		
-		protected var _layer : MapLayer;
+		protected var _map : Map;
 		protected var _range : Rectangle;
 		protected var _tiles : Dictionary;
 
@@ -38,11 +38,11 @@ package org.baicaix.single {
 		// constructor
 		//------------------------------------
 
-		public function FlowRangeImpl(layer: MapLayer, range : Rectangle = null) {
-			this._layer = layer;
+		public function FlowRangeImpl(map: Map, range : Rectangle = null) {
+			this._map = map;
 			this._range = range;
 			if(range != null) {
-				selectRange(layer, range);
+				selectRange(map, range);
 			}
 		}
 
@@ -115,15 +115,15 @@ package org.baicaix.single {
 		/**
 		 * 選取區域
 		 */
-		public function selectRange(layer: MapLayer, range : Rectangle) : void {
-			this._layer = layer;
+		public function selectRange(map: Map, range : Rectangle) : void {
+			this._map = map;
 			this._range = range;
 			this._tiles = new Dictionary();
 			var key : String;
 			for (var x : int = _range.left;x <= _range.right;x++) {
 				for (var y : int = _range.top;y <= _range.bottom;y++) {
 					key = x + "," + y;
-					this._tiles[key] = _layer.getOrCreateTile(x, y);
+					this._tiles[key] = _map.layers[0].getOrCreateTile(x, y);
 				}
 			}
 		}
@@ -153,7 +153,7 @@ package org.baicaix.single {
 				//下方越界
 				targetY = targetY > this.range.top + sourceCellRange.range.height ? targetY - (sourceCellRange.range.height + 1) : targetY; 
 				
-				var targettile : MapTile = this._layer.getTile(targetX, targetY);
+				var targettile : MapTile = this._map.layers[0].getTile(targetX, targetY);
 				//超出边界的处理
 				if(targettile == null) continue;
 				targettile.paste(sourcetile);
@@ -178,7 +178,7 @@ package org.baicaix.single {
 		}
 		
 		private function refreshRim() : void {
-			dispatchEvent(new FlowCellEvent(FlowCellEvent.RELOAD_RIM, {range : _range}));
+			dispatchEvent(new FlowCellEvent(FlowCellEvent.DRAW_RIM, {range : _range}));
 		}
 		
 		private function refreshCell() : void {
@@ -190,18 +190,18 @@ package org.baicaix.single {
 		 */
 		public function drawRim() : void {
 			//设置tile
-			findTopCells().forEach( function (tile : MapTile, index : int, array : Array) : void {
-				tile.rim = MapTile.TOP_RIM;
-			});
-			findBottomCells().forEach( function (tile : MapTile, index : int, array : Array) : void {
-				tile.rim = MapTile.BOTTOM_RIM;
-			});
-			findLeftCells().forEach( function (tile : MapTile, index : int, array : Array) : void {
-				tile.rim = MapTile.LEFT_RIM;
-			});
-			findRightCells().forEach( function (tile : MapTile, index : int, array : Array) : void {
-				tile.rim = MapTile.RIGHT_RIM;
-			});
+//			findTopCells().forEach( function (tile : MapTile, index : int, array : Array) : void {
+//				tile.rim = MapTile.TOP_RIM;
+//			});
+//			findBottomCells().forEach( function (tile : MapTile, index : int, array : Array) : void {
+//				tile.rim = MapTile.BOTTOM_RIM;
+//			});
+//			findLeftCells().forEach( function (tile : MapTile, index : int, array : Array) : void {
+//				tile.rim = MapTile.LEFT_RIM;
+//			});
+//			findRightCells().forEach( function (tile : MapTile, index : int, array : Array) : void {
+//				tile.rim = MapTile.RIGHT_RIM;
+//			});
 			refreshRim();
 		}
 		
@@ -209,11 +209,11 @@ package org.baicaix.single {
 		 * 清除邊框
 		 */
 		public function clearRim() : void {
-			findTopCells().forEach(clearCellRim);
-			findBottomCells().forEach(clearCellRim);
-			findLeftCells().forEach(clearCellRim);
-			findRightCells().forEach(clearCellRim);
-			refreshRim();
+//			findTopCells().forEach(clearCellRim);
+//			findBottomCells().forEach(clearCellRim);
+//			findLeftCells().forEach(clearCellRim);
+//			findRightCells().forEach(clearCellRim);
+			dispatchEvent(new FlowCellEvent(FlowCellEvent.CLEAR_RIM, {range : _range}));
 		}
 		
 		public function clear() : void {

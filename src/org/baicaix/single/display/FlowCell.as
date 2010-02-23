@@ -31,7 +31,7 @@ package org.baicaix.single.display {
 		//------------------------------------
 		
 		private var _browser : FlowBrowser;
-		private var _tile : MapTile; 
+		private var _tiles : Array; 
 		
 		private var cellWidth : int;
 		private var cellHeight : int;
@@ -102,7 +102,7 @@ package org.baicaix.single.display {
 		}
 		
 		private function registerPosition() : void {
-			_tile = _browser.position.register(this, _logicX, _logicY);
+			_tiles = _browser.position.register(this, _logicX, _logicY);
 		}
 
 		public function redrawResource() : void {
@@ -114,26 +114,28 @@ package org.baicaix.single.display {
 			//clear
 //			_canvasLayer.setPixel32(x, y, color)
 			//copy
-			var res : BitmapData = _resourceLoader.load(_tile.src, _tile.srcX, _tile.srcY);
-			_canvasLayer.bitmapData.copyPixels(res, new Rectangle(0, 0, cellWidth, cellHeight), new Point(_logicX * cellWidth, _logicY * cellHeight));
+			for each (var tile : MapTile in _tiles) {
+				var res : BitmapData = _resourceLoader.load(tile.src, tile.srcX, tile.srcY);
+				_canvasLayer.bitmapData.copyPixels(res, new Rectangle(0, 0, cellWidth, cellHeight), new Point(_logicX * cellWidth, _logicY * cellHeight));
+			}
 //			if(showResource != null) {
 //				_lastResource = this.addChildAt(showResource, 0);
 //			}
 		}
 		
-		private function drawTopRim(color : uint = FOCUS_RIM_COLOR) : void {
+		public function drawTopRim(color : uint = FOCUS_RIM_COLOR) : void {
 			drawRect(_focusLayer, 0, 0, cellWidth, FOCUS_RIM_LENGTH, color);
 		}
 		
-		private function drawBottomRim(color : uint = FOCUS_RIM_COLOR) : void {
+		public function drawBottomRim(color : uint = FOCUS_RIM_COLOR) : void {
 			drawRect(_focusLayer, 0, cellHeight - FOCUS_RIM_LENGTH, cellWidth, FOCUS_RIM_LENGTH, color);
 		}
 		
-		private function drawLeftRim(color : uint = FOCUS_RIM_COLOR) : void {
+		public function drawLeftRim(color : uint = FOCUS_RIM_COLOR) : void {
 			drawRect(_focusLayer, 0, 0, FOCUS_RIM_LENGTH, cellHeight, color);
 		}
 		
-		private function drawRightRim(color : uint = FOCUS_RIM_COLOR) : void {
+		public function drawRightRim(color : uint = FOCUS_RIM_COLOR) : void {
 			drawRect(_focusLayer, cellWidth - FOCUS_RIM_LENGTH, 0, FOCUS_RIM_LENGTH, cellHeight, color);
 		}
 		
@@ -145,7 +147,7 @@ package org.baicaix.single.display {
 			}
 		}
 		
-		private function clearRim() : void {
+		public function clearRim() : void {
 			for (var offsetX : int = 0;offsetX < cellWidth; offsetX++) {
 				for (var offsetY : int = 0; offsetY < cellHeight; offsetY++) {
 					_focusLayer.bitmapData.setPixel32(this.x + offsetX, this.y + offsetY, 0x00000000);
@@ -164,24 +166,25 @@ package org.baicaix.single.display {
 			return _logicY;
 		}
 		
-		public function drawRim() : void {
-			if(_tile.isRimBySide(MapTile.TOP_RIM)) {
-				drawTopRim();
-			}
-			if(_tile.isRimBySide(MapTile.BOTTOM_RIM)) {
-				drawBottomRim();
-			}
-			if(_tile.isRimBySide(MapTile.LEFT_RIM)) {
-				drawLeftRim();
-			}
-			if(_tile.isRimBySide(MapTile.RIGHT_RIM)) {
-				drawRightRim();
-			}
-			
-			if(_tile.rim == MapTile.NONE_RIM) {
-				clearRim();
-			}
-		}
+//		public function drawRim() : void {
+//			//FIXME 选择框要跟tile分离
+//			if(_tiles.isRimBySide(MapTile.TOP_RIM)) {
+//				drawTopRim();
+//			}
+//			if(_tiles.isRimBySide(MapTile.BOTTOM_RIM)) {
+//				drawBottomRim();
+//			}
+//			if(_tiles.isRimBySide(MapTile.LEFT_RIM)) {
+//				drawLeftRim();
+//			}
+//			if(_tiles.isRimBySide(MapTile.RIGHT_RIM)) {
+//				drawRightRim();
+//			}
+//			
+//			if(_tiles.rim == MapTile.NONE_RIM) {
+//				clearRim();
+//			}
+//		}
 //		
 //		public function drawLine() : void {
 ////			if(!contains(_lineLayer)) {
@@ -204,13 +207,13 @@ package org.baicaix.single.display {
 //			}
 //			
 //			_typeLayer.graphics.clear();
-			if(_tile.type == MapTile.DEFAULT_TILE_TYPE) {
+			if(_tiles[0].type == MapTile.DEFAULT_TILE_TYPE) {
 //				clearType();
 				return;
 			}
 			for (var x : int = 0; x < cellWidth; x++) {
 				for (var y : int = 0; y < cellHeight;y++) {
-					_typeLayer.bitmapData.setPixel32(this.x + x, this.y + y, TILE_TYPE_COLOR[_tile.type]);
+					_typeLayer.bitmapData.setPixel32(this.x + x, this.y + y, TILE_TYPE_COLOR[_tiles[0].type]);
 				}
 			}
 //			drawRect(_typeLayer, 0, 0, cellWidth, cellHeight, TILE_TYPE_COLOR[_tile.type], .7);
