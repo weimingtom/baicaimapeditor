@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml">
+
+	<mx:Metadata>
+		[Event(name="productRemoved",type="events.ProductEvent")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import events.ProductEvent;
+			import valueObjects.Product;
+			import valueObjects.ShoppingCart;
+			import valueObjects.ShoppingCartItem;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			
+			[Bindable]
+			public var cart:ShoppingCart;
+			
+			private function renderPriceLabel(item:ShoppingCartItem, dataField:DataGridColumn):String
+			{
+				return "$"+String(item.subtotal);
+			}
+
+			public function removeItem(cartItem:ShoppingCartItem):void{
+				var prod:Product = cartItem.product;
+				var e:ProductEvent = new ProductEvent(prod,"productRemoved");
+				this.dispatchEvent(e);
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:DataGrid
+		id="cartView"
+		dataProvider="{cart.aItems}" width="100%" height="100%"
+		editable="true" draggableColumns="false"
+		variableRowHeight="true">
+		<mx:columns>
+			<mx:DataGridColumn dataField="product" headerText="Product"
+				itemRenderer="renderer.ecomm.ProductName" editable="false"/>
+			<mx:DataGridColumn dataField="quantity"
+				itemEditor="mx.controls.NumericStepper"
+				editorDataField="value" editable="true" headerText="Quantity" />
+			<mx:DataGridColumn dataField="subtotal" headerText="Amount"
+				labelFunction="renderPriceLabel" editable="false"/>
+			<mx:DataGridColumn editable="false">
+				<mx:itemRenderer>
+					<mx:Component>
+						<mx:VBox>
+							<mx:Script>
+								<![CDATA[
+									import valueObjects.ShoppingCartItem;
+								]]>
+							</mx:Script>
+							<mx:Button
+								label="Remove"
+								click="outerDocument.removeItem(data as ShoppingCartItem);"/>
+						</mx:VBox>
+					</mx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
+		</mx:columns>
+	</mx:DataGrid>
+</mx:VBox>

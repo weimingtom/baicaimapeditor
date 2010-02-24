@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:u="utils.*">
+
+	<mx:Metadata>
+		[Event(name="billingInfoReturn",type="events.ObjectDataEvent")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import events.ObjectDataEvent;
+			
+			private function process():void{
+				var o:ObjectDataEvent =  new ObjectDataEvent("billingInfoReturn",checkoutInfo);
+				dispatchEvent(o);
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Model id="checkoutInfo">
+		<custInfo>
+			<billingName>{billingName.text}</billingName>
+			<billingAddress>{billingAddress.text}</billingAddress>
+			<billingCity>{billingCity.text}</billingCity>
+			<billingState>{billingState.text}</billingState>
+			<billingZip>{billingZip.text}</billingZip>
+			<deliveryDate>{deliveryDate.selectedDate}</deliveryDate>
+		</custInfo>
+	</mx:Model>
+
+	<mx:ZipCodeValidator id="zipV" source="{billingZip}"
+		property="text" domain="US or Canada"/>
+
+	<u:AddressValidator id="addressV" required="true"
+		source="{billingAddress}" property="text"/>
+
+	<mx:VBox>
+		<mx:Form>
+			<mx:Label text="Checkout Page 1 of 3"/>
+			<mx:FormHeading label="Customer Information"/>
+			<mx:FormItem label="Name">
+				<mx:TextInput id="billingName"/>
+			</mx:FormItem>
+			<mx:FormItem label="Address">
+				<mx:TextArea id="billingAddress" width="160"/>
+			</mx:FormItem>
+			<mx:FormItem label="City">
+				<mx:TextInput id="billingCity"/>
+			</mx:FormItem>
+			<mx:FormItem label="State">
+				<mx:TextInput id="billingState" maxChars="2"/>
+			</mx:FormItem>
+			<mx:FormItem label="Zip">
+				<mx:TextInput id="billingZip"/>
+			</mx:FormItem>
+		</mx:Form>
+	</mx:VBox>
+	<mx:VBox>
+		<mx:Spacer height="40"/>
+		<mx:Form>
+			<mx:FormItem label="Delivery Date">
+				<mx:DateChooser id="deliveryDate"/>
+			</mx:FormItem>
+			<mx:FormItem>
+				<mx:Button label="Continue" click="process()"/>
+			</mx:FormItem>
+		</mx:Form>
+	</mx:VBox>
+</mx:HBox>

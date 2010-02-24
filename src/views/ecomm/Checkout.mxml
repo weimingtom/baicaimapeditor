@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:v="views.ecomm.*"	>
+	
+	<mx:Script>
+		<![CDATA[
+			import valueObjects.OrderInfo;
+			import events.ObjectDataEvent;
+
+			[Bindable]
+			public var orderInfo:OrderInfo=new OrderInfo();
+
+			private function doBillingInfoReturn(event:ObjectDataEvent):void{
+				orderInfo.billingName=event.data.billingName;
+				orderInfo.billingAddress=event.data.billingAddress;
+				orderInfo.billingCity=event.data.billingCity;
+				orderInfo.billingState=event.data.billingState;
+				orderInfo.billingZip=event.data.billingZip;
+				orderInfo.deliveryDate=event.data.deliveryDate;
+				
+				checkoutNav.selectedChild=ccInfo;
+			}
+			
+			private function doCCInfoReturn(event:ObjectDataEvent):void{
+				orderInfo.cardType=event.data.cardType;
+				orderInfo.cardNumber=event.data.cardNumber;
+				orderInfo.cardExpirationMonth=event.data.cardExpirationMonth;
+				orderInfo.cardExpirationYear=event.data.cardExpirationYear;
+				
+				checkoutNav.selectedChild=orderConf;
+			}
+		]]>
+	</mx:Script>
+
+	<mx:ViewStack id="checkoutNav" width="100%" height="100%">
+		<v:BillingInfo id="billingInfo"
+			width="100%" height="100%"
+			billingInfoReturn="doBillingInfoReturn(event)"/>
+		<v:CCInfo id="ccInfo"
+			width="100%" height="100%"
+			ccInfoReturn="doCCInfoReturn(event)"
+			back="checkoutNav.selectedChild=billingInfo"/>
+		<v:OrderConf id="orderConf"
+			width="100%" height="100%"
+			orderInfo="{orderInfo}"
+			back="checkoutNav.selectedChild=billingInfo"/>
+	</mx:ViewStack>
+</mx:VBox>

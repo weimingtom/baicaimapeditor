@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<v:MaxRestorePanel xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:v="views.*" 
+	layout="vertical">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ICollectionView;
+			[Bindable]
+			public var dp:ICollectionView = null;
+
+		]]>
+	</mx:Script>
+
+	<mx:DataGrid dataProvider="{dp}" width="100%" height="100%" />
+
+	<mx:ControlBar id="controls">
+		<mx:Button id="btGraph"
+			label="Graph" />
+		<mx:Button id="btData"
+			label="Data" />
+	</mx:ControlBar>
+</v:MaxRestorePanel>

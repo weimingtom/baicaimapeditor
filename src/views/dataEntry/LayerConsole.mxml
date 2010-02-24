@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:v="views.*" 
+	layout="vertical"
+	borderStyle="solid">
+	
+	<mx:XMLList id="mXml" xmlns="">
+		<item label="File">111</item>
+		<item label="Edit">222</item>
+		<item label="Tool">333</item>
+		<item label="Help">444</item>
+		<item label="Help">555</item>
+		<item label="Help">666</item>
+		<item label="Help">777</item>
+	</mx:XMLList>
+	
+	<mx:HBox width="100%" height="100%">
+		<mx:VBox width="100%" height="100%">
+			<mx:List width="100%" height="100%" 
+				dataProvider="{mXml}">
+			</mx:List>
+			<mx:ControlBar width="100%"
+				horizontalAlign="left" verticalAlign="middle">
+				<mx:Button label="Add"/>
+				<mx:Button label="Delete"/>
+			</mx:ControlBar>
+		</mx:VBox>
+		<mx:VBox width="20%" height="100%">
+			<mx:Button label="Up" width="100%"/>
+			<mx:Button label="down" width="100%"/>
+			<mx:CheckBox label="显示"/>
+			<mx:CheckBox label="加锁"/>
+			<mx:CheckBox label="半透明"/>
+			<mx:CheckBox label="角色层"/>
+		</mx:VBox>
+	</mx:HBox>
+</mx:Panel>

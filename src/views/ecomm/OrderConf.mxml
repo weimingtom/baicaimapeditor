@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml">
+
+	<mx:Metadata>
+		[Event(name="back")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import valueObjects.OrderInfo;
+
+			[Bindable]
+			public var orderInfo:OrderInfo;
+
+			private function back():void{
+				var o:Event=new Event("back");
+				dispatchEvent(o);
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:DateFormatter id="orderFormat"/>
+
+	<mx:Form>
+		<mx:Label text="Checkout Page 3 of 3"/>
+		<mx:FormHeading label="Billing Information"/>
+		<mx:HBox>
+			<mx:VBox>
+				<mx:FormItem >
+					<mx:Label text="{orderInfo.billingName}"/>
+				</mx:FormItem>
+				<mx:FormItem >
+					<mx:Label text="{orderInfo.billingAddress}"/>
+				</mx:FormItem>
+				<mx:FormItem >
+					<mx:Label text="{orderInfo.billingCity}"/>
+				</mx:FormItem>
+				<mx:FormItem >
+					<mx:Label text="{orderInfo.billingState}"/>
+				</mx:FormItem>
+				<mx:FormItem >
+					<mx:Label text="{orderInfo.billingZip}"/>
+				</mx:FormItem>
+			</mx:VBox>
+			<mx:VBox>
+				<mx:FormItem label="Delivery Date">
+					<mx:Label text="{orderFormat.format(orderInfo.deliveryDate)}"/>
+				</mx:FormItem>
+			</mx:VBox>
+		</mx:HBox>
+	</mx:Form>
+
+	<mx:Button label="Complete Order"/>
+	<mx:Label text="* Clicking this button will bill your credit card and 
+		complete this order"/>
+	<mx:Spacer height="20"/>
+	<mx:Button label="Edit Information" click="back()"/>
+
+</mx:VBox>

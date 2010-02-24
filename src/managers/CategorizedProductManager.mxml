@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:UIComponent xmlns:mx="http://www.adobe.com/2006/mxml"
+	creationComplete="prodByCatRPC.send()">
+
+	<mx:Metadata>
+		[Event(name="catDataLoaded")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.rpc.events.ResultEvent;
+			import valueObjects.Product;
+			import valueObjects.Category;
+
+			private var categorizedProducts:Object = new Object();
+			private var aCats:Array = new Array();
+			private var rawData:XML;
+
+			public function getProdsForCat(catID:int):Array{
+				return categorizedProducts[catID];
+			}
+
+			public function getCats():Array{
+				return aCats;
+			}
+
+			public function getCategorizedProducts():XML{
+				return rawData;
+			}
+	
+			private function prodByCategoryHandler(event:ResultEvent):void
+			{
+				rawData=event.result as XML;
+
+				for each(var c:XML in event.result..category)
+				{
+					var category:Category = new Category(int(c.@catID),String(c.@catName));
+					aCats.push(category);
+					categorizedProducts[c.@catID] = new Array();
+					for each (var p:XML in c..product)
+					{
+						var prod:Product = new Product(Number(p.@catID),
+						String(p.@prodName),
+						Number(p.@unitID),
+						Number(p.@cost),
+						Number(p.@listPrice),
+						String(p.@description),
+						Boolean(p.@isOrganic=="Yes"),
+						Boolean(p.@isLowFat=="Yes"),
+						String(p.@imageName));
+						categorizedProducts[c.@catID].push(prod);
+					}
+				}
+				var e:Event = new Event("catDataLoaded");
+				this.dispatchEvent(e);
+			}
+		]]>
+	</mx:Script>
+
+	<mx:HTTPService id="prodByCatRPC"
+		url="http://www.flexgrocer.com/categorizedProducts.xml"
+		result="prodByCategoryHandler(event)"
+		resultFormat="e4x"/>
+
+
+</mx:UIComponent>

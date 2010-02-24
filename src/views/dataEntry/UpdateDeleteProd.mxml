@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml">
+
+	<mx:Metadata>
+		[Event(name="productUpdate",type="events.ProductEvent")]
+		[Event(name="productDelete",type="events.ProductEvent")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import events.ProductEvent;
+			import flash.net.FileReference;
+			import utils.Util;
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+			import valueObjects.Product;
+			
+			private var win:ConfirmScreen;
+			
+			[Bindable]
+			public var units:ArrayCollection;
+			[Bindable]
+			public var foodColl:XML;
+
+			public function fileBrowse():void
+			{
+				var myFileRef:FileReferenceList = new FileReferenceList();
+				myFileRef.browse();
+			}
+			
+			private function populateForm(event:Event):void
+			{
+				var selectedNode:Object=event.target.selectedItem;
+			
+				if(selectedNode.@prodName != undefined){
+					Util.presetList(unitID,"unitID",selectedNode.@unitID);
+					prodName.text = selectedNode.@prodName;
+					cost.text = selectedNode.@cost;
+					listPrice.text = selectedNode.@listPrice;
+					description.text = selectedNode.@description;
+					isOrganic.selected = Util.yesNoToBoolean(selectedNode.@isOrganic);
+					isLowFat.selected = Util.yesNoToBoolean(selectedNode.@isLowFat);
+					imageName.text = selectedNode.@imageName;
+				} else {
+					resetForm();
+				}
+			}
+			
+			private function resetForm():void{
+				prodName.text = "";
+				unitID.selectedIndex = -1;
+				cost.text="";
+				listPrice.text="";
+				description.text="";
+				isOrganic.selected = false;
+				isLowFat.selected = false;
+				imageName.text = "";
+			}
+
+			private function doProdUpdate():void{
+				var prod:Product=Product.buildProduct(prodModel);
+				broadcastEvent(prod,"productUpdate");
+			}					
+
+			private function doProdDelete():void{
+				var prod:Product = Product.buildProduct(prodModel);
+				broadcastEvent(prod,"productDelete");
+			}
+
+			private function broadcastEvent(prod:Product, type:String):void{
+				var e:ProductEvent = new ProductEvent(prod,type);
+				this.dispatchEvent(e);
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Model id="prodModel">
+		<product>
+			<catID>{productTree.selectedItem.@catID}</catID>
+			<prodName>{prodName.text}</prodName>
+			<unitID>{unitID.selectedItem.unitID}</unitID>
+			<cost>{Number(cost.text)}</cost>
+			<listPrice>{Number(listPrice.text)}</listPrice>
+			<description>{description.text}</description>
+			<isOrganic>{isOrganic.selected}</isOrganic>
+			<isLowFat>{isLowFat.selected}</isLowFat>
+			<imageName>{imageName.text}</imageName>
+		</product>
+	</mx:Model>
+
+	<mx:Tree id="productTree"
+		height="100%" width="200"
+		dataProvider="{foodColl}"
+		labelField="@name"
+		change="populateForm(event)"
+		showRoot="false"/>
+
+	<mx:Form>
+		<mx:FormItem label="Product Name">
+			<mx:TextInput id="prodName"/>
+		</mx:FormItem>
+		<mx:FormItem label="Unit">
+			<mx:List id="unitID"
+				rowCount="4"
+				dataProvider="{units}"
+				labelField="unitName"/>
+		</mx:FormItem>
+		<mx:FormItem label="Cost">
+			<mx:TextInput id="cost"/>
+		</mx:FormItem>
+		<mx:FormItem label="List Price">
+			<mx:TextInput id="listPrice"/>
+		</mx:FormItem>
+		<mx:FormItem label="Description">
+			<mx:RichTextEditor id="description" height="200"/>
+		</mx:FormItem>
+		<mx:FormItem label="Specialties">
+			<mx:CheckBox id="isLowFat" label="Is Low Fat"/>
+			<mx:CheckBox id="isOrganic" label="Is Organic"/>
+		</mx:FormItem>
+		<mx:FormItem label="Image Name" direction="horizontal">
+			<mx:TextInput id="imageName"/>
+			<mx:Button click="fileBrowse()" label="Browse"/>
+		</mx:FormItem>
+		<mx:FormItem>
+			<mx:HBox>
+			<mx:Button label="Update" click="doProdUpdate()"/>
+			<mx:Button label="Delete" click="doProdDelete()"/>
+			</mx:HBox>
+		</mx:FormItem>
+	</mx:Form>
+</mx:HBox>

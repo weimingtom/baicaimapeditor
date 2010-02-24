@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HorizontalList xmlns:mx="http://www.adobe.com/2006/mxml"
+	dataProvider="{cats}"
+	itemRenderer="views.ecomm.TextAndPic"
+	horizontalScrollPolicy="off"
+	click="broadcastCategoryEvent()"
+	creationComplete="initApp()">
+	
+	<mx:Metadata>
+		[Event(name="categorySelect",type="events.CategoryEvent")]
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import valueObjects.Category;
+			import events.CategoryEvent;
+
+			import mx.managers.IBrowserManager;
+			import mx.managers.BrowserManager;
+			import mx.events.BrowserChangeEvent;
+			import mx.utils.URLUtil;
+
+			private var browserMgr:IBrowserManager = BrowserManager.getInstance();
+
+			[Bindable]
+			public var cats:ArrayCollection;
+			[Bindable]
+			public var catSelected:int;
+			
+			private function broadcastCategoryEvent():void{
+				var e:CategoryEvent = new CategoryEvent(this.selectedItem as Category, "categorySelect");
+				this.dispatchEvent(e);
+				updateURL();
+			}
+			
+			private function initApp():void{
+				browserMgr.init("","Flex Grocer");
+				browserMgr.addEventListener(BrowserChangeEvent.BROWSER_URL_CHANGE, parseURL);
+			}
+
+			private function updateURL():void{
+				var o:Object = new Object();
+				o.category=selectedIndex;
+				var s:String = URLUtil.objectToString(o);
+				browserMgr.setFragment(s);
+				setTitle();
+			}
+
+			private function parseURL(event:BrowserChangeEvent=null):void{
+				var o:Object = URLUtil.stringToObject(browserMgr.fragment);
+				if(!cats){
+					callLater(parseURL);
+					return;
+				}
+				if(o.category != null){
+					selectedIndex = o.category;
+					setTitle();
+					broadcastCategoryEvent();
+				}
+			}
+
+			private function setTitle():void{
+				var title:String = "Flex Grocer - " + (selectedItem as Category).catName
+				browserMgr.setTitle(title);
+			}
+		]]>
+	</mx:Script>
+</mx:HorizontalList>

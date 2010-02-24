@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off">
+
+	<mx:Image source="{'assets/' +data.product.imageName}"/>
+	<mx:Text text="{data.product.prodName}" width="100%" height="100%"/>
+			
+</mx:HBox>

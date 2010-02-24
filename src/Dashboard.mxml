@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:v="views.dashboard.*"
+	layout="horizontal"
+	creationComplete="init()">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.events.FaultEvent;
+
+			[Bindable]
+			private var categories:ArrayCollection=new ArrayCollection();
+
+			private function catHandler(event:ResultEvent):void{
+				categories = event.result.catalog.category;
+				var catObj:Object = new Object();
+				catObj.name = "All";
+				catObj.categoryID = 0;
+				categories.addItemAt(catObj, 0);
+				catCombo.selectedIndex = 0;
+			}
+
+			private function salesRPCResult(event:ResultEvent):void{
+				sales.dp = event.result.salesData.dailySales;
+			}
+
+			private function typeRPCResult(event:ResultEvent):void{
+				type.dp = event.result.categorySalesData.categorySales;
+			}
+
+			private function compRPCResult(event:ResultEvent):void{
+				comp.dp = event.result.salesData.dailySales;
+			}
+
+			private function showFault(event:FaultEvent):void{
+				trace(event.fault.faultCode+":"+event.fault.faultString);
+			}
+
+			private function getData():void{
+				salesRPC.send();
+				typeRPC.send();
+				compRPC.send();
+			}
+
+			private function init():void{
+				startDate.selectedDate = new Date(2006,3,1);
+				endDate.selectedDate = new Date(2006,4,1);
+				catRPC.send();
+				getData();
+			}
+
+		]]>
+	</mx:Script>
+
+	<mx:HTTPService id="salesRPC"
+		url="http://www.flexgrocer.com/rawSalesData.xml"
+		result="salesRPCResult(event)"
+		fault="showFault(event)"/>
+	<mx:HTTPService id="typeRPC"
+		url="http://www.flexgrocer.com/categorySalesData.xml"
+		result="typeRPCResult(event)"
+		fault="showFault(event)"/>
+	<mx:HTTPService id="compRPC"
+		url="http://www.flexgrocer.com/salesData.xml"
+		result="compRPCResult(event)"
+		fault="showFault(event)"/>
+
+	<mx:HTTPService id="catRPC"
+		url="http://www.flexgrocer.com/category.xml"
+		result="catHandler(event)"/>
+
+	<mx:ApplicationControlBar dock="true">
+		<mx:Label text="Start Date"/>
+		<mx:DateField id="startDate"/>
+		<mx:Label text="End Date"/>
+		<mx:DateField id="endDate"/>
+		<mx:Spacer width="100%"/>
+		<mx:ComboBox id="catCombo"
+			dataProvider="{categories}"
+			labelField = "name"/>
+		<mx:Spacer width="100%"/>
+		<mx:RadioButtonGroup id="grossOrNetGroup"/>
+		<mx:RadioButton id="gross"
+			groupName="grossOrNetGroup"
+			label="Gross Sales"
+			data="GROSS"
+			selected="true"/>
+		<mx:RadioButton id="net"
+			groupName="grossOrNetGroup"
+			label="Net Sales"
+			data="NET"/>
+	</mx:ApplicationControlBar>
+
+	<mx:states>
+		<mx:State name="fullSales">
+			<mx:SetProperty target="{rightCharts}"
+				name="width" value="0"/>
+			<mx:SetProperty target="{rightCharts}"
+				name="height" value="0"/>
+		</mx:State>
+
+		<mx:State name="fullType">
+			<mx:SetProperty target="{sales}"
+				name="width"
+				value="0"/>
+			<mx:SetProperty target="{sales}"
+				name="height"
+				value="0"/>
+			<mx:SetProperty target="{comp}"
+				name="width"
+				value="0"/>
+			<mx:SetProperty target="{comp}"
+				name="height"
+				value="0"/>
+		</mx:State>
+		<mx:State name="fullComp">
+			<mx:SetProperty target="{sales}"
+				name="width"
+				value="0"/>
+			<mx:SetProperty target="{sales}"
+				name="height"
+				value="0"/>
+			<mx:SetProperty target="{type}"
+				name="width"
+				value="0"/>
+			<mx:SetProperty target="{type}"
+				name="height"
+				value="0"/>
+		</mx:State>
+	</mx:states>
+
+	<v:ChartPod id="sales"
+		width="100%" height="100%"
+		title="Sales Chart"
+		maximize="this.currentState='fullSales'"
+		restore="this.currentState=''">
+	</v:ChartPod>
+	<mx:VBox id="rightCharts"
+		width="100%" height="100%" >
+		<v:ChartPod id="type"
+			width="100%" height="100%"
+			title="Category Chart"
+			maximize="this.currentState='fullType'"
+			restore="this.currentState=''">
+		</v:ChartPod>
+		<v:ChartPod id="comp"
+			width="100%" height="100%"
+			title=" Comparison Chart"
+			maximize="this.currentState='fullComp'"
+			restore="this.currentState=''">
+		</v:ChartPod>
+	</mx:VBox>
+</mx:Application>

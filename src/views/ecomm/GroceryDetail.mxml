@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	mouseMove="dragIt(this,groceryItem,event,'cartFormat')">
+	
+	<mx:Metadata>
+		[Event(name="itemAdded",type="events.ProductEvent")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import events.ProductEvent;
+			import valueObjects.Product;
+			import mx.managers.DragManager;
+			import mx.core.DragSource;
+
+			[Bindable]
+			public var groceryItem:Product;
+			
+			private function itemAdded(prod:Product):void{
+				var e:ProductEvent = new ProductEvent(prod,"itemAdded",true);
+				dispatchEvent(e);
+			}
+						
+			private function toggleState(state:String):void{
+				if(state == "closed"){
+					this.currentState = "";
+				} else {
+					this.currentState = "expanded";
+				}
+			}
+			
+			private function dragIt( initiator:Canvas, dsData:Product, event:MouseEvent, format:String ):void
+			{
+				var imageProxy:Image=new Image();
+				imageProxy.load("assets/"+groceryItem.imageName);
+				imageProxy.height=80;
+				imageProxy.width=80;
+				var ds:DragSource=new DragSource();
+				ds.addData(dsData,format);
+				DragManager.doDrag(initiator,ds,event,imageProxy);
+			}
+			
+		]]>
+	</mx:Script>
+
+	<mx:CurrencyFormatter id="curFormat"
+		currencySymbol="$"
+		precision="2"/>
+
+	<mx:states>
+		<mx:State name="expanded">
+			<mx:AddChild>
+				<mx:VBox width="100%" x="200">
+					<mx:Text text="{groceryItem.description}"
+						width="50%"/>
+					<mx:Label text="Certified Organic"
+						visible="{groceryItem.isOrganic}"/>
+					<mx:Label text="Low Fat"
+						x="100" y="60"
+						visible="{groceryItem.isLowFat}"/>
+				</mx:VBox>
+			</mx:AddChild>
+			<mx:SetProperty target="{add}"
+				name="visible"
+				value="true"/>
+		</mx:State>
+	</mx:states>
+
+	<mx:Canvas mouseOver="toggleState('open')"
+		mouseOut="toggleState('closed')">
+		<mx:Image id="pic"
+			source="{'assets/'+groceryItem.imageName}"/>
+	
+		<mx:Label id="prodName"
+			text="{groceryItem.prodName}"
+			x="100" y="0"/>
+			
+		<mx:Label id="price"
+			text="{curFormat.format(groceryItem.listPrice)}"
+			x="100"
+			y="20"/>
+	
+		<mx:Button id="add"
+			label="Add To Cart"
+			click="itemAdded(groceryItem)"
+			x="100" y="40"
+			visible="false"/>
+	</mx:Canvas>
+</mx:Canvas>

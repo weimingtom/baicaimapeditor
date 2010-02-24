@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml">
+
+	<mx:Metadata>
+		[Event(name="productAdded",type="events.ProductEvent")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import events.ProductEvent;
+			import valueObjects.Product;
+			import mx.collections.ArrayCollection;
+			import flash.net.FileReference;
+			import mx.managers.PopUpManager;
+			
+			private var win:ConfirmScreen;
+			[Bindable]
+			public var units:ArrayCollection;
+			[Bindable]
+			public var cats:ArrayCollection;
+			
+			private function doProdAdd():void
+			{
+				var pattern:RegExp = new RegExp(".\\.[Gg][Ii][Ff]");
+				if(prodModel.imageName.search(pattern) != -1){
+				var prod:Product = Product.buildProduct(prodModel);
+				var o:ProductEvent = new ProductEvent(prod,'productAdded');
+				this.dispatchEvent(o);
+				}else{
+				mx.controls.Alert.show("Please attach a GIF file");
+				}
+			}
+			
+			private function fileBrowse():void{
+				var myFileRef:FileReferenceList = new FileReferenceList();
+				myFileRef.browse();
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Model id="prodModel">
+		<product>
+			<catID>{int(catID.selectedItem.catID)}</catID>
+			<prodName>{prodName.text}</prodName>
+			<unitID>{unitID.selectedItem.unitID}</unitID>
+			<cost>{Number(cost.text)}</cost>
+			<listPrice>{Number(listPrice.text)}</listPrice>
+			<description>{description.text}</description>
+			<isOrganic>{isOrganic.selected}</isOrganic>
+			<isLowFat>{isLowFat.selected}</isLowFat>
+			<imageName>{imageName.text}</imageName>
+		</product>
+	</mx:Model>
+
+	<mx:Form>
+		<mx:FormItem label="Category">
+			<mx:ComboBox id="catID" 
+				dataProvider="{cats}" 
+				labelField="catName"/>
+		</mx:FormItem>
+		<mx:FormItem label="Product Name">
+			<mx:TextInput id="prodName"/>
+		</mx:FormItem>
+		<mx:FormItem label="Unit">
+			<mx:ComboBox id="unitID" 
+				dataProvider="{units}" 
+				labelField="unitName"/>
+		</mx:FormItem>
+		<mx:FormItem label="Cost">
+			<mx:TextInput id="cost" />
+		</mx:FormItem>
+		<mx:FormItem label="List Price">
+			<mx:TextInput id="listPrice" />
+		</mx:FormItem>
+		<mx:FormItem label="Description">
+			<mx:RichTextEditor id="description" height="200"/>
+		</mx:FormItem>
+		<mx:FormItem label="Organic">
+			<mx:CheckBox id="isOrganic"/>
+		</mx:FormItem>
+		<mx:FormItem label="Low Fat">
+			<mx:CheckBox id="isLowFat"/>
+		</mx:FormItem>
+		<mx:FormItem label="Image Name" direction="horizontal">
+			<mx:TextInput id="imageName"/>
+			<mx:Button click="fileBrowse()" label="Browse"/>
+		</mx:FormItem>
+		<mx:FormItem>
+			<mx:Button label="Add Product" click="doProdAdd()"/>
+		</mx:FormItem>
+	</mx:Form>
+	
+</mx:VBox>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+	layout="vertical"
+	close="PopUpManager.removePopUp(this)"
+	showCloseButton="true">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			import valueObjects.Product;
+
+			[Bindable]
+			public var prod:Product;
+		]]>
+	</mx:Script>	
+
+	<mx:Form>
+		<mx:FormItem label="Category ID">
+			<mx:Label text="{prod.catID}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Product Name">
+			<mx:Label text="{prod.prodName}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Unit">
+			<mx:Label text="{prod.unitID}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Cost">
+			<mx:Label text="{prod.cost}"/>
+		</mx:FormItem>
+		<mx:FormItem label="List Price">
+			<mx:Label text="{prod.listPrice}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Description">
+			<mx:Text htmlText="{prod.description}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Organic">
+			<mx:Label text="{prod.isOrganic}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Low Fat">
+			<mx:Label text="{prod.isLowFat}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Image Name">
+			<mx:Label text="{prod.imageName}"/>
+		</mx:FormItem>
+	</mx:Form>
+</mx:TitleWindow>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:v="views.ecomm.*">
+	
+	<mx:Metadata>
+		[Event(name="itemAdded",type="events.ProductEvent")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import events.ProductEvent;
+			import mx.collections.ArrayCollection;
+
+			[Bindable]
+			public var prodByCategory:ArrayCollection;
+		]]>
+	</mx:Script>
+
+	<mx:Repeater id="foodRepeater"
+		width="100%" height="100%"
+		dataProvider="{prodByCategory}">
+		<v:GroceryDetail id="prod"
+			width="80%"
+			groceryItem="{foodRepeater.currentItem}"/>
+	</mx:Repeater>
+
+</mx:VBox>

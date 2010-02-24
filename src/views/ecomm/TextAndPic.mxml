@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="100" height="75"
+	horizontalAlign="center">
+	
+	<mx:Image source="{'assets/nav_'+data.catName+'.jpg'}"
+		height="31" width="93"/>
+	<mx:Label text="{data.catName}" width="100%"/>
+	
+</mx:VBox>

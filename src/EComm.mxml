@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+	layout="absolute"
+	xmlns:v="views.ecomm.*"
+	xmlns:m="managers.*">
+
+	<mx:Script source="as/ecomm.as"/>
+
+	<mx:CurrencyFormatter id="cartFormat"
+		currencySymbol="$"
+		precision="2"/>
+
+	<mx:states>
+		<mx:State name="cartView">
+			<mx:SetProperty target="{prodTile}" name="width" value="0"/>
+			<mx:SetProperty target="{prodTile}" name="height" value="0"/>
+			<mx:SetProperty target="{cartBox}" name="width" value="100%"/>
+			<mx:AddChild relativeTo="{cartBox}" position="lastChild">
+				<v:Cart id="shoppingCart"
+					width="100%"
+					cart="{cart}"
+					productRemoved="deleteProd(event.product)"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{cartBox}" position="lastChild">
+				<mx:LinkButton label="Continue Shopping" click="this.currentState=''"/>
+			</mx:AddChild>
+			<mx:RemoveChild target="{linkbutton1}"/>
+			<mx:RemoveChild target="{cartView}"/>
+		</mx:State>
+	</mx:states>
+	<mx:ApplicationControlBar dock="true" width="100%" height="90">
+		<mx:Canvas width="100%" height="100%"
+			horizontalScrollPolicy="off"
+			verticalScrollPolicy="off">
+			<mx:Label x="0" y="0" text="Flex" click="ecommNav.selectedChild=homePage"/>
+			<mx:Label x="0" y="41" text="GROCER" click="ecommNav.selectedChild=homePage"/>
+			<v:CategoryView id="catView"
+				width="600"
+				left="100"
+				cats="{categories}"
+				categorySelect="displayProdByCategory(event)"
+				click="showProducts()"/>
+			<mx:Button label="View Cart"
+				id="btnViewCart"
+				right="90" y="0"
+				click="showCart()"
+				enabled="false"/>
+			<mx:Button label="Checkout" id="btnCheckout" right="10" y="0" click="ecommNav.selectedChild=checkout"/>
+		</mx:Canvas>
+	</mx:ApplicationControlBar>
+	<mx:ViewStack id="ecommNav" width="100%" height="100%">
+		<v:HomePage id="homePage"/>
+		<mx:HBox x="0" y="0" width="100%" height="100%" id="bodyBox">
+			<v:FoodList id="prodTile"
+				width="100%" height="100%"
+				prodByCategory="{prodByCategory}"
+				itemAdded="addToCart(event.product)"/>
+			<mx:VBox height="100%" id="cartBox">
+					<mx:Label text="Your Cart Total: {cartFormat.format(cart.total)}"/>
+				<mx:LinkButton label="View Cart" click="this.currentState='cartView'" id="linkbutton1"/>
+				<mx:List id="cartView"
+					dataProvider="{cart.aItems}"
+					width="100%"
+					dragEnter="doDragEnter(event,'cartFormat')"
+					dragDrop="doDragDrop(event,'cartFormat')"/>
+			</mx:VBox>
+		</mx:HBox>
+		<v:Checkout id="checkout" width="100%" height="100%" />
+	</mx:ViewStack>
+	<mx:Label text="(c) 2006, FlexGrocer" bottom="10" right="10"/>
+
+	<m:CategorizedProductManager id="catProds"
+		catDataLoaded="categorizedProductDataLoaded()" />
+
+</mx:Application>

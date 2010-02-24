@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:v="views.dashboard.*" 
+	xmlns:d="views.dataEntry.*" 
+	layout="absolute">
+	<mx:XMLList id="mXml" xmlns="">
+           	<item label="File">
+                <node label="New" data="new"/>
+                <node label="Open" data="open"/>
+                <node label="Close" data="close"/>
+                <node label="Save" data="save"/>
+                <node label="Save As" data="saveas"/>
+                <node type="separator"/>
+                <node label="Quit" data="logout"/>
+             </item>
+             <item label="Edit">
+                <node label="Undo" data="undo"/>
+                <node type="separator"/>
+                <node label="Cut" data="cut"/>
+                <node label="Copy" data="copy"/>
+                <node label="Paste" data="paste"/>
+             </item>
+             <item label="Tool">
+                <node label="Pen" data="pen"/>
+                <node label="Select" data="select"/>
+                <node label="Move" data="move"/>
+             </item>
+             <item label="Help">
+                <node label="Help" data="help"/>
+                <node label="About" data="about"/>
+             </item>
+	</mx:XMLList>
+	
+	<mx:Script>
+		<![CDATA[
+		
+			import flash.display.Loader;
+			import flash.display.Bitmap;
+			import flash.events.Event;
+			import flash.events.EventDispatcher;
+			import flash.net.URLRequest;
+			
+			import mx.core.UIComponent;
+			
+			import mx.controls.Button;  
+            private function clickHandler():void {  
+                var bt:Button = new Button();  
+                addChild(bt);  
+            }  
+            
+            private var map : Bitmap;
+            private var showRange : Bitmap;
+            private static const DEFAULT_POINT : Point = new Point(0,0);
+            
+			public function loadpic(comp : UIComponent) : void {
+				var url : String = './assets/22213312.png';
+				var loader : Loader = new Loader();
+				var m_request : URLRequest = new URLRequest(url);
+				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
+				loader.load(m_request);
+				function onComplete(event : Event) : void {
+					map = Bitmap(event.target.content);
+					var uc : UIComponent = new UIComponent();    
+					showRange = new Bitmap(new BitmapData(mapbrowser.width, mapbrowser.height));
+					uc.addChild(showRange);  
+					uc.width = map.width;
+					uc.height = map.height;
+					comp.addChild(uc);
+					copyPixel();
+				}
+			}
+			
+			private function copyPixel() : void {
+				var rect : Rectangle = new Rectangle(
+								mapbrowser.horizontalScrollPosition, 
+								mapbrowser.verticalScrollPosition, 
+								mapbrowser.width, mapbrowser.height);
+				showRange.bitmapData.copyPixels(map.bitmapData, rect, DEFAULT_POINT);
+				showRange.x = mapbrowser.horizontalScrollPosition;
+				showRange.y = mapbrowser.verticalScrollPosition;
+			}
+			
+			private function mm() : void {
+				mappos.text = "("+mouseX+","+mouseY+")";
+			}
+			
+			private function scrollMove() : void {
+				topleftpos.text = "("+mapbrowser.horizontalScrollPosition + "," + mapbrowser.verticalScrollPosition+")";
+				copyPixel();
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="100%">
+	
+	   <mx:Canvas width="100%">
+		    <mx:MenuBar labelField="@label" height="30" id="myMenu" width="100%" dataProvider="{mXml}">
+		    
+		    </mx:MenuBar>
+	   </mx:Canvas>
+	   
+	   <mx:HDividedBox width="100%" height="100%">
+			<mx:VDividedBox id="leftPane"
+				width="40%" height="100%" >
+				<v:ResBrowserPod id="resource"
+					width="100%" height="100%"
+					title="Resource Browser">
+				</v:ResBrowserPod>
+				<mx:TabNavigator width="100%" height="40%">
+					<d:LayerConsole id="layeredit"
+						width="100%" height="100%"
+						label="Map Layer Editor">
+					</d:LayerConsole>
+					<d:MapConsole id="mapedit"
+						width="100%" height="100%"
+						label="Map Editor">
+					</d:MapConsole>
+					<d:ResConsole id="resedit"
+						width="100%" height="100%"
+						label="Resource Editor">
+					</d:ResConsole>
+				</mx:TabNavigator>
+			</mx:VDividedBox>
+			<v:MapBrowserPod id="mapbrowser"
+				width="100%" height="100%"
+				title="Map Browser" mouseMove="mm()" scroll="scrollMove()">
+				<mx:ControlBar>
+					<mx:RadioButtonGroup id="tools"/>
+					<mx:RadioButton label="Pen" groupName="tools" selected="true"/>
+					<mx:RadioButton label="Select" groupName="tools"/>
+					<mx:RadioButton label="Move" groupName="tools"/>
+					<mx:Button id="btData"
+							label="load map" click="loadpic(mapbrowser)"/>
+					<mx:Button id="btGraph"
+							label="load res" click="loadpic(resource)"/>
+					<mx:Label text="(0,0)" id="topleftpos"/>
+					<mx:Label text="(0,0)" id="mappos"/>
+				</mx:ControlBar>
+			</v:MapBrowserPod>
+	   </mx:HDividedBox>
+	   
+	</mx:VBox>
+</mx:Application>

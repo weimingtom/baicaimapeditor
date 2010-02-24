@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" >
+
+	<mx:Metadata>
+		[Event(name="ccInfoReturn",type="events.ObjectDataEvent")]
+		[Event(name="back",type="events.ObjectDataEvent")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import events.ObjectDataEvent;
+			import mx.events.ValidationResultEvent;
+			
+			private var vResult:ValidationResultEvent;
+
+			private function process():void{
+				vResult = ccV.validate();  
+
+			 	if (vResult.type==ValidationResultEvent.VALID) {
+					var o:ObjectDataEvent=new ObjectDataEvent("ccInfoReturn",checkoutInfo);
+					dispatchEvent(o);	
+			 	} else {
+			 	
+			 	}
+			}
+			private function back():void{
+				var o:ObjectDataEvent=new ObjectDataEvent("back",checkoutInfo);
+				dispatchEvent(o);	
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Model id="checkoutInfo">
+		<cardInfo>
+			<cardType>{cardType.selectedItem.data}</cardType>
+			<cardNumber>{cardNumber.text}</cardNumber>
+			<cardExpirationMonth>{cardExpirationMonth.selectedItem}</cardExpirationMonth>
+			<cardExpirationYear>{cardExpirationYear.selectedItem}</cardExpirationYear>
+		</cardInfo>
+	</mx:Model>
+
+	<mx:CreditCardValidator id="ccV" 
+		cardTypeSource="{cardType.selectedItem}" 
+		cardTypeProperty="data" 
+		cardNumberSource="{cardNumber}" 
+		cardNumberProperty="text"/> 
+
+	<mx:Form width="100%">
+	<mx:Label text="Checkout Page 2 of 3"/>
+		<mx:FormItem label="Credit Card Type">    
+			<mx:ComboBox id="cardType">
+				<mx:dataProvider>
+					<mx:Object label="American Express" data="American Express"/>
+					<mx:Object label="Diners Club" data="Diners Club"/>
+					<mx:Object label="Discover"	data="Discover"/>
+					<mx:Object label="MasterCard" data="MasterCard"/>
+					<mx:Object label="Visa" data="Visa"/>
+				</mx:dataProvider>
+			</mx:ComboBox>
+		</mx:FormItem>
+		<mx:FormItem label="Card Number">
+			<mx:TextInput id="cardNumber"/>
+		</mx:FormItem>
+		<mx:FormItem label="Expiration" direction="horizontal">
+			<mx:ComboBox id="cardExpirationMonth">
+				<mx:dataProvider>
+					<mx:String>January</mx:String>
+					<mx:String>February</mx:String>
+					<mx:String>March</mx:String>
+					<mx:String>April</mx:String>
+					<mx:String>May</mx:String>
+					<mx:String>June</mx:String>
+					<mx:String>July</mx:String>
+					<mx:String>August</mx:String>
+					<mx:String>September</mx:String>
+					<mx:String>October</mx:String>
+					<mx:String>November</mx:String>
+					<mx:String>December</mx:String>
+				</mx:dataProvider>
+			</mx:ComboBox>
+			<mx:ComboBox id="cardExpirationYear" width="65">
+				<mx:dataProvider>
+					<mx:String>2006</mx:String>
+					<mx:String>2007</mx:String>
+					<mx:String>2008</mx:String>
+					<mx:String>2009</mx:String>
+					<mx:String>2010</mx:String>
+					<mx:String>2011</mx:String>
+				</mx:dataProvider>
+			</mx:ComboBox>
+		</mx:FormItem>
+		
+	</mx:Form>
+	<mx:Button label="Back" click="back()" x="500" y="230" id="prev"/>
+	<mx:Button label="Continue" click="process()"  id="next"  x="560" y="230" />
+
+</mx:Canvas>

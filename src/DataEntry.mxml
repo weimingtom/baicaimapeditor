@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+	layout="vertical"
+	creationComplete="unitRPC.send()"
+	xmlns:v="views.dataEntry.*"
+	xmlns:m="managers.*">
+
+	<mx:Script>
+		<![CDATA[
+			import views.dataEntry.ConfirmScreen;
+			import mx.rpc.events.ResultEvent;
+			import mx.collections.ArrayCollection;
+			import valueObjects.Product;
+			import mx.managers.PopUpManager;
+	
+			[Bindable]
+			private var units:ArrayCollection=new ArrayCollection();
+	
+			[Bindable]
+			private var categories:ArrayCollection;
+	
+			[Bindable]
+			private var foodColl:XML;
+
+			private var win:ConfirmScreen;
+	
+			private function unitRPCResult(event:ResultEvent):void
+			{
+				units=event.result.allUnits.unit;
+			}
+			
+			private function categorizedProductDataLoaded():void{
+				categories=new ArrayCollection(prodMgr.getCats());
+				foodColl=prodMgr.getCategorizedProducts();
+			}
+
+			private function showPopUp(prod:Product,title:String):void{
+				win =ConfirmScreen(PopUpManager.createPopUp(this,ConfirmScreen,true));
+				win.prod = prod;
+				win.title = title;
+			}
+		]]>
+	</mx:Script>
+
+	<mx:HTTPService id="unitRPC"
+		url="http://www.flexgrocer.com/units.xml"
+		result="unitRPCResult(event)"/>
+
+	<mx:TabNavigator width="700" height="600">
+		<v:UpdateDeleteProd
+			units="{units}"
+			foodColl="{foodColl}"
+			productUpdate="showPopUp(event.product,'Product Updated')"
+			productDelete="showPopUp(event.product,'Product Deleted')"
+			label="Update/Delete Product"/>
+
+		<v:AddProduct
+			cats="{categories}"
+			units="{units}"
+			productAdded="showPopUp(event.product,'Product Added')"
+			label="Add Product"/>
+	</mx:TabNavigator>	
+
+	<m:CategorizedProductManager id="prodMgr"
+		catDataLoaded="categorizedProductDataLoaded()"/>
+
+</mx:Application>
