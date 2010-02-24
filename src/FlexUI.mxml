@@ -71,6 +71,10 @@
 			}
 			
 			private function copyPixel() : void {
+//				m = new Matrix(1, 0, 0, 1, d.pos.x - p.pos.x, d.pos.y - p.pos.y);
+//				r = new Rectangle(d.pos.x, d.pos.y, data.widthTile, data.heightTile);
+//				dataCase.draw(p.source, m, null, null, r);
+//				showRange.bitmapData.draw(map.bitmapData, new Matrix
 				var rect : Rectangle = new Rectangle(
 								mapbrowser.horizontalScrollPosition, 
 								mapbrowser.verticalScrollPosition, 
@@ -80,13 +84,70 @@
 				showRange.y = mapbrowser.verticalScrollPosition;
 			}
 			
+			private function drawLine(fromX : int = 0, fromY : int = 0) : void {
+				var lineColor : uint = 0xaaffbb;
+//				version 1
+//				for(var x : int = 0; x < mapbrowser.width; x++) {
+//					for(var y : int = 0; y < mapbrowser.height; y++) {
+//						if(x % 32 == 0 || y % 32 == 0) {
+//							showRange.bitmapData.setPixel(x, y, 0xffffbb);
+//						}
+//					}
+//				}
+//				version 2
+//				for(var x : int = 0; x < mapbrowser.width; x+=32) {
+//					for(var y : int = 0; y < mapbrowser.height; y++) {
+//						showRange.bitmapData.setPixel(x, y, 0xffffbb);
+//					}
+//				}
+//				for(y = 0; y < mapbrowser.height; y+=32) {
+//					for(x = 0; x < mapbrowser.width; x++) {
+//						showRange.bitmapData.setPixel(x, y, 0xffffbb);
+//					}
+//				}
+//				version 3
+				var frameWidth : int = 64;
+				var frameHeight : int = 32;
+				fromX = frameWidth - mapbrowser.horizontalScrollPosition % frameWidth;
+				fromY = frameHeight - mapbrowser.verticalScrollPosition % frameHeight;
+				for(var y : int = fromY; y < mapbrowser.height; y+=frameHeight) {
+					showRange.bitmapData.fillRect(new Rectangle(0, y, mapbrowser.width, 1), lineColor);
+				}
+				for(var x : int = fromX; x < mapbrowser.width; x+=frameWidth) {
+					showRange.bitmapData.fillRect(new Rectangle(x, 0, 1, mapbrowser.height), lineColor);
+				}
+			}
+			
+			
+			
 			private function mm() : void {
-				mappos.text = "("+mouseX+","+mouseY+")";
+				var localPos : Point = mapbrowser.globalToLocal(new Point(mouseX, mouseY));
+				var paneXOffset : int = 10;
+				var paneYOffset : int = 30;
+				var logicX : int = (localPos.x - paneXOffset) / cellWidth;
+				var logicY : int = (localPos.y - paneYOffset) / cellHeight;
+				mappos.text = "("+logicX+","+logicY+")";
+//				drawFocuss(logicX, logicY);
+			}
+			
+			private var cellWidth : int = 32; 
+			private var cellHeight : int = 32; 
+			private function drawFocuss(logicX : int, logicY : int) : void {
+				var focusColor : uint = 0xaaffbb;
+				var fromX : int = logicX * cellWidth;
+				var fromY : int = logicY * cellHeight;
+				var focusWidth : int = 3;
+				showRange.bitmapData.fillRect(new Rectangle(fromX, fromY, cellWidth, focusWidth), focusColor);
+				showRange.bitmapData.fillRect(new Rectangle(fromX, fromY, focusWidth, cellHeight), focusColor);
+				showRange.bitmapData.fillRect(new Rectangle(fromX + cellWidth - focusWidth, fromY, focusWidth, cellHeight), focusColor);
+				showRange.bitmapData.fillRect(new Rectangle(fromX, fromY + cellHeight - focusWidth, cellWidth, focusWidth), focusColor);
 			}
 			
 			private function scrollMove() : void {
-				topleftpos.text = "("+mapbrowser.horizontalScrollPosition + "," + mapbrowser.verticalScrollPosition+")";
+				topleftpos.text = "("+mapbrowser.horizontalScrollPosition + 
+					"," + mapbrowser.verticalScrollPosition+")";
 				copyPixel();
+				drawLine();
 			}
 		]]>
 	</mx:Script>
@@ -129,10 +190,10 @@
 					<mx:RadioButton label="Pen" groupName="tools" selected="true"/>
 					<mx:RadioButton label="Select" groupName="tools"/>
 					<mx:RadioButton label="Move" groupName="tools"/>
-					<mx:Button id="btData"
+					<mx:Button
 							label="load map" click="loadpic(mapbrowser)"/>
-					<mx:Button id="btGraph"
-							label="load res" click="loadpic(resource)"/>
+					<mx:Button
+							label="draw line" click="drawLine()"/>
 					<mx:Label text="(0,0)" id="topleftpos"/>
 					<mx:Label text="(0,0)" id="mappos"/>
 				</mx:ControlBar>
