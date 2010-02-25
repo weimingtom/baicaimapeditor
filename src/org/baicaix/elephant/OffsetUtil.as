@@ -46,8 +46,8 @@ package org.baicaix.elephant {
 			var pixelOffset : Point = getPixelOffset();
 			var fromX : int = range.left * cellWidth + pixelOffset.x;
 			var fromY : int = range.top * cellHeight + pixelOffset.y;
-			var rangeWidth : int = (range.width + 1) * cellWidth;
-			var rangeHeight : int = (range.height + 1) * cellHeight;
+			var rangeWidth : int = range.width * cellWidth;
+			var rangeHeight : int = range.height * cellHeight;
 			return new Rectangle(fromX, fromY, rangeWidth, rangeHeight);
 		}
 		

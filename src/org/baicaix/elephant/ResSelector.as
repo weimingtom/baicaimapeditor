@@ -28,7 +28,7 @@ package org.baicaix.elephant {
 		
 		protected var _startPos : Point;
 		protected var _endPos : Point;
-		protected var _selectRange : Rectangle;
+		protected var _selectedRange : Rectangle;
 		protected var _oldRange : Rectangle;
 		
 		private var _isInSelect : Boolean;
@@ -49,9 +49,9 @@ package org.baicaix.elephant {
 		}
 
 		protected function selectRange(range : Rectangle) : void {
-			_oldRange = _selectRange;
-			_selectRange = range;
-			if(_oldRange == null || _selectRange.equals(_oldRange)) return;
+			_oldRange = _selectedRange;
+			_selectedRange = range;
+			if(_oldRange == null || _selectedRange.equals(_oldRange)) return;
 			clearOldRange();
 			focusRange();
 		}
@@ -61,7 +61,7 @@ package org.baicaix.elephant {
 		}
 
 		private function focusRange() : void {
-			dispatchEvent(new RangeEvent(_selectRange, RangeEvent.FOCUS_RANGE));
+			dispatchEvent(new RangeEvent(_selectedRange, RangeEvent.FOCUS_RANGE));
 		}
 		
 		protected function onMouseDown(event : MouseEvent) : void {
@@ -96,9 +96,13 @@ package org.baicaix.elephant {
 		private function buildRectangle() : Rectangle {
 			var fromX : int = Math.min(_startPos.x, _endPos.x);
 			var fromY : int = Math.min(_startPos.y, _endPos.y);
-			var width : int = Math.max(_startPos.x, _endPos.x) - fromX;
-			var height : int = Math.max(_startPos.y, _endPos.y) - fromY;
+			var width : int = Math.max(_startPos.x, _endPos.x) - fromX + 1;
+			var height : int = Math.max(_startPos.y, _endPos.y) - fromY + 1;
 			return new Rectangle(fromX, fromY, width, height);
+		}
+		
+		public function get selectedRange() : Rectangle {
+			return _selectedRange;
 		}
 	}
 }

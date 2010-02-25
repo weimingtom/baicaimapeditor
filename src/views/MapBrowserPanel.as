@@ -104,11 +104,11 @@ package views {
 				pastePos = new Point(pastePixelRange.x, pastePixelRange.y);
 				copyPixels(src, copyRange, pastePos);
 				//right
-				copyRange = new Rectangle(copyPixelRange.x + copyPixelRange.width - focusWidth, copyPixelRange.y, focusWidth, copyPixelRange.height + 1);
+				copyRange = new Rectangle(copyPixelRange.x + copyPixelRange.width - focusWidth, copyPixelRange.y, focusWidth, copyPixelRange.height);
 				pastePos = new Point(pastePixelRange.right - focusWidth, pastePixelRange.top);
 				copyPixels(src, copyRange, pastePos);
 				//bottom
-				copyRange = new Rectangle(copyPixelRange.x, copyPixelRange.y + copyPixelRange.height - focusWidth, copyPixelRange.width + 1, focusWidth);
+				copyRange = new Rectangle(copyPixelRange.x, copyPixelRange.y + copyPixelRange.height - focusWidth, copyPixelRange.width, focusWidth);
 				pastePos = new Point(pastePixelRange.left, pastePixelRange.bottom - focusWidth);
 				copyPixels(src, copyRange, pastePos);
 			}
