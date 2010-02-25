@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel
+<v:ResBrowserPanel 
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:v="views.*" 
 	borderStyle="solid">
-	
-</mx:Panel>
+</v:ResBrowserPanel>

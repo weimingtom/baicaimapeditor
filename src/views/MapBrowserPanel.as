@@ -22,8 +22,8 @@ package views {
 		private var _resourceBitmap : Bitmap;
 	    private var _showRangeBitmap : Bitmap;
 	    private var selector : AbsSelector;
-	    private var _offsetUtil : OffsetUtil;
-	    private var uc : UIComponent;
+	    protected var _offsetUtil : OffsetUtil;
+	    protected var uc : UIComponent;
 	    private static const DEFAULT_POINT : Point = new Point(0,0);
 		
 		public function MapBrowserPanel() {
@@ -32,6 +32,7 @@ package views {
 			
 			//only for test
 			copyRange = new Rectangle(0, 0, 2, 3);
+			_offsetUtil = new OffsetUtil(this);
 			
 			addEventListener(ScrollEvent.SCROLL, scrollMove);
 		}
@@ -40,8 +41,6 @@ package views {
         	_resourceBitmap = value;
         	uc.width = _resourceBitmap.width;
 			uc.height = _resourceBitmap.height; 
-			
-			_offsetUtil = new OffsetUtil(this);
 			
 			selector = new MapSelector(this, _offsetUtil);  
 			selector.addEventListener(RangeEvent.CLEAR_RANGE, clearRange);

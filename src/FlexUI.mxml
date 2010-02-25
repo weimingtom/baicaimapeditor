@@ -56,6 +56,16 @@
 					mapbrowser.resourceBitmap = Bitmap(event.target.content);
 				}
 			} 
+			public function loadpic2(comp : UIComponent) : void {
+				var url : String = './assets/22213312.png';
+				var loader : Loader = new Loader();
+				var m_request : URLRequest = new URLRequest(url);
+				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
+				loader.load(m_request);
+				function onComplete(event : Event) : void {
+					resbrowser.resourceBitmap = Bitmap(event.target.content);
+				}
+			} 
 		]]>
 	</mx:Script>
 	
@@ -70,7 +80,7 @@
 	   <mx:HDividedBox width="100%" height="100%">
 			<mx:VDividedBox id="leftPane"
 				width="40%" height="100%" >
-				<v:ResBrowserPod id="resource"
+				<v:ResBrowserPod id="resbrowser"
 					width="100%" height="100%"
 					title="Resource Browser">
 				</v:ResBrowserPod>
@@ -100,7 +110,7 @@
 					<mx:Button
 							label="load map" click="loadpic(mapbrowser)"/>
 					<mx:Button
-							label="draw line"/><!-- click="drawLine()"/>-->
+							label="load res" click="loadpic2(resbrowser)"/><!-- click="drawLine()"/>-->
 					<mx:Label text="(0,0)" id="topleftpos"/>
 					<mx:Label text="(0,0)" id="mappos"/>
 				</mx:ControlBar>
