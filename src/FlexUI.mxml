@@ -43,8 +43,7 @@
 			import mx.core.UIComponent;
 			
 			import mx.controls.Button;  
-            
-            private var uc : UIComponent;
+             
             private static const DEFAULT_POINT : Point = new Point(0,0);
             
 			public function loadpic(comp : UIComponent) : void {
@@ -54,24 +53,9 @@
 				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
 				loader.load(m_request);
 				function onComplete(event : Event) : void {
-					uc = new UIComponent();
-					comp.addChild(uc);
 					mapbrowser.resourceBitmap = Bitmap(event.target.content);
-					uc.width = mapbrowser.resourceBitmap.width;
-					uc.height = mapbrowser.resourceBitmap.height;   
-					browserResize(comp);
 				}
-			}
-			
-			private function browserResize(comp : UIComponent) : void {
-				if(uc == null || mapbrowser.resourceBitmap == null ) return;
-				if(mapbrowser.showRangeBitmap != null) {
-					uc.removeChild(mapbrowser.showRangeBitmap);
-				}
-				mapbrowser.showRangeBitmap = new Bitmap(new BitmapData(mapbrowser.width, mapbrowser.height));
-				uc.addChild(mapbrowser.showRangeBitmap);  
-				mapbrowser.copyPixel();
-			}
+			} 
 		]]>
 	</mx:Script>
 	
@@ -107,7 +91,7 @@
 			</mx:VDividedBox>
 			<v:MapBrowserPod id="mapbrowser"
 				width="100%" height="100%"
-				title="Map Browser" resize="browserResize(mapbrowser)"><!-- mouseMove="mm()" scroll="scrollMove()">-->
+				title="Map Browser"><!-- mouseMove="mm()" scroll="scrollMove()">-->
 				<mx:ControlBar>
 					<mx:RadioButtonGroup id="tools"/>
 					<mx:RadioButton label="Pen" groupName="tools" selected="true"/>
