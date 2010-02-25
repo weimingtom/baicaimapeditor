@@ -1,37 +1,51 @@
-package views{
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	
+package views {
+	import events.RangeEvent;
+
+	import org.baicaix.elephant.OffsetUtil;
+	import org.baicaix.elephant.ResSelector;
+
 	import mx.containers.Panel;
 	import mx.core.UIComponent;
 	import mx.events.ScrollEvent;
-  
-	
+
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.events.Event;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+
 	public class MapBrowserPanel extends Panel {
 		
-		public var _resourceBitmap : Bitmap;
+		private var _resourceBitmap : Bitmap;
 	    private var _showRangeBitmap : Bitmap;
+	    private var selector : ResSelector;
+	    private var _offsetUtil : OffsetUtil;
 	    private var uc : UIComponent;
-	    privatre var a : ResSelector;
 	    private static const DEFAULT_POINT : Point = new Point(0,0);
 		
 		public function MapBrowserPanel() {
 			uc = new UIComponent();
 			addChild(uc);
 			
-			addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			addEventListener(ScrollEvent.SCROLL, scrollMove);
 		}
         
         public function set resourceBitmap(value : Bitmap) : void {
         	_resourceBitmap = value;
         	uc.width = _resourceBitmap.width;
-			uc.height = _resourceBitmap.height;   
+			uc.height = _resourceBitmap.height; 
+			
+			_offsetUtil = new OffsetUtil(this);
+			
+			selector = new ResSelector(this, _offsetUtil);  
+			selector.addEventListener(RangeEvent.CLEAR_RANGE, clearRange);
+			selector.addEventListener(RangeEvent.FOCUS_RANGE, focusRange);
+			
 			browserResize();
+        }
+        
+        public function get showRangeBitmap() : Bitmap {
+        	return _showRangeBitmap;
         }
         
         private function browserResize() : void {
@@ -50,87 +64,69 @@ package views{
 //				dataCase.draw(p.source, m, null, null, r);
 //				showRange.bitmapData.draw(map.bitmapData, new Matrix
 			var rect : Rectangle = new Rectangle(
-							this.horizontalScrollPosition, 
-							this.verticalScrollPosition, 
-							this.width, this.height);
+							horizontalScrollPosition, 
+							verticalScrollPosition, 
+							width, height);
 			_showRangeBitmap.bitmapData.copyPixels(_resourceBitmap.bitmapData, rect, DEFAULT_POINT);
-			_showRangeBitmap.x = this.horizontalScrollPosition;
-			_showRangeBitmap.y = this.verticalScrollPosition;
+			_showRangeBitmap.x = horizontalScrollPosition;
+			_showRangeBitmap.y = verticalScrollPosition;
 		}
 			
-		private function drawLine(fromX : int = 0, fromY : int = 0) : void {
-			var lineColor : uint = 0xaaffbb;
-//				version 1
-//				for(var x : int = 0; x < this.width; x++) {
-//					for(var y : int = 0; y < this.height; y++) {
-//						if(x % 32 == 0 || y % 32 == 0) {
-//							showRange.bitmapData.setPixel(x, y, 0xffffbb);
-//						}
-//					}
-//				}
-//				version 2
-//				for(var x : int = 0; x < this.width; x+=32) {
-//					for(var y : int = 0; y < this.height; y++) {
-//						showRange.bitmapData.setPixel(x, y, 0xffffbb);
-//					}
-//				}
-//				for(y = 0; y < this.height; y+=32) {
-//					for(x = 0; x < this.width; x++) {
-//						showRange.bitmapData.setPixel(x, y, 0xffffbb);
-//					}
-//				}
-//				version 3
+		private function drawLine() : void {
+			var lineColor : uint = 0x00ffbb;
 			var frameWidth : int = 64;
 			var frameHeight : int = 32;
-			fromX = frameWidth - this.horizontalScrollPosition % frameWidth;
-			fromY = frameHeight - this.verticalScrollPosition % frameHeight;
-			for(var y : int = fromY; y < this.height; y+=frameHeight) {
-				_showRangeBitmap.bitmapData.fillRect(new Rectangle(0, y, this.width, 1), lineColor);
+			var fromPoint : Point = _offsetUtil.getPixelOffset();
+			for(var y : int = fromPoint.y; y < height; y+=frameHeight) {
+				_showRangeBitmap.bitmapData.fillRect(new Rectangle(0, y, width, 1), lineColor);
 			}
-			for(var x : int = fromX; x < this.width; x+=frameWidth) {
-				_showRangeBitmap.bitmapData.fillRect(new Rectangle(x, 0, 1, this.height), lineColor);
+			for(var x : int = fromPoint.x; x < width; x+=frameWidth) {
+				_showRangeBitmap.bitmapData.fillRect(new Rectangle(x, 0, 1, height), lineColor);
 			}
 		}
 		
-		private function onMouseDown(event : MouseEvent) : void {
-			addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-		}	
-				
-		private function onMouseMove(event : MouseEvent) : void {
-			if(_showRangeBitmap == null) return;
-			var localPos : Point = new Point(event.localX - _showRangeBitmap.x, event.localY - _showRangeBitmap.y);
-			fromLogicX = localPos.x / cellWidth;
-			fromLogicY = localPos.y / cellHeight;
-//TODO				mappos.text = "("+logicX+","+logicY+")";
-			drawFocuss();
+		private var focusWidth : int = 3;
+		private var focusColor : uint = 0xaaffbb;
+		
+		private function clearRange(event : RangeEvent) : void {
+			var cellRange : Rectangle = event.range;
+			var pastePixelRange : Rectangle = _offsetUtil.cellRangeConvertToPixelRange(cellRange);
+			var copyPixelRange : Rectangle = _offsetUtil.cellRangeConvertToAbsPixelRange(cellRange);
+			
+			with(_showRangeBitmap.bitmapData) {
+				var src : BitmapData = _resourceBitmap.bitmapData;
+				//top;
+				var copyRange : Rectangle = new Rectangle(copyPixelRange.x, copyPixelRange.y, copyPixelRange.width, focusWidth);
+				var pastePos : Point = new Point(pastePixelRange.x, pastePixelRange.y);
+				copyPixels(src, copyRange, pastePos);
+				//left
+				copyRange = new Rectangle(copyPixelRange.x, copyPixelRange.y, focusWidth, copyPixelRange.height);
+				pastePos = new Point(pastePixelRange.x, pastePixelRange.y);
+				copyPixels(src, copyRange, pastePos);
+				//right
+				copyRange = new Rectangle(copyPixelRange.x + copyPixelRange.width - focusWidth, copyPixelRange.y, focusWidth, copyPixelRange.height + 1);
+				pastePos = new Point(pastePixelRange.right - focusWidth, pastePixelRange.top);
+				copyPixels(src, copyRange, pastePos);
+				//bottom
+				copyRange = new Rectangle(copyPixelRange.x, copyPixelRange.y + copyPixelRange.height - focusWidth, copyPixelRange.width + 1, focusWidth);
+				pastePos = new Point(pastePixelRange.left, pastePixelRange.bottom - focusWidth);
+				copyPixels(src, copyRange, pastePos);
+			}
 		}
 		
-		private function onMouseUp(event : MouseEvent) : void {
-			removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-		}
-		
-		private var cellWidth : int = 32; 
-		private var cellHeight : int = 32; 
-		private var fromLogicX : int;
-		private var fromLogicY : int;
-		private var toLogicX : int;
-		private var toLogicY : int;
-		private function drawFocuss() : void {
-			var focusColor : uint = 0xaaffbb;
-			var fromX : int = fromLogicX * cellWidth;
-			var fromY : int = fromLogicY * cellHeight;
-			var focusWidth : int = 3;
-			_showRangeBitmap.bitmapData.fillRect(new Rectangle(fromX, fromY, cellWidth, focusWidth), focusColor);
-			_showRangeBitmap.bitmapData.fillRect(new Rectangle(fromX, fromY, focusWidth, cellHeight), focusColor);
-			_showRangeBitmap.bitmapData.fillRect(new Rectangle(fromX + cellWidth - focusWidth, fromY, focusWidth, cellHeight), focusColor);
-			_showRangeBitmap.bitmapData.fillRect(new Rectangle(fromX, fromY + cellHeight - focusWidth, cellWidth, focusWidth), focusColor);
+		private function focusRange(event : RangeEvent) : void {
+			var cellRange : Rectangle = event.range;
+			var pixelRange : Rectangle = _offsetUtil.cellRangeConvertToPixelRange(cellRange);
+			
+			with(_showRangeBitmap.bitmapData) {
+				fillRect(new Rectangle(pixelRange.x, pixelRange.y, pixelRange.width, focusWidth), focusColor);
+				fillRect(new Rectangle(pixelRange.x, pixelRange.y, focusWidth, pixelRange.height), focusColor);
+				fillRect(new Rectangle(pixelRange.x + pixelRange.width - focusWidth, pixelRange.y, focusWidth, pixelRange.height), focusColor);
+				fillRect(new Rectangle(pixelRange.x, pixelRange.y + pixelRange.height - focusWidth, pixelRange.width, focusWidth), focusColor);
+			}
 		}
 		
 		private function scrollMove(event : Event) : void {
-//TODO				topleftpos.text = "("+this.horizontalScrollPosition + 
-//					"," + this.verticalScrollPosition+")";
 			copyPixel();
 			drawLine();
 		}
