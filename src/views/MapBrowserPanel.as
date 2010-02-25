@@ -1,8 +1,9 @@
 package views {
 	import events.RangeEvent;
 
+	import org.baicaix.elephant.AbsSelector;
+	import org.baicaix.elephant.MapSelector;
 	import org.baicaix.elephant.OffsetUtil;
-	import org.baicaix.elephant.ResSelector;
 
 	import mx.containers.Panel;
 	import mx.core.UIComponent;
@@ -16,9 +17,11 @@ package views {
 
 	public class MapBrowserPanel extends Panel {
 		
+		public var copyRange : Rectangle;
+		
 		private var _resourceBitmap : Bitmap;
 	    private var _showRangeBitmap : Bitmap;
-	    private var selector : ResSelector;
+	    private var selector : AbsSelector;
 	    private var _offsetUtil : OffsetUtil;
 	    private var uc : UIComponent;
 	    private static const DEFAULT_POINT : Point = new Point(0,0);
@@ -26,6 +29,9 @@ package views {
 		public function MapBrowserPanel() {
 			uc = new UIComponent();
 			addChild(uc);
+			
+			//only for test
+			copyRange = new Rectangle(0, 0, 2, 3);
 			
 			addEventListener(ScrollEvent.SCROLL, scrollMove);
 		}
@@ -37,7 +43,7 @@ package views {
 			
 			_offsetUtil = new OffsetUtil(this);
 			
-			selector = new ResSelector(this, _offsetUtil);  
+			selector = new MapSelector(this, _offsetUtil);  
 			selector.addEventListener(RangeEvent.CLEAR_RANGE, clearRange);
 			selector.addEventListener(RangeEvent.FOCUS_RANGE, focusRange);
 			

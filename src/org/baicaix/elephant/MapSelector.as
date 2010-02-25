@@ -20,30 +20,29 @@ package org.baicaix.elephant {
 	/**
 	 * @author dengyang
 	 */
-	public class ResSelector extends AbsSelector {
+	public class MapSelector extends AbsSelector {
 		
 		protected var _base : MapBrowserPanel;
-		private var _offsetUtil : OffsetUtil;
+		protected var _offsetUtil : OffsetUtil;
 		
 		protected var _startPos : Point;
 		protected var _endPos : Point;
 		protected var _selectedRange : Rectangle;
 		protected var _oldRange : Rectangle;
 		
-		private var _isInSelect : Boolean;
-		
-		public function ResSelector(base : MapBrowserPanel, offsetUtil : OffsetUtil) {
+		public function MapSelector(base : MapBrowserPanel, offsetUtil : OffsetUtil) {
 			_base = base;
 			_offsetUtil = offsetUtil;
 			initEditEvent();
 			selectDefaultCell();
 		}
 		
-		private function initEditEvent() : void {
+		protected function initEditEvent() : void {
 			_base.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			_base.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		}
 		
-		private function selectDefaultCell() : void {
+		protected function selectDefaultCell() : void {
 			selectRange(new Rectangle(0, 0, 0, 0));
 		}
 
@@ -55,44 +54,39 @@ package org.baicaix.elephant {
 			focusRange();
 		}
 		
-		private function clearOldRange() : void {
+		protected function clearOldRange() : void {
 			dispatchEvent(new RangeEvent(_oldRange, RangeEvent.CLEAR_RANGE));
 		}
 
-		private function focusRange() : void {
+		protected function focusRange() : void {
 			dispatchEvent(new RangeEvent(_selectedRange, RangeEvent.FOCUS_RANGE));
 		}
 		
 		protected function onMouseDown(event : MouseEvent) : void {
-			_base.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			_base.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		}
+		
+		protected function onMouseUp(event : MouseEvent) : void {
+			_base.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+		}
+
+		protected function onMouseMove(event : MouseEvent) : void {
 			var localPos : Point = _offsetUtil.getCellOffset(event);
 			selectStart(localPos);
 			selectEnd(localPos);
 		}
 		
-		protected function onMouseUp(event : MouseEvent) : void {
-			_base.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			_base.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			_isInSelect = false;
-		}
-
-		protected function onMouseMove(event : MouseEvent) : void {
-			selectEnd(_offsetUtil.getCellOffset(event));
-		}
-		
-		private function selectStart(pos : Point) : void {
+		protected function selectStart(pos : Point) : void {
 			_startPos = pos;
-			_isInSelect = true;
 		}
 		
-		private function selectEnd(pos : Point) : void {
-			if(_startPos == null || !_isInSelect) return;
-			_endPos = pos;
+		protected function selectEnd(pos : Point) : void {
+			if(_startPos == null) return;
+			_endPos = new Point(pos.x + _base.copyRange.width, pos.y + _base.copyRange.height);
 			selectRange(buildRectangle());
 		}
 		
-		private function buildRectangle() : Rectangle {
+		protected function buildRectangle() : Rectangle {
 			var fromX : int = Math.min(_startPos.x, _endPos.x);
 			var fromY : int = Math.min(_startPos.y, _endPos.y);
 			var width : int = Math.max(_startPos.x, _endPos.x) - fromX + 1;
