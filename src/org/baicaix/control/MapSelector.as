@@ -9,7 +9,7 @@
  * @updatedate 2010-2-3
  */   
 package org.baicaix.control {
-	import events.EditEvent;
+	import org.baicaix.events.EditEvent;
 
 	import org.baicaix.utils.OffsetUtil;
 	import org.baicaix.views.MapBrowserPanel;

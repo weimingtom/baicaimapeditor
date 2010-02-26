@@ -1,6 +1,6 @@
 package org.baicaix.views {
-	import events.EditEvent;
-	import events.RangeEvent;
+	import org.baicaix.events.RangeEvent;
+	import org.baicaix.events.EditEvent;
 
 	import org.baicaix.control.AbsSelector;
 	import org.baicaix.control.MapSelector;

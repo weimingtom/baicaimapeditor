@@ -1,5 +1,5 @@
 package org.baicaix.views {
-	import events.RangeEvent;
+	import org.baicaix.events.RangeEvent;
 
 	import org.baicaix.control.ResSelector;
 	import org.baicaix.utils.OffsetUtil;

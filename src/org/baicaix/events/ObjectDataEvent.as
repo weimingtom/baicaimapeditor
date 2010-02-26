@@ -1,4 +1,4 @@
-package events {
+package org.baicaix.events {
 	import flash.events.Event;
 	public class ObjectDataEvent extends Event{
 		public var data:Object;

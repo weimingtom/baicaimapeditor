@@ -9,7 +9,7 @@
  * @updatedate 2010-2-25
  */   
 package org.baicaix.control {
-	import events.RangeEvent;
+	import org.baicaix.events.RangeEvent;
 
 	import org.baicaix.views.MapBrowserPanel;
 
