@@ -101,7 +101,7 @@ package org.baicaix.views {
 		}
 		
 		private var focusWidth : int = 3;
-		private var focusColor : uint = 0xaaffbb;
+		private var focusColor : uint = 0xFF9900;
 		
 		protected function clearRange(event : RangeEvent) : void {
 			var cellRange : Rectangle = event.range;

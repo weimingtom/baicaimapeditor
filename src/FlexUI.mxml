@@ -46,27 +46,16 @@
 			
 			import org.baicaix.events.RangeEvent;  
 			import org.baicaix.utils.NumberFormat;
+			import org.baicaix.modules.serialization.FileManager;
              
             private static const DEFAULT_POINT : Point = new Point(0,0);
-            
-			public function loadpic(comp : UIComponent) : void {
-				var url : String = './assets/22213312.png';
+			public function loadpic(url : String = './assets/22213312.png') : void {
 				var loader : Loader = new Loader();
 				var m_request : URLRequest = new URLRequest(url);
 				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
 				loader.load(m_request);
 				function onComplete(event : Event) : void {
 					mapbrowser.resourceBitmap = Bitmap(event.target.content);
-				}
-			} 
-			public function loadpic2(comp : UIComponent) : void {
-				var url : String = './assets/22213312.png';
-				var loader : Loader = new Loader();
-				var m_request : URLRequest = new URLRequest(url);
-				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
-				loader.load(m_request);
-				function onComplete(event : Event) : void {
-					resbrowser.resourceBitmap = Bitmap(event.target.content);
 				}
 			} 
 			
@@ -79,8 +68,14 @@
 				topleftpos.text = "(" + format.format(event.range.x) + "," + format.format(event.range.y) + ")";
 			}
 			
+			private var fileMnger : FileManager;
 			public function itemclick(event : MenuEvent) : void {
 				trace(event.item.@data);
+				if(fileMnger == null) fileMnger = new FileManager();
+				fileMnger.openFile(event);
+				fileMnger.onOpen = function(url : String) : void {
+					loadpic(url);
+				}
 			}
 		]]>
 	</mx:Script>
@@ -124,9 +119,9 @@
 					<mx:RadioButton label="Select" groupName="tools"/>
 					<mx:RadioButton label="Move" groupName="tools"/>
 					<mx:Button
-							label="load map" click="loadpic(mapbrowser)"/>
+							label="load map" click="loadpic()"/>
 					<mx:Button
-							label="load res" click="loadpic2(resbrowser)"/><!-- click="drawLine()"/>-->
+							label="load res" click="loadpic()"/><!-- click="drawLine()"/>-->
 					<mx:Label text="(0,0)" id="topleftpos"/>
 					<mx:Label text="(0,0)" id="mappos"/>
 				</mx:ControlBar>
