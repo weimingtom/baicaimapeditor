@@ -1,7 +1,7 @@
 package org.baicaix.views {
 	import org.baicaix.events.RangeEvent;
 
-	import org.baicaix.control.ResSelector;
+	import org.baicaix.controls.ResSelector;
 	import org.baicaix.utils.OffsetUtil;
 
 	public class ResBrowserPanel extends MapBrowserPanel {

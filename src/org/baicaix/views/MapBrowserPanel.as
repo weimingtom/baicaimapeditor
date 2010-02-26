@@ -2,8 +2,8 @@ package org.baicaix.views {
 	import org.baicaix.events.RangeEvent;
 	import org.baicaix.events.EditEvent;
 
-	import org.baicaix.control.AbsSelector;
-	import org.baicaix.control.MapSelector;
+	import org.baicaix.controls.MapSelector;
+	import org.baicaix.controls.AbsSelector;
 	import org.baicaix.utils.OffsetUtil;
 
 	import mx.containers.Panel;
