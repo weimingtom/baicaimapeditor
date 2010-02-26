@@ -33,6 +33,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.events.MenuEvent;
 		
 			import flash.display.Loader;
 			import flash.display.Bitmap;
@@ -77,13 +78,17 @@
 				var format : NumberFormat = new NumberFormat("000");
 				topleftpos.text = "(" + format.format(event.range.x) + "," + format.format(event.range.y) + ")";
 			}
+			
+			public function itemclick(event : MenuEvent) : void {
+				trace(event.item.@data);
+			}
 		]]>
 	</mx:Script>
 	
 	<mx:VBox width="100%" height="100%">
 	
 	   <mx:Canvas width="100%">
-		    <mx:MenuBar labelField="@label" height="30" id="myMenu" width="100%" dataProvider="{mXml}">
+		    <mx:MenuBar itemClick="itemclick(event)" labelField="@label" height="30" id="myMenu" width="100%" dataProvider="{mXml}">
 		    
 		    </mx:MenuBar>
 	   </mx:Canvas>
