@@ -73,10 +73,41 @@
 				trace(event.item.@data);
 				if(fileMnger == null) fileMnger = new FileManager();
 				fileMnger.openFile(event);
-				fileMnger.onOpen = function(url : String) : void {
-					loadpic(mapbrowser, url);
+				fileMnger.onOpen = function(value : Bitmap) : void {
+					//loadpic(mapbrowser, url);
+					mapbrowser.resourceBitmap = value;
 				}
 			}
+			
+			/*private function openImg(e:Event):void {
+				fileMnger.onOpen = onOpenImg;
+				fileMnger.openFile(e);
+			}
+			
+			private static const REGEX_SUBFIX : RegExp = new RegExp('\\.(\\w+?)$');
+	        private function onOpenImg(url : String) : void {
+	        	//only for test
+	        	var keystr : String = REGEX_INDEX.exec(url)[1];
+	        	var key : int = int(keystr);
+	        	
+	        	imgLoader.loadResource(url, function() : void {
+	        		//resListVBox.addChild(new RadioButton(layerVBox, 0, 0, "load Layer "+key, false, loadmap));
+	        		//dataLoader.loadResource(url.replace(REGEX_SUBFIX, ".txt"));
+	        	});
+				
+				/*function loadmap(event:Event = null):void {
+	        		//实际中应该是读取
+					var map : Map = dataLoader.getResourceMap(""+key);
+					if(map == null) {
+						//新建,加入到管理中
+						map = resourceCreator.createDataByResource(key, imgLoader.getResourceByIndex(key));
+						dataLoader.put(key, map);
+					}
+					resFlowShower.loadMap(map);
+					if(event != null)
+						selectedLayer = RadioButton(event.currentTarget);
+				}
+	        }*/
 		]]>
 	</mx:Script>
 	
@@ -95,7 +126,7 @@
 					width="100%" height="100%"
 					title="Resource Browser">
 				</v:ResBrowserPod>
-				<mx:TabNavigator width="100%" height="40%">
+				<mx:TabNavigator width="100%" height="50%">
 					<d:LayerConsole id="layeredit"
 						width="100%" height="100%"
 						label="Map Layer Editor">
@@ -120,8 +151,8 @@
 					<mx:RadioButton label="Move" groupName="tools"/>
 					<mx:Button
 							label="load map" click="loadpic(mapbrowser)"/>
-					<mx:Button
-							label="load res" click="loadpic(resbrowser)"/>
+					<!--<mx:Button
+							label="load res" click="loadpic(resbrowser)"/>-->
 					<mx:Label text="(0,0)" id="topleftpos"/>
 					<mx:Label text="(0,0)" id="mappos"/>
 				</mx:ControlBar>
