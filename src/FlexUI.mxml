@@ -49,13 +49,13 @@
 			import org.baicaix.modules.serialization.FileManager;
              
             private static const DEFAULT_POINT : Point = new Point(0,0);
-			public function loadpic(url : String = './assets/22213312.png') : void {
+			public function loadpic(comp : MapBrowserPod, url : String = './assets/22213312.png') : void {
 				var loader : Loader = new Loader();
 				var m_request : URLRequest = new URLRequest(url);
 				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
 				loader.load(m_request);
 				function onComplete(event : Event) : void {
-					mapbrowser.resourceBitmap = Bitmap(event.target.content);
+					comp.resourceBitmap = Bitmap(event.target.content);
 				}
 			} 
 			
@@ -74,7 +74,7 @@
 				if(fileMnger == null) fileMnger = new FileManager();
 				fileMnger.openFile(event);
 				fileMnger.onOpen = function(url : String) : void {
-					loadpic(url);
+					loadpic(mapbrowser, url);
 				}
 			}
 		]]>
@@ -119,9 +119,9 @@
 					<mx:RadioButton label="Select" groupName="tools"/>
 					<mx:RadioButton label="Move" groupName="tools"/>
 					<mx:Button
-							label="load map" click="loadpic()"/>
+							label="load map" click="loadpic(mapbrowser)"/>
 					<mx:Button
-							label="load res" click="loadpic()"/><!-- click="drawLine()"/>-->
+							label="load res" click="loadpic(resbrowser)"/>
 					<mx:Label text="(0,0)" id="topleftpos"/>
 					<mx:Label text="(0,0)" id="mappos"/>
 				</mx:ControlBar>
