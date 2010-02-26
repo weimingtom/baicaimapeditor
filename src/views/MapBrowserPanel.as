@@ -21,7 +21,7 @@ package views {
 		
 		private var _resourceBitmap : Bitmap;
 	    private var _showRangeBitmap : Bitmap;
-	    private var selector : AbsSelector;
+	    protected var selector : AbsSelector;
 	    protected var _offsetUtil : OffsetUtil;
 	    protected var uc : UIComponent;
 	    private static const DEFAULT_POINT : Point = new Point(0,0);
@@ -33,23 +33,30 @@ package views {
 			//only for test
 			copyRange = new Rectangle(0, 0, 2, 3);
 			_offsetUtil = new OffsetUtil(this);
-			
 			addEventListener(ScrollEvent.SCROLL, scrollMove);
 		}
-        
-        public function set resourceBitmap(value : Bitmap) : void {
+
+		public function set resourceBitmap(value : Bitmap) : void {
         	_resourceBitmap = value;
         	uc.width = _resourceBitmap.width;
 			uc.height = _resourceBitmap.height; 
 			
-			selector = new MapSelector(this, _offsetUtil);  
-			selector.addEventListener(RangeEvent.CLEAR_RANGE, clearRange);
-			selector.addEventListener(RangeEvent.FOCUS_RANGE, focusRange);
+			initSelector();
 			
 			browserResize();
-        }
-        
-        public function get showRangeBitmap() : Bitmap {
+		}
+
+		protected function initSelector() : void {
+			if(selector != null) {
+				selector.removeEventListener(RangeEvent.CLEAR_RANGE, clearRange);
+				selector.removeEventListener(RangeEvent.FOCUS_RANGE, focusRange);
+			}
+			selector = new MapSelector(this, _offsetUtil);
+			selector.addEventListener(RangeEvent.CLEAR_RANGE, clearRange);
+			selector.addEventListener(RangeEvent.FOCUS_RANGE, focusRange);
+		}
+		
+		public function get showRangeBitmap() : Bitmap {
         	return _showRangeBitmap;
         }
         
@@ -93,7 +100,7 @@ package views {
 		private var focusWidth : int = 3;
 		private var focusColor : uint = 0xaaffbb;
 		
-		private function clearRange(event : RangeEvent) : void {
+		protected function clearRange(event : RangeEvent) : void {
 			var cellRange : Rectangle = event.range;
 			var pastePixelRange : Rectangle = _offsetUtil.cellRangeConvertToPixelRange(cellRange);
 			var copyPixelRange : Rectangle = _offsetUtil.cellRangeConvertToAbsPixelRange(cellRange);
@@ -119,7 +126,7 @@ package views {
 			}
 		}
 		
-		private function focusRange(event : RangeEvent) : void {
+		protected function focusRange(event : RangeEvent) : void {
 			var cellRange : Rectangle = event.range;
 			var pixelRange : Rectangle = _offsetUtil.cellRangeConvertToPixelRange(cellRange);
 			

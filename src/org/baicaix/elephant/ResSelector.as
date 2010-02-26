@@ -36,6 +36,7 @@ package org.baicaix.elephant {
 		override protected function onMouseUp(event : MouseEvent) : void {
 			super.onMouseUp(event);
 			_base.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			_isInSelect = false;
 		}
 
 		override protected function onMouseMove(event : MouseEvent) : void {
@@ -51,7 +52,6 @@ package org.baicaix.elephant {
 			if(_startPos == null || !_isInSelect) return;
 			_endPos = pos;
 			selectRange(buildRectangle());
-			_isInSelect = false;
 		}
 	}
 }
