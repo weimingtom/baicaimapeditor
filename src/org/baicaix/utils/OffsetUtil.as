@@ -8,8 +8,8 @@
  * @builddate  2010-2-25
  * @updatedate 2010-2-25
  */   
-package org.baicaix.elephant {
-	import views.MapBrowserPanel;
+package org.baicaix.utils {
+	import org.baicaix.views.MapBrowserPanel;
 
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
@@ -39,7 +39,7 @@ package org.baicaix.elephant {
 		public function getPixelOffset() : Point {
 			var fromX : int = cellWidth - _base.horizontalScrollPosition % cellWidth;
 			var fromY : int = cellHeight - _base.verticalScrollPosition % cellHeight;
-			return new Point(fromX, fromY);
+			return new Point(fromX == cellWidth ? 0 : fromX, fromY == cellHeight ? 0 : fromY);
 		}
 
 		public function cellRangeConvertToPixelRange(range : Rectangle) : Rectangle {

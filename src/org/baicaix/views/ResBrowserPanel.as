@@ -1,8 +1,8 @@
-package views {
+package org.baicaix.views {
 	import events.RangeEvent;
 
-	import org.baicaix.elephant.OffsetUtil;
-	import org.baicaix.elephant.ResSelector;
+	import org.baicaix.control.ResSelector;
+	import org.baicaix.utils.OffsetUtil;
 
 	public class ResBrowserPanel extends MapBrowserPanel {
 		public function ResBrowserPanel() {

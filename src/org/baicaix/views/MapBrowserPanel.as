@@ -1,20 +1,20 @@
-package views {
-	import org.baicaix.utils.NumberFormat;
+package org.baicaix.views {
+	import events.EditEvent;
 	import events.RangeEvent;
-	
+
+	import org.baicaix.control.AbsSelector;
+	import org.baicaix.control.MapSelector;
+	import org.baicaix.utils.OffsetUtil;
+
+	import mx.containers.Panel;
+	import mx.core.UIComponent;
+	import mx.events.ScrollEvent;
+
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	
-	import mx.containers.Panel;
-	import mx.core.UIComponent;
-	import mx.events.ScrollEvent;
-	
-	import org.baicaix.elephant.AbsSelector;
-	import org.baicaix.elephant.MapSelector;
-	import org.baicaix.elephant.OffsetUtil;
 
 	public class MapBrowserPanel extends Panel {
 		
@@ -55,6 +55,8 @@ package views {
 			selector = new MapSelector(this, _offsetUtil);
 			selector.addEventListener(RangeEvent.CLEAR_RANGE, clearRange);
 			selector.addEventListener(RangeEvent.FOCUS_RANGE, focusRange);
+			selector.addEventListener(EditEvent.PASTE_START, pasteStart);
+			selector.addEventListener(EditEvent.PASTE_END, pasteEnd);
 		}
 		
 		public function get showRangeBitmap() : Bitmap {
@@ -126,7 +128,15 @@ package views {
 				copyPixels(src, copyRange, pastePos);
 			}
 		}
-		
+
+		private function pasteStart(event : EditEvent) : void {
+			
+		}
+
+		private function pasteEnd(event : EditEvent) : void {
+			
+		}
+
 		protected function focusRange(event : RangeEvent) : void {
 			var cellRange : Rectangle = event.range;
 			var pixelRange : Rectangle = _offsetUtil.cellRangeConvertToPixelRange(cellRange);
@@ -138,7 +148,7 @@ package views {
 				fillRect(new Rectangle(pixelRange.x, pixelRange.y + pixelRange.height - focusWidth, pixelRange.width, focusWidth), focusColor);
 			}
 			
-			dispatchEvent(new RangeEvent(event.range, RangeEvent.RANGE_POS_CHANGE));
+			dispatchEvent(new RangeEvent(RangeEvent.RANGE_POS_CHANGE, event.range));
 		}
 		
 		private function scrollMove(event : Event) : void {

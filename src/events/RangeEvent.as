@@ -10,15 +10,15 @@ package events {
 		
 		public static const RANGE_POS_CHANGE : String = "RANGE_POS_CHANGE";
 		
-		private var _range : Rectangle;
+		protected var _range : Rectangle;
 		
-		public function RangeEvent(range : Rectangle, type:String, bubbles:Boolean=false){
+		public function RangeEvent(type:String, range : Rectangle=null, bubbles:Boolean=false){
 			super(type, bubbles);
 			_range = range;
 		}
 		
 		public override function clone():Event{
-			return new RangeEvent(_range, type, bubbles);
+			return new RangeEvent(type, _range, bubbles);
 		}
 		
 		public function get range() : Rectangle {
