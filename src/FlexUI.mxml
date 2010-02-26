@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
-	xmlns:v="views.dashboard.*" 
-	xmlns:d="views.dataEntry.*" 
+	xmlns:v="org.baicaix.views.dashboard.*" 
+	xmlns:d="org.baicaix.views.dataEntry.*" 
 	layout="absolute" applicationComplete="init()">
 	<mx:XMLList id="mXml" xmlns="">
            	<item label="File">
@@ -43,7 +43,7 @@
 			import mx.core.UIComponent;
 			import mx.controls.Button;
 			
-			import events.RangeEvent;  
+			import org.baicaix.events.RangeEvent;  
 			import org.baicaix.utils.NumberFormat;
              
             private static const DEFAULT_POINT : Point = new Point(0,0);

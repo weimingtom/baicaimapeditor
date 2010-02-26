@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:v="views.*" 
+	layout="vertical"
+	borderStyle="solid">
+	<mx:VBox width="100%" height="100%">
+		<mx:CheckBox label="Draw Line"/>
+		<mx:CheckBox label="Checkbox"/>
+		<mx:CheckBox label="Checkbox"/>
+		<mx:CheckBox label="Checkbox"/>
+		<mx:CheckBox label="Checkbox"/>
+	</mx:VBox>
+</mx:Panel>
