@@ -44,6 +44,7 @@
 			import mx.controls.Button;
 			
 			import events.RangeEvent;  
+			import org.baicaix.utils.NumberFormat;
              
             private static const DEFAULT_POINT : Point = new Point(0,0);
             
@@ -73,7 +74,8 @@
 			}
 			
 			private function ff(event : RangeEvent) : void {
-				topleftpos.text = "(" + event.range.x + "," + event.range.y + ")";
+				var format : NumberFormat = new NumberFormat("000");
+				topleftpos.text = "(" + format.format(event.range.x) + "," + format.format(event.range.y) + ")";
 			}
 		]]>
 	</mx:Script>

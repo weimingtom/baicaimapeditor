@@ -1,4 +1,5 @@
 package views {
+	import org.baicaix.utils.NumberFormat;
 	import events.RangeEvent;
 	
 	import flash.display.Bitmap;

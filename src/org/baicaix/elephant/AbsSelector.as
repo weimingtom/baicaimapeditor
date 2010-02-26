@@ -47,18 +47,25 @@ package org.baicaix.elephant {
 		}
 
 		protected function selectRange(range : Rectangle) : void {
-			_oldRange = _selectedRange;
-			_selectedRange = range;
-			if(_oldRange == null || _selectedRange.equals(_oldRange)) return;
+			setNewRange(range);
+			var isNewOrInSameRange : Boolean = _oldRange == null || _selectedRange.equals(_oldRange);
+			if(isNewOrInSameRange) return;
 			clearOldRange();
 			focusRange();
 		}
 		
+		protected function setNewRange(range : Rectangle) : void {
+			_oldRange = _selectedRange;
+			_selectedRange = range;
+		}
+		
 		protected function clearOldRange() : void {
+			if(_oldRange == null) return;
 			dispatchEvent(new RangeEvent(_oldRange, RangeEvent.CLEAR_RANGE));
 		}
 
 		protected function focusRange() : void {
+			if(_selectedRange == null) return;
 			dispatchEvent(new RangeEvent(_selectedRange, RangeEvent.FOCUS_RANGE));
 		}
 		

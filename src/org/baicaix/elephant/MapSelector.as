@@ -26,12 +26,20 @@ package org.baicaix.elephant {
 		override protected function initEditEvent() : void {
 			super.initEditEvent();
 			_base.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			_base.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 		}
 
 		override protected function onMouseMove(event : MouseEvent) : void {
 			var localPos : Point = _offsetUtil.getCellOffset(event);
 			selectStart(localPos);
 			selectEnd(localPos);
+		}
+
+		private function onMouseOut(event : MouseEvent) : void {
+			_startPos = null;
+			_endPos = null;
+			setNewRange(null);
+			clearOldRange();
 		}
 		
 		override protected function selectEnd(pos : Point) : void {
