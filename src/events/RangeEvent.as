@@ -8,6 +8,8 @@ package events {
 		
 		public static const FOCUS_RANGE : String = "FOCUS_RANGE";
 		
+		public static const RANGE_POS_CHANGE : String = "RANGE_POS_CHANGE";
+		
 		private var _range : Rectangle;
 		
 		public function RangeEvent(range : Rectangle, type:String, bubbles:Boolean=false){

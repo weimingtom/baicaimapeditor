@@ -2,7 +2,7 @@
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:v="views.dashboard.*" 
 	xmlns:d="views.dataEntry.*" 
-	layout="absolute">
+	layout="absolute" applicationComplete="init()">
 	<mx:XMLList id="mXml" xmlns="">
            	<item label="File">
                 <node label="New" data="new"/>
@@ -41,8 +41,9 @@
 			import flash.net.URLRequest;
 			
 			import mx.core.UIComponent;
+			import mx.controls.Button;
 			
-			import mx.controls.Button;  
+			import events.RangeEvent;  
              
             private static const DEFAULT_POINT : Point = new Point(0,0);
             
@@ -66,6 +67,14 @@
 					resbrowser.resourceBitmap = Bitmap(event.target.content);
 				}
 			} 
+			
+			public function init() : void {
+				mapbrowser.addEventListener(RangeEvent.RANGE_POS_CHANGE, ff);
+			}
+			
+			private function ff(event : RangeEvent) : void {
+				topleftpos.text = "(" + event.range.x + "," + event.range.y + ")";
+			}
 		]]>
 	</mx:Script>
 	

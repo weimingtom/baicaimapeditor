@@ -1,19 +1,19 @@
 package views {
 	import events.RangeEvent;
-
-	import org.baicaix.elephant.AbsSelector;
-	import org.baicaix.elephant.MapSelector;
-	import org.baicaix.elephant.OffsetUtil;
-
-	import mx.containers.Panel;
-	import mx.core.UIComponent;
-	import mx.events.ScrollEvent;
-
+	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	
+	import mx.containers.Panel;
+	import mx.core.UIComponent;
+	import mx.events.ScrollEvent;
+	
+	import org.baicaix.elephant.AbsSelector;
+	import org.baicaix.elephant.MapSelector;
+	import org.baicaix.elephant.OffsetUtil;
 
 	public class MapBrowserPanel extends Panel {
 		
@@ -136,6 +136,8 @@ package views {
 				fillRect(new Rectangle(pixelRange.x + pixelRange.width - focusWidth, pixelRange.y, focusWidth, pixelRange.height), focusColor);
 				fillRect(new Rectangle(pixelRange.x, pixelRange.y + pixelRange.height - focusWidth, pixelRange.width, focusWidth), focusColor);
 			}
+			
+			dispatchEvent(new RangeEvent(event.range, RangeEvent.RANGE_POS_CHANGE));
 		}
 		
 		private function scrollMove(event : Event) : void {
