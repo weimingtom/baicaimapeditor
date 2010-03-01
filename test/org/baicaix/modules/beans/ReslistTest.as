@@ -57,13 +57,14 @@ package org.baicaix.modules.beans {
 			setUp();
 			
 			//数据准备
-			var key : String = "01";
-			var key2 : String = "02";
+			var key : String = "00000001";
+			var key2 : String = "00000002";
 			var valueBefor : String = "awel;ifgorpiweurfewkjf";
 			var valueAfter : String = "34rpiou3oijg09837urofi";
 			
 			//单资源测试
 			var resultXML : XML = 	<Resources>
+										<maxid id="1"/>
 										<res id={key} name={valueBefor}/>
 									</Resources>;
 			
@@ -72,6 +73,7 @@ package org.baicaix.modules.beans {
 			
 			//资源替换测试
 			resultXML = <Resources>
+							<maxid id="1"/>
 							<res id={key} name={valueAfter}/>
 						</Resources>;
 						
@@ -80,6 +82,7 @@ package org.baicaix.modules.beans {
 			
 			//多资源测试
 			resultXML = <Resources>
+							<maxid id="2"/>
 							<res id={key} name={valueAfter}/>
 							<res id={key2} name={valueBefor}/>
 						</Resources>;
@@ -99,6 +102,7 @@ package org.baicaix.modules.beans {
 			var valueAfter : String = "34rpiou3oijg09837urofi";
 			
 			var resultXML : XML = <Resources>
+							<maxid id="2"/>
 							<res id={key} name={valueAfter}/>
 							<res id={key2} name={valueBefor}/>
 						</Resources>;

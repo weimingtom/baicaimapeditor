@@ -10,6 +10,9 @@
  */   
 package org.baicaix.modules.serialization {
 	import org.baicaix.events.ResLoadEvent;
+	import org.baicaix.modules.DataConvertor;
+	import org.baicaix.modules.ResourceCreator;
+	import org.baicaix.modules.beans.Map;
 	import org.baicaix.modules.beans.Reslist;
 
 	import flash.display.Bitmap;
@@ -38,6 +41,8 @@ package org.baicaix.modules.serialization {
 		private var _reslist : Reslist;
 		private var _reslistFile : File;
 		private var _reslistFileStream : FileStream;
+		private var resourceCreator : ResourceCreator;
+		private var dataConvertor : DataConvertor;
 
 		public function FileManager() {
 			_fileStream = new FileStream();
@@ -45,6 +50,8 @@ package org.baicaix.modules.serialization {
 			_reslist = new Reslist();
 			_reslistFile = new File(File.applicationDirectory.nativePath + "/assets/Reslist.xml");
 			_reslistFileStream = new FileStream();
+			resourceCreator = new ResourceCreator();
+			dataConvertor = new DataConvertor();
 			readReslist();
 		}
 
@@ -99,21 +106,30 @@ package org.baicaix.modules.serialization {
 			function imageLoaded(event : Event) : void {
 				event.target.removeEventListener(Event.COMPLETE, imageLoaded);
 				var bitmap : Bitmap = Bitmap(event.target.loader.content);
-				onOpen(bitmap);
 				
-				var id : String = String(getTimer());
-				var saveFile : File = new File(File.applicationDirectory.nativePath + "/assets/" + id + ".png");
-				var imgFileStream : FileStream = new FileStream();
-				imgFileStream.open(saveFile, FileMode.WRITE); 
+				var id : String = _reslist.generatNewId();
+				
+				var saveImgFile : File = new File(File.applicationDirectory.nativePath + "/assets/" + id + ".png");
+				var saveFileStream : FileStream = new FileStream();
+				saveFileStream.open(saveImgFile, FileMode.WRITE); 
 				var pngBytes : ByteArray = PNGEncoder.encode(bitmap.bitmapData);
-				imgFileStream.writeBytes(pngBytes);
-				imgFileStream.close();
+				saveFileStream.writeBytes(pngBytes);
+				saveFileStream.close();
+				
+				var saveDataFile : File = new File(File.applicationDirectory.nativePath + "/assets/" + id + ".res");
+				saveFileStream.open(saveDataFile, FileMode.WRITE); 
+				var map : Map = resourceCreator.createDataByResource(int(id), bitmap.bitmapData);
+				var cont : String = dataConvertor.saveMap(map);
+				saveFileStream.writeUTFBytes(cont);
+				saveFileStream.close();
+				
 				//更新Reslist
 				_reslist.add(id, "name"+id);
 				saveReslist();
 				//资源管理器重新 open 新的资源
 				dispatchEvent(new ResLoadEvent(ResLoadEvent.LOAD_RES_IMG));
 				dispatchEvent(new ResLoadEvent(ResLoadEvent.LOAD_RES_DATA));
+				onOpen(bitmap);
 			}
 		}
 //		
