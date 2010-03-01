@@ -1,10 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Panel 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:v="views.*" 
+	xmlns:vo="org.baicaix.views.*"
 	layout="vertical"
 	borderStyle="solid">
-	<mx:HBox width="100%" height="100%">
-		
-	</mx:HBox>
+	
+	<mx:Script>
+         <![CDATA[
+             import mx.events.CollectionEvent;
+             import mx.utils.ObjectUtil;
+             import org.baicaix.views.*;
+  
+             private function init():void {
+                 arrColl.dispatchEvent(new CollectionEvent(CollectionEvent.COLLECTION_CHANGE));
+             }
+  
+             private function arrColl_collectionChange(evt:CollectionEvent):void {
+                 try {
+                     var tArr:Array = arrColl.source.filter(selectedOnly);
+                     textArea.text = ObjectUtil.toString(tArr);
+                     lbl.text = tArr.length.toString() + " item(s) selected";
+                 } catch (err:Error) {
+                     // ignore.
+                 }
+             }
+  
+             private function selectedOnly(item:ListItemValueObject, idx:uint, arr:Array):Boolean {
+                 return item.isSelected;
+             }
+         ]]>
+     </mx:Script>
+  
+     <mx:Array id="arr">
+         <vo:ListItemValueObject label="One" isSelected="true" />
+         <vo:ListItemValueObject label="Two" isSelected="true" />
+         <vo:ListItemValueObject label="Three" isSelected="true" />
+         <vo:ListItemValueObject label="Four" isSelected="true" />
+         <vo:ListItemValueObject label="Five" isSelected="false" />
+         <vo:ListItemValueObject label="Six" isSelected="false" />
+         <vo:ListItemValueObject label="Seven" isSelected="false" />
+         <vo:ListItemValueObject label="Eight" isSelected="false" />
+         <vo:ListItemValueObject label="Nine" isSelected="false" />
+         <vo:ListItemValueObject label="Ten" isSelected="false" />
+         <vo:ListItemValueObject label="Eleven" isSelected="false" />
+         <vo:ListItemValueObject label="Twelve" isSelected="false" />
+     </mx:Array>
+  
+     <mx:ArrayCollection id="arrColl"
+             source="{arr}"
+             collectionChange="arrColl_collectionChange(event);" />
+  
+     <mx:Panel id="panel"
+             title="Items"
+             status="{arrColl.length} total"
+             styleName="opaquePanel">
+         <mx:List id="list"
+                 dataProvider="{arrColl}"
+                 alternatingItemColors="[EEEEEE, white]"
+                 width="150"
+                 rowCount="8">
+             <mx:itemRenderer>
+                 <mx:Component>
+                     <mx:CheckBox selectedField="isSelected"
+                             change="onChange(event);">
+                         <mx:Script>
+                             <![CDATA[
+                                 private function onChange(evt:Event):void {
+                                     data.isSelected = !data.isSelected;
+                                 }
+                             ]]>
+                         </mx:Script>
+                     </mx:CheckBox>
+                 </mx:Component>
+             </mx:itemRenderer>
+         </mx:List>
+         <mx:ControlBar horizontalAlign="right">
+             <mx:Label id="lbl" />
+         </mx:ControlBar>
+     </mx:Panel>
+  
+     <mx:TextArea id="textArea"
+             verticalScrollPolicy="on"
+             width="100%"
+             height="{panel.height}" />
 </mx:Panel>
