@@ -10,6 +10,7 @@
  */   
 package org.baicaix.modules.serialization {
 	import org.baicaix.events.ResLoadEvent;
+	import org.baicaix.events.ReslistEvent;
 	import org.baicaix.modules.DataConvertor;
 	import org.baicaix.modules.ResourceCreator;
 	import org.baicaix.modules.beans.Map;
@@ -22,7 +23,6 @@ package org.baicaix.modules.serialization {
 	import flash.filesystem.*;
 	import flash.net.FileFilter;
 	import flash.utils.ByteArray;
-	import flash.utils.getTimer;
 
 	/**
 	 * @author dengyang
@@ -55,13 +55,14 @@ package org.baicaix.modules.serialization {
 			readReslist();
 		}
 
-		private function readReslist() : void {
-			if(_reslistFile.exists) {
+		public function readReslist() : void {
+			if(_reslistFile.exists && !_reslist.isInit) {
 				_reslistFileStream.open(_reslistFile, FileMode.READ);
 				var resStr : String = _reslistFileStream.readUTFBytes(_reslistFileStream.bytesAvailable);
 				_reslist.read(new XML(resStr));
 				_reslistFileStream.close();
 			}
+			dispatchEvent(new ReslistEvent(ReslistEvent.RESLIST_LOAD_COMPLETE, _reslist));
 		}
 		
 		private function saveReslist() : void {
@@ -70,6 +71,14 @@ package org.baicaix.modules.serialization {
 			_reslistFileStream.close();
 		}
 
+		private function loadResByResList() : void {
+			
+		}
+		
+		private function loadSingleRes() : void {
+			
+		}
+		
 		public function openImgFile() : void {
 			var file : File = File.applicationDirectory;
 			file.browseForOpen("请选择要打开的文件", [new FileFilter("Image Resource", "*.jpeg;*.jpg;*.gif;*.png")]);//打开文件选择器

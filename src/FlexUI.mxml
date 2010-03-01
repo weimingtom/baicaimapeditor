@@ -44,9 +44,11 @@
 			import mx.core.UIComponent;
 			import mx.controls.Button;
 			
-			import org.baicaix.events.RangeEvent;  
-			import org.baicaix.utils.NumberFormat;
-			import org.baicaix.modules.serialization.FileManager;
+			import org.baicaix.events.*;  
+			import org.baicaix.utils.*;
+			import org.baicaix.modules.*;
+			import org.baicaix.modules.beans.*;
+			import org.baicaix.modules.serialization.*;
              
             private static const DEFAULT_POINT : Point = new Point(0,0);
 			public function loadpic(comp : MapBrowserPod, url : String = './assets/22213312.png') : void {
@@ -75,12 +77,25 @@
 					case "open":
 						// just for test
 						if(fileMnger == null) fileMnger = new FileManager();
+						fileMnger.addEventListener(ReslistEvent.RESLIST_LOAD_COMPLETE, aaa);
+						fileMnger.readReslist();
 						fileMnger.openImgFile();
 						fileMnger.onOpen = function(value : Bitmap) : void {
 							//loadpic(mapbrowser, url);
 							resbrowser.resourceBitmap = value;
 						}
 						break;
+				}
+			}
+			
+			private function aaa(event : ReslistEvent) : void {
+				var reslist : Reslist = Reslist(event.data);
+				trace(reslist._ids);
+				for each (var id : int in reslist._ids) {
+					var name : String = reslist.getName(Reslist.ID_FORMAT.format(id));
+					if(name != null) {
+						trace(id, name);	
+					}
 				}
 			}
 			

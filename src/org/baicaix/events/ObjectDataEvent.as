@@ -4,7 +4,7 @@ package org.baicaix.events {
 		
 		public var data:Object;
 		
-		public function ObjectDataEvent(type:String,data:Object){
+		public function ObjectDataEvent(type:String, data:Object){
 			super(type);
 			this.data = data;
 		}
