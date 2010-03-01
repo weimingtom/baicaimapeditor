@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:flexunit="flexunit.flexui.*"  
+    layout="absolute"  
+    creationComplete="onCreationComplete()">
+	<mx:Script>  
+        <![CDATA[  
+            import flexunit.framework.TestSuite; 
+            import org.baicaix.modules.beans.*;
+              
+            /** 
+             * 创建整个项目的TestSuite 
+             * author:dengyang
+             */  
+            private function createSuite() : TestSuite {  
+                /*组建TestSuite*/  
+                var suite:TestSuite = new TestSuite();  
+                
+                /*TODO:在这加入其它TestSuite*/  
+                suite.addTest(new ReslistTest().buildAllTest());
+                  
+                return suite;  
+            }             
+            
+            /** 
+             * 调用TestRunner进行测试 
+             */  
+            private function onCreationComplete() : void {                                 
+                testRunner.test = this.createSuite();  
+                testRunner.startTest();  
+            }             
+        ]]>  
+    </mx:Script>  
+    <!-- flexunit的TestRunnerBase界面组件 -->  
+    <flexunit:TestRunnerBase id="testRunner" width="100%" height="100%" />  
+</mx:Application>

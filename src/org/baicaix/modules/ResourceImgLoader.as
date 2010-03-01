@@ -31,7 +31,6 @@ package org.baicaix.modules {
 		public function ResourceImgLoader() {
 			super();
 			this._subfix = "png";
-			this._path = "";
 		}
 		
 		override protected function onComplete(event : Event) : void {

@@ -28,8 +28,6 @@ package org.baicaix.modules {
 		
 		public function ResourceDataLoader() {
 			super();
-			this._subfix = "map";
-			this._path = "";
 			//IOC
 			_dataConverter = new DataConvertor();
 		}

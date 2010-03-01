@@ -71,11 +71,16 @@
 			private var fileMnger : FileManager;
 			public function itemclick(event : MenuEvent) : void {
 				trace(event.item.@data);
-				if(fileMnger == null) fileMnger = new FileManager();
-				fileMnger.openFile(event);
-				fileMnger.onOpen = function(value : Bitmap) : void {
-					//loadpic(mapbrowser, url);
-					mapbrowser.resourceBitmap = value;
+				switch(event.item.@data.toString()) {
+					case "open":
+						// just for test
+						if(fileMnger == null) fileMnger = new FileManager();
+						fileMnger.openImgFile();
+						fileMnger.onOpen = function(value : Bitmap) : void {
+							//loadpic(mapbrowser, url);
+							resbrowser.resourceBitmap = value;
+						}
+						break;
 				}
 			}
 			

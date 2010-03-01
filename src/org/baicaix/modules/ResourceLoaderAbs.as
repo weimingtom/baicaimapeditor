@@ -23,8 +23,8 @@ package org.baicaix.modules {
 		protected var _loaders : Dictionary;
 		protected var _callbackFuncs : Dictionary;
 		protected var _datas : Dictionary;
-		protected var _path : String;
-		protected var _subfix : String;
+		protected var _path : String = "./assets/";
+		protected var _subfix : String = ".png";
 		
 		protected static const REGEX_INDEX : RegExp = new RegExp('(\\w+?)\\.');
 		
@@ -50,7 +50,7 @@ package org.baicaix.modules {
 		
 		public function addTask(indexs : Array) : void {
 			for each (var index : int in indexs) {
-				loadResource(_path + index + "." + _subfix);
+				loadResource(_path + index + _subfix);
 			}
 		}
 	}

@@ -22,17 +22,11 @@ package org.baicaix.modules.serialization {
 
 		public function unmask(json : Object) : * {
 			var jsobj : Object = JSON.decode(String(json));
-//			trace(jsobj.layers[0].indexs);
-//			for each (var tile : Object in jsobj.layers[0].gezi) {
-//				trace(tile.index);
-//			}
-//			trace(jsobj);
 			return jsobj;
 		}
 		
 		public function mask(value : *) : Object {
 			var json : String = JSON.encode(value);
-			trace(json);
 			return json;
 		}
 	}
