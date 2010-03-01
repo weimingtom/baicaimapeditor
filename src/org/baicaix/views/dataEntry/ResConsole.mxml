@@ -24,9 +24,13 @@
                      // ignore.
                  }
              }
-  
+             
              private function selectedOnly(item:ListItemValueObject, idx:uint, arr:Array):Boolean {
                  return item.isSelected;
+             }
+  
+             public function addItem(id : String, name : String) : void {
+             	arrColl.addItem(new ListItemValueObject(id + " " + name));
              }
          ]]>
      </mx:Script>
@@ -56,9 +60,8 @@
              styleName="opaquePanel">
          <mx:List id="list"
                  dataProvider="{arrColl}"
-                 alternatingItemColors="[EEEEEE, white]"
                  width="150"
-                 rowCount="8">
+                 rowCount="8"><!--alternatingItemColors="[EEEEEE, white]"-->
              <mx:itemRenderer>
                  <mx:Component>
                      <mx:CheckBox selectedField="isSelected"
