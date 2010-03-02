@@ -36,7 +36,7 @@ package org.baicaix.modules.serialization {
 		public var onSave : Function;
 		
 //		private var _fileName : String;
-//		private var _content : *;
+		private var _content : *;
 		
 		private var _reslist : Reslist;
 		private var _reslistFile : File;
@@ -152,45 +152,26 @@ package org.baicaix.modules.serialization {
 //			content = txt; //只读方式打开文件，将内容放到TextArea
 //		}
 //
-//		//打开文件选择器
-//		public function saveFileTo(event : Event) : void {
-//			var file : File = File.applicationDirectory; //默认为文档文件夹
-//			file.browseForSave("请选择保存路径");  //打开文件夹选择器
-//			file.addEventListener(Event.SELECT, fileSaveHandle);  //监听文件夹选择事件
-//		}
-//
-//		//用文本框内容创建文件
-//		private function fileSaveHandle(e : Event) : void {
-//			_currentFile = e.target as File;
-//			saveFile(e);
-//		}
-//
-//		private static const REGEX_SUBFIX : RegExp = new RegExp('[/\\\\]\\w+?\\.(\\w+?)$');
-//
-//		//用文本框内容更新文件
-//		public function saveFile(event : Event) : void {
-//			var saveFile : File = _currentFile;
-//			if(_fileName != null) {
-//				var targetURL : String = _currentFile.nativePath.replace(REGEX_SUBFIX, "/" + _fileName);
-//				saveFile = new File(targetURL);
-//				_fileName = null;
-//			}
-//			_fileStream.open(saveFile, FileMode.WRITE); //Write方式打开
-//			_fileStream.writeUTFBytes(content);  //将内容写入文件
-//			_fileStream.close();
-//		}
-//
-//		public function get content() : * {
-//			return _content;
-//		}
-//
-//		public function set content(cont : *) : void {
-//			_content = cont;
-//		}
-//
-//		public function set fileName(name : String) : void {
-//			this._fileName = name;
-//		}
+		//打开文件选择器
+		public function saveFileTo(cont : String) : void {
+			_content = cont;
+			var file : File = File.applicationDirectory; //默认为文档文件夹
+			file.browseForSave("请选择保存路径");  //打开文件夹选择器
+			file.addEventListener(Event.SELECT, fileSaveHandle);  //监听文件夹选择事件
+		}
+
+		//用文本框内容创建文件
+		private function fileSaveHandle(e : Event) : void {
+			var saveFile : File = e.target as File;
+			save(saveFile.url, _content);
+		}
+		
+		public function save(url : String, cont : *) : void {
+			var saveFile : File = new File(url);
+			_fileStream.open(saveFile, FileMode.WRITE); //Write方式打开
+			_fileStream.writeUTFBytes(cont);  //将内容写入文件
+			_fileStream.close();
+		}
 		
 		public function get reslist() : Reslist {
 			return _reslist;

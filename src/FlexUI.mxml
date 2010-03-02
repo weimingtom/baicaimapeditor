@@ -10,7 +10,7 @@
                 <node label="Open map" data="open map"/>
                 <node label="Close" data="close"/>
                 <node label="Save" data="save"/>
-                <node label="Save As" data="saveas"/>
+                <node label="Save As" data="save as"/>
                 <node type="separator"/>
                 <node label="Quit" data="logout"/>
              </item>
@@ -82,19 +82,16 @@
 				trace(event.item.@data);
 				switch(event.item.@data.toString()) {
 					case "open res":
-						// just for test
-						//if(fileMnger == null) fileMnger = new FileManager();
-						//fileMnger.addEventListener(ReslistEvent.RESLIST_LOAD_COMPLETE, loadReslist);
-						//fileMnger.readReslist();
-						//fileMnger.openImgFile();
-						//fileMnger.onOpen = function(value : Bitmap) : void {
-						//	//loadpic(mapbrowser, url);
-						//	resbrowser.resourceBitmap = value;
-						//}
 						resMnger.openImg();
 						break;
 					case "open map":
 						mapMnger.openMap();
+						break;
+					case "save as":
+						mapMnger.saveMapAS();
+						break;
+					case "save":
+						mapMnger.saveMap();
 						break;
 				}
 			}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+    <mx:Script>
+        <![CDATA[
+            import mx.managers.PopUpManager;
+        ]]>
+    </mx:Script>
+    <mx:Image id="face" x="0" y="0" source="assets/face.png" click="PopUpManager.removePopUp(this)"/>
+</mx:Canvas>
