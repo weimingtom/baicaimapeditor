@@ -70,8 +70,14 @@ package org.baicaix.modules {
 		}
 		
 		public function openMap() : void {
+			closeMap();
 			fileMnger.onOpen = onOpenMap;
 			fileMnger.openMapFile();
+		}
+		
+		public function closeMap() : void {
+			map = null;
+			_base.mapbrowser.map = map;
 		}
 		
 		private function onOpenMap(url : String) : void {
@@ -101,9 +107,7 @@ package org.baicaix.modules {
     	}	
     	
     	private function loadMap(event : Event) : void {
-    		//TODO 显示图片到 
     		_base.mapbrowser.map = map;
-//			mapFlowShower.loadMap(map);
 		}
 		
 		public function refresh(e:Event=null):void {

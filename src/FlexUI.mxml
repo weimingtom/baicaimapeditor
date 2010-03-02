@@ -93,6 +93,9 @@
 					case "save":
 						mapMnger.saveMap();
 						break;
+					case "close":
+						mapMnger.closeMap();
+						break;
 				}
 			}
 			
@@ -153,9 +156,9 @@
 					<mx:RadioButton label="Pen" groupName="tools" selected="true"/>
 					<mx:RadioButton label="Select" groupName="tools"/>
 					<mx:RadioButton label="Move" groupName="tools"/>
-					<mx:Button
-							label="load map" click="loadpic(mapbrowser)"/>
 					<!--<mx:Button
+							label="load map" click="loadpic(mapbrowser)"/>
+					<mx:Button
 							label="load res" click="openwindow()"/>-->
 					<mx:Label text="(0,0)" id="topleftpos"/>
 					<mx:Label text="(0,0)" id="mappos"/>

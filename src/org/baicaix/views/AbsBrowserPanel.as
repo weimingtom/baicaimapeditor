@@ -1,9 +1,8 @@
 package org.baicaix.views {
-	import org.baicaix.controls.MapSelector;
 	import org.baicaix.modules.beans.Map;
+	import org.baicaix.single.Editor;
 	import org.baicaix.single.display.Browser;
 	import org.baicaix.single.display.Shower;
-	import org.baicaix.single.events.CellEvent;
 	import org.baicaix.single.resource.ResourceImgLoader;
 
 	import mx.containers.Panel;
@@ -20,6 +19,7 @@ package org.baicaix.views {
 //	    protected var _selector : AbsSelector;
 //	    protected var _offsetUtil : OffsetUtil;
 	    protected var _totalRange : UIComponent;
+	    protected var Selector : Class;
 	    
 	    protected var _browser : Browser;
 		
@@ -34,18 +34,22 @@ package org.baicaix.views {
 		}
 		
 		public function set map(map : Map) : void {
-//        	_map = map;
-        	_totalRange.width = map.width * 32;
-			_totalRange.height = map.height * 32; 
-			
-			//FIXME obj 管理有问题
-			var shower : Shower = new Shower(new ResourceImgLoader(), _totalRange.width, _totalRange.height, MapSelector);			
-			_browser = shower.browser;
-			shower.loadMap(map, width, height);
-			
-			_totalRange.addChild(_browser);
-			
-			_browser.refresh(new CellEvent("", {}));
+			if(map != null) {
+	        	_totalRange.width = map.width * 32;
+				_totalRange.height = map.height * 32; 
+				
+				//FIXME obj 管理有问题
+				var editor : Editor = Editor.getInstance();
+				var shower : Shower = new Shower(ResourceImgLoader.getInstance(), _totalRange.width, _totalRange.height, Selector);	
+				shower.register(editor);		
+				_browser = shower.browser;
+				shower.loadMap(map, width, height);
+				
+				_totalRange.addChild(_browser);
+				editor.refreshMap();
+			} else {
+				_totalRange.removeChild(_browser);
+			}
 		}
 
 //		override protected function initSelector() : void {
