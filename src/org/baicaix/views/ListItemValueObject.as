@@ -8,10 +8,8 @@ package org.baicaix.views
         [Bindable]
         public var isSelected:Boolean;
   
-		public function ListItemValueObject(value : String) {
+		public function ListItemValueObject() {
 			super();
-			label = value;
-			isSeledted = false;
 		}
 	}
 }

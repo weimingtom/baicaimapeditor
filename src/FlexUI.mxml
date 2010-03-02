@@ -94,7 +94,7 @@
 				for each (var id : int in reslist._ids) {
 					var name : String = reslist.getName(Reslist.ID_FORMAT.format(id));
 					if(name != null) {
-						trace(id, name);	
+						resedit.addItem(Reslist.ID_FORMAT.format(id), name);	
 					}
 				}
 			}

@@ -2,7 +2,7 @@
 <mx:Panel 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:vo="org.baicaix.views.*"
-	layout="vertical"
+	layout="horizontal"
 	borderStyle="solid">
 	
 	<mx:Script>
@@ -30,13 +30,15 @@
              }
   
              public function addItem(id : String, name : String) : void {
-             	arrColl.addItem(new ListItemValueObject(id + " " + name));
+             	var item : ListItemValueObject = new ListItemValueObject();
+             	item.label = id + " " + name;
+             	arrColl.addItem(item);
              }
          ]]>
      </mx:Script>
   
      <mx:Array id="arr">
-         <vo:ListItemValueObject label="One" isSelected="true" />
+         <!--<vo:ListItemValueObject label="One" isSelected="true" />
          <vo:ListItemValueObject label="Two" isSelected="true" />
          <vo:ListItemValueObject label="Three" isSelected="true" />
          <vo:ListItemValueObject label="Four" isSelected="true" />
@@ -47,7 +49,7 @@
          <vo:ListItemValueObject label="Nine" isSelected="false" />
          <vo:ListItemValueObject label="Ten" isSelected="false" />
          <vo:ListItemValueObject label="Eleven" isSelected="false" />
-         <vo:ListItemValueObject label="Twelve" isSelected="false" />
+         <vo:ListItemValueObject label="Twelve" isSelected="false" />-->
      </mx:Array>
   
      <mx:ArrayCollection id="arrColl"
