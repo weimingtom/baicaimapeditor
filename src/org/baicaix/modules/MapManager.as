@@ -70,7 +70,6 @@ package org.baicaix.modules {
 		}
 		
 		public function openMap() : void {
-			closeMap();
 			fileMnger.onOpen = onOpenMap;
 			fileMnger.openMapFile();
 		}

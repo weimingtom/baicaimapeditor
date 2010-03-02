@@ -34,6 +34,9 @@ package org.baicaix.views {
 		}
 		
 		public function set map(map : Map) : void {
+			if(_browser != null) {
+				_totalRange.removeChild(_browser);
+			}
 			if(map != null) {
 	        	_totalRange.width = map.width * 32;
 				_totalRange.height = map.height * 32; 
@@ -47,9 +50,7 @@ package org.baicaix.views {
 				
 				_totalRange.addChild(_browser);
 				editor.refreshMap();
-			} else {
-				_totalRange.removeChild(_browser);
-			}
+			} 
 		}
 
 //		override protected function initSelector() : void {
