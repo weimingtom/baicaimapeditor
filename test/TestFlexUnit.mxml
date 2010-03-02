@@ -6,8 +6,7 @@
 	<mx:Script>  
         <![CDATA[  
             import flexunit.framework.TestSuite; 
-            import org.baicaix.map.*; 
-            import org.baicaix.editor.*;
+            import org.baicaix.modules.beans.*;
               
             /** 
              * 创建整个项目的TestSuite 
@@ -18,13 +17,7 @@
                 var suite:TestSuite = new TestSuite();  
                 
                 /*TODO:在这加入其它TestSuite*/  
-                /*suite.addTest(new MapTileTest().buildAllTest());
-                suite.addTest(new MapLayerTest().buildAllTest());
-                suite.addTest(new MapTest().buildAllTest());
-                
-                suite.addTest(new CellTest().buildAllTest());
-                suite.addTest(new RangeTest().buildAllTest());*/
-                suite.addTest(new LayerManagerTest().buildAllTest());
+                suite.addTest(new ReslistTest().buildAllTest());
                   
                 return suite;  
             }             
@@ -33,7 +26,6 @@
              * 调用TestRunner进行测试 
              */  
             private function onCreationComplete() : void {                                 
-                /*代入TestRunnerBase进行测试*/  
                 testRunner.test = this.createSuite();  
                 testRunner.startTest();  
             }             

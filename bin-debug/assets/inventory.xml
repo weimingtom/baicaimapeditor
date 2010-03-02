@@ -1,0 +1,11 @@
+<groceries>
+		<catID>1</catID>
+		<prodName>Milk</prodName>
+		<unitID>2</unitID>
+		<cost>1.20</cost>
+		<listPrice>1.99</listPrice>
+		<description>Direct from California where cows are happiest</description>
+		<isOrganic>true</isOrganic>
+		<isLowFat>true</isLowFat>
+		<imageName>dairy_milk.jpg</imageName>
+</groceries>
