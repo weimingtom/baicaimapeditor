@@ -9,6 +9,8 @@
  * @updatedate 2010-2-8
  */   
 package org.baicaix.single.resource {
+	import org.baicaix.modules.beans.Reslist;
+
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.LoaderInfo;
@@ -85,7 +87,7 @@ package org.baicaix.single.resource {
 		
 		public function getResourceByIndex(index : int) : BitmapData {
 			//TODO 实现对资源的管理
-			return _datas[""+index];
+			return _datas[Reslist.ID_FORMAT.format(index)];
 		}
 	}
 }

@@ -12,9 +12,9 @@ package org.baicaix.modules.serialization {
 	import org.baicaix.events.ResLoadEvent;
 	import org.baicaix.events.ReslistEvent;
 	import org.baicaix.modules.DataConvertor;
-	import org.baicaix.modules.ResourceCreator;
 	import org.baicaix.modules.beans.Map;
 	import org.baicaix.modules.beans.Reslist;
+	import org.baicaix.single.resource.ResourceCreator;
 
 	import flash.display.Bitmap;
 	import flash.display.Loader;

@@ -66,7 +66,7 @@ package org.baicaix.single.resource {
 		}
 		
 		public function load(key : String, x : int, y : int) : Tile {
-			if(key == "-1" || key == "0") return null;
+			if(key == "-1" || key == "00000000") return null;
 			var layer : Layer = getResourceByIndex(key);
 			return layer.getTile(x, y);
 		}

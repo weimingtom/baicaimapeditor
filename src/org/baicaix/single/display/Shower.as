@@ -32,7 +32,8 @@ package org.baicaix.single.display {
 			this.cellHeight = cellHeight;
 			
 			var camera : Camera = new Camera(showPixelWidth, showPixelHeight, cellWidth, cellHeight, 2);
-			flowBrowser = Browser(new Browser(camera, new Point(88, 88), loader, Selector));
+			//FIXME 实际长宽目前写死，目前现实像素长款是地图最大，两个地方都要改
+			flowBrowser = Browser(new Browser(camera, new Point(20, 20), loader, Selector));
 		}
 		
 		public function register(editor :Editor) : void {

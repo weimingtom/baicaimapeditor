@@ -1,5 +1,5 @@
 package org.baicaix.views {
-	import org.baicaix.single.MapSelector;
+	import org.baicaix.controls.MapSelector;
 
 	import mx.core.UIComponent;
 	import mx.events.ScrollEvent;

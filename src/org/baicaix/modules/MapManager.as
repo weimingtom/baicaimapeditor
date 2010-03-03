@@ -9,6 +9,8 @@
  * @updatedate 2010-3-2
  */   
 package org.baicaix.modules {
+	import org.baicaix.single.resource.ResourceDataLoader;
+	import org.baicaix.single.resource.ResourceImgLoader;
 	import org.baicaix.events.ReslistEvent;
 	import org.baicaix.modules.beans.Map;
 	import org.baicaix.modules.beans.Reslist;
@@ -89,7 +91,7 @@ package org.baicaix.modules {
 				map = dataLoader.getResourceMap(name);
 				//加载所有资源
 				for each (var key : String in map.ress) {
-					loadRes(url, key);
+					loadRes(url, Reslist.ID_FORMAT.format(int(key)));
 				}
 				//延迟加载
 				var timer : Timer = new Timer(2000, 1);
@@ -109,14 +111,11 @@ package org.baicaix.modules {
     		_base.mapbrowser.map = map;
 		}
 		
-		public function refresh(e:Event=null):void {
-//			editor.refreshMap();
-		}
     	
         private function loadRes(url : String, key : String) : void {
         	//TODO 地址的获取方式需要修改
         	imgLoader.loadResource(url.replace(REGEX_FILENAME, key+".png"));
-    		dataLoader.loadResource(url.replace(REGEX_FILENAME, key+".txt"));
+    		dataLoader.loadResource(url.replace(REGEX_FILENAME, key+".res"));
         }
 	}
 }

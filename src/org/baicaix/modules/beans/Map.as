@@ -41,6 +41,7 @@ package org.baicaix.modules.beans {
 		}
 		
 		private function copyProperty(obj : Object) : void {
+			index = obj.index;
 			width = obj.width;
 			height = obj.height;
 			ress = obj.ress;

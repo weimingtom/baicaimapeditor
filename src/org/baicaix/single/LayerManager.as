@@ -9,11 +9,12 @@
  * @updatedate 2010-1-27
  */   
 package org.baicaix.single {
-	import org.baicaix.modules.ResourceDataLoader;
 	import org.baicaix.modules.beans.Layer;
 	import org.baicaix.modules.beans.Map;
+	import org.baicaix.modules.beans.Reslist;
 	import org.baicaix.modules.beans.Tile;
 	import org.baicaix.single.events.LayerEvent;
+	import org.baicaix.single.resource.ResourceDataLoader;
 
 	import flash.events.EventDispatcher;
 
@@ -115,11 +116,11 @@ package org.baicaix.single {
 			dispatchEvent(new LayerEvent(LayerEvent.LAYER_SELECT, {"layer" : _currentLayer}));
 		}
 		
-		public function refresh() : void {
+		public function refreshAllLayer() : void {
 			for each (var layer : Layer in _map.layers) {
 				for each (var tile : Tile in layer.tiles) {
 					//TODO IOC
-					tile.paste(ResourceDataLoader.getInstance().load(tile.src+"", tile.srcX, tile.srcY));
+					tile.paste(ResourceDataLoader.getInstance().load(Reslist.ID_FORMAT.format(tile.src), tile.srcX, tile.srcY));
 				}
 			}
 		}

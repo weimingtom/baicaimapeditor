@@ -168,7 +168,7 @@ package org.baicaix.single.display {
 //			var convaHeight : int = map.height * 32;
 			
 			_typeLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true, 0x00000000);
-			_canvasLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true, 0xFFFF0000);
+			_canvasLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true, (Math.random() * 0xffffff + 0xff000000));
 			_lineLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true, 0x00000000);
 			_focusLayer.bitmapData = new BitmapData(canvaWidth, convaHeight, true, 0x00000000);
 			
@@ -181,7 +181,7 @@ package org.baicaix.single.display {
 		}
 		
 		public function refresh(event : CellEvent) : void {
-			_mapMnger.refresh();
+			_mapMnger.refreshAllLayer();
 			redrawCell(event);
 		}
 		

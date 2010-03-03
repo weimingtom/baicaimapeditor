@@ -3,6 +3,7 @@ package org.baicaix.views {
 	import org.baicaix.single.Editor;
 	import org.baicaix.single.display.Browser;
 	import org.baicaix.single.display.Shower;
+	import org.baicaix.single.events.CellEvent;
 	import org.baicaix.single.resource.ResourceImgLoader;
 
 	import mx.containers.Panel;
@@ -49,7 +50,9 @@ package org.baicaix.views {
 				shower.loadMap(map, width, height);
 				
 				_totalRange.addChild(_browser);
-				editor.refreshMap();
+//				editor.refreshMap();
+				_browser.refresh(new CellEvent("", {}));
+//				_browser.refresh(new CellEvent("", {}));//editor.refreshMap();
 			} 
 		}
 

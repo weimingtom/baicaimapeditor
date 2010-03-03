@@ -9,7 +9,6 @@
  * @updatedate 2010-2-2
  */   
 package org.baicaix.single {
-	import org.baicaix.modules.beans.Map;
 	import org.baicaix.single.events.CellEvent;
 
 	import flash.events.EventDispatcher;
@@ -20,8 +19,6 @@ package org.baicaix.single {
 	public class Editor extends EventDispatcher {
 		
 		private static var _me : Editor;
-		
-		private var _activtyMap : Map;
 		
 		private var _pasteBaseRange : Range;
 		private var _selectRange: Range;
@@ -37,10 +34,6 @@ package org.baicaix.single {
 			return _me;
 		}
 		
-		public function loadMap(map : Map) : void {
-			_activtyMap = map;
-		}
-		 
 		//=====================Range=====================
 		public function selectRange(range : Range) : void {
 			_selectRange = range;
@@ -102,9 +95,5 @@ package org.baicaix.single {
 //		public function set zuobiaoChange(zuobiaoChange : Function) : void {
 //			_zuobiaoChange = zuobiaoChange;
 //		}
-		
-		public function get activityMap() : Map {
-			return _activtyMap;
-		}
 	}
 }

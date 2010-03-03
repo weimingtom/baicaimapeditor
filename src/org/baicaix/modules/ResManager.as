@@ -10,7 +10,11 @@
  */   
 package org.baicaix.modules {
 	import org.baicaix.modules.beans.Map;
+	import org.baicaix.modules.beans.Reslist;
 	import org.baicaix.modules.serialization.FileManager;
+	import org.baicaix.single.resource.ResourceCreator;
+	import org.baicaix.single.resource.ResourceDataLoader;
+	import org.baicaix.single.resource.ResourceImgLoader;
 
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -20,7 +24,6 @@ package org.baicaix.modules {
 	 */
 	public class ResManager extends EventDispatcher {
 		
-		private var map : Map;
 		private var imgLoader : ResourceImgLoader;
 		private var dataLoader : ResourceDataLoader;
 		private var dataConvertor : DataConvertor;
@@ -28,9 +31,6 @@ package org.baicaix.modules {
 		
 		private var _base : *;
 		
-		private static const REGEX_INDEX : RegExp = new RegExp('(\\w+?)\\.');
-    	private static const REGEX_FILENAME : RegExp = new RegExp('(\\w+?)\\.\\w+$');
-
 		public function ResManager(base : *) {
 			_base = base;
 			imgLoader = ResourceImgLoader.getInstance();
@@ -38,7 +38,6 @@ package org.baicaix.modules {
 			
 			dataConvertor = new DataConvertor();
 			fileMnger = new FileManager();
-			addEventListener("loadMap", loadMap);
 		}
 		
 		public function openImg():void {
@@ -46,35 +45,22 @@ package org.baicaix.modules {
 			fileMnger.openImgFile();
 		}
 		
+		private static const REGEX_INDEX : RegExp = new RegExp('(\\w+?)\\.');
 		private static const REGEX_SUBFIX : RegExp = new RegExp('\\.(\\w+?)$');
         private function onOpenImg(url : String) : void {
         	//only for test
         	var keystr : String = REGEX_INDEX.exec(url)[1];
-        	var key : int = int(keystr);
-        	
-        	imgLoader.loadResource(url);
-    		dataLoader.loadResource(url.replace(REGEX_FILENAME, key+".txt"), loadmap);
-			
-			function loadmap(event:Event = null):void {
-				map = dataLoader.getResourceMap(""+key);
-				dispatchEvent(new Event("loadMap"));
-			}
+			loadRes(url, keystr);      	
         }
-    	
-    	private function loadMap(event : Event) : void {
-    		//TODO 显示图片到 
-    		_base.resbrowser.map = map;
-//			mapFlowShower.loadMap(map);
-		}
 		
-		public function refresh(e:Event=null):void {
-//			editor.refreshMap();
-		}
-    	
         private function loadRes(url : String, key : String) : void {
-        	//TODO 地址的获取方式需要修改
-        	imgLoader.loadResource(url.replace(REGEX_FILENAME, key+".png"));
-    		dataLoader.loadResource(url.replace(REGEX_FILENAME, key+".txt"));
+        	imgLoader.loadResource(url, function() : void {
+        		dataLoader.loadResource(url.replace(REGEX_SUBFIX, ".res"), function (event:Event = null):void {
+	        		//实际中应该是读取
+					var map : Map = dataLoader.getResourceMap(key);
+					_base.resbrowser.map = map;
+				});
+        	});
         }
 	}
 }
