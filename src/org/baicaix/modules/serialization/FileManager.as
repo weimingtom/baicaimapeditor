@@ -73,7 +73,7 @@ package org.baicaix.modules.serialization {
 
 		public function openImgFile() : void {
 			var file : File = File.applicationDirectory;
-			file.browseForOpen("请选择要导入的资源文件", [new FileFilter("Image Resource", "*.jpeg;*.jpg;*.gif;*.png")]);//打开文件选择器
+			file.browseForOpen("请选择要打开的资源文件", [new FileFilter("Image Resource", "*.jpeg;*.jpg;*.gif;*.png")]);//打开文件选择器
 			file.addEventListener(Event.SELECT, openSelectRes);   //监听文件选择事件
 		}
 		
@@ -81,6 +81,12 @@ package org.baicaix.modules.serialization {
 			var file : File = File.applicationDirectory;
 			file.browseForOpen("请选择要打开的地图文件", [new FileFilter("Map", "*.map")]);//打开文件选择器
 			file.addEventListener(Event.SELECT, openSelectMap);   //监听文件选择事件
+		}
+		
+		public function ImportImgFile() : void {
+			var file : File = File.applicationDirectory;
+			file.browseForOpen("请选择要导入的资源文件", [new FileFilter("Image Resource", "*.jpeg;*.jpg;*.gif;*.png")]);//打开文件选择器
+			file.addEventListener(Event.SELECT, openSelectImportResource);   //监听文件选择事件
 		}
 
 		private function openSelectImportResource(e : Event = null) : void {
@@ -142,8 +148,8 @@ package org.baicaix.modules.serialization {
 				saveReslist();
 				//资源管理器重新 open 新的资源
 				dispatchEvent(new ResLoadEvent(ResLoadEvent.LOAD_RES_IMG, id));
-				dispatchEvent(new ResLoadEvent(ResLoadEvent.LOAD_RES_DATA, id));
-				onOpen(bitmap);
+//				dispatchEvent(new ResLoadEvent(ResLoadEvent.LOAD_RES_DATA, id));
+				onOpen(saveImgFile.url);
 			}
 		}
 //		

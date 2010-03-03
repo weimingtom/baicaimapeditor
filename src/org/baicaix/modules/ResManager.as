@@ -9,10 +9,9 @@
  * @updatedate 2010-3-2
  */   
 package org.baicaix.modules {
+	import org.baicaix.events.ResLoadEvent;
 	import org.baicaix.modules.beans.Map;
-	import org.baicaix.modules.beans.Reslist;
 	import org.baicaix.modules.serialization.FileManager;
-	import org.baicaix.single.resource.ResourceCreator;
 	import org.baicaix.single.resource.ResourceDataLoader;
 	import org.baicaix.single.resource.ResourceImgLoader;
 
@@ -45,12 +44,26 @@ package org.baicaix.modules {
 			fileMnger.openImgFile();
 		}
 		
+		public function importImg() : void {
+			if(!fileMnger.hasEventListener(ResLoadEvent.LOAD_RES_IMG)) {
+				fileMnger.addEventListener(ResLoadEvent.LOAD_RES_IMG, onLoadResImg);
+			}
+			fileMnger.onOpen = onOpenImg;
+			fileMnger.ImportImgFile();
+		}
+
+		private function onLoadResImg(event : ResLoadEvent) : void {
+			var id : String = String(event.data);
+			var url : String = "./assets/"+id+".png";
+			loadRes(url, id);
+		}
+
 		private static const REGEX_INDEX : RegExp = new RegExp('(\\w+?)\\.');
 		private static const REGEX_SUBFIX : RegExp = new RegExp('\\.(\\w+?)$');
         private function onOpenImg(url : String) : void {
         	//only for test
-        	var keystr : String = REGEX_INDEX.exec(url)[1];
-			loadRes(url, keystr);      	
+        	var id : String = REGEX_INDEX.exec(url)[1];
+			loadRes(url, id);      	
         }
 		
         private function loadRes(url : String, key : String) : void {

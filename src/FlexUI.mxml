@@ -6,6 +6,7 @@
 	<mx:XMLList id="mXml" xmlns="">
            	<item label="File">
                 <node label="New" data="new"/>
+                <node label="Import res" data="import res"/>
                 <node label="Open res" data="open res"/>
                 <node label="Open map" data="open map"/>
                 <node label="Close" data="close"/>
@@ -95,6 +96,9 @@
 						break;
 					case "close":
 						mapMnger.closeMap();
+						break;
+					case "import res":
+						resMnger.importImg();
 						break;
 				}
 			}

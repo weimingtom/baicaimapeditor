@@ -1,5 +1,5 @@
 <Resources>
-  <maxid id="51550"/>
+  <maxid id="51553"/>
   <res id="00011221" name="×ÊԴ1"/>
   <res id="00011222" name="×ÊԴ2"/>
   <res id="00011223" name="×ÊԴ3"/>
@@ -11,4 +11,7 @@
   <res id="00051548" name="name00051548"/>
   <res id="00051549" name="name00051549"/>
   <res id="00051550" name="name00051550"/>
+  <res id="00051551" name="name00051551"/>
+  <res id="00051552" name="name00051552"/>
+  <res id="00051553" name="name00051553"/>
 </Resources>
