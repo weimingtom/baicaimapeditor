@@ -15,7 +15,6 @@ package org.baicaix.single.display {
 	import org.baicaix.single.resource.ResourceImgLoader;
 
 	import flash.display.Sprite;
-	import flash.geom.Point;
 
 	/**
 	 * @author dengyang
@@ -26,14 +25,16 @@ package org.baicaix.single.display {
 		private var cellHeight : int;
 		private var flowBrowser : Browser;
 		
-		public function Shower(loader : ResourceImgLoader, showPixelWidth : int, showPixelHeight : int, Selector : Class, cellWidth : int = 32, cellHeight : int = 32) {
+		public function Shower(loader : ResourceImgLoader, 
+				showPixelWidth : int, showPixelHeight : int, 
+				Selector : Class, cellWidth : int = 32, cellHeight : int = 32) {
 			
 			this.cellWidth = cellWidth;
 			this.cellHeight = cellHeight;
 			
 			var camera : Camera = new Camera(showPixelWidth, showPixelHeight, cellWidth, cellHeight, 2);
 			//FIXME 实际长宽目前写死，目前现实像素长款是地图最大，两个地方都要改
-			flowBrowser = Browser(new Browser(camera, new Point(20, 20), loader, Selector));
+			flowBrowser = Browser(new Browser(camera, loader, Selector));
 		}
 		
 		public function register(editor :Editor) : void {

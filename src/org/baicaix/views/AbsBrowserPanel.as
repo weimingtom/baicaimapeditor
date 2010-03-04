@@ -5,12 +5,14 @@ package org.baicaix.views {
 	import org.baicaix.single.display.Shower;
 	import org.baicaix.single.events.CellEvent;
 	import org.baicaix.single.resource.ResourceImgLoader;
+	import org.baicaix.utils.OffsetUtil;
 
 	import mx.containers.Panel;
 	import mx.core.UIComponent;
 	import mx.events.ScrollEvent;
 
 	import flash.events.Event;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
 	public class AbsBrowserPanel extends Panel {
@@ -18,7 +20,7 @@ package org.baicaix.views {
 		public var _copyRange : Rectangle;
 //		protected var _map : Map;
 //	    protected var _selector : AbsSelector;
-//	    protected var _offsetUtil : OffsetUtil;
+	    protected var _offsetUtil : OffsetUtil;
 	    protected var _totalRange : UIComponent;
 	    protected var Selector : Class;
 	    
@@ -30,7 +32,7 @@ package org.baicaix.views {
 			
 			//only for test
 			_copyRange = new Rectangle(0, 0, 2, 3);
-//			_offsetUtil = new OffsetUtil(this);
+			_offsetUtil = new OffsetUtil(this);
 			addEventListener(ScrollEvent.SCROLL, scrollMove);
 		}
 		
@@ -44,15 +46,15 @@ package org.baicaix.views {
 				
 				//FIXME obj 管理有问题
 				var editor : Editor = Editor.getInstance();
-				var shower : Shower = new Shower(ResourceImgLoader.getInstance(), _totalRange.width, _totalRange.height, Selector);	
+				//TODO 长宽 根据界面设定，还不够严谨
+				var shower : Shower = new Shower(ResourceImgLoader.getInstance(), width, height, Selector);	
 				shower.register(editor);		
 				_browser = shower.browser;
 				shower.loadMap(map, width, height);
 				
 				_totalRange.addChild(_browser);
 //				editor.refreshMap();
-				_browser.refresh(new CellEvent("", {}));
-//				_browser.refresh(new CellEvent("", {}));//editor.refreshMap();
+				_browser.refresh(new CellEvent("", {}));//editor.refreshMap();
 			} 
 		}
 
@@ -82,7 +84,7 @@ package org.baicaix.views {
 //			copyPixel();
 //		}
 //        
-		public function copyPixel() : void {
+		public function moveCamera() : void {
 //				m = new Matrix(1, 0, 0, 1, d.pos.x - p.pos.x, d.pos.y - p.pos.y);
 //				r = new Rectangle(d.pos.x, d.pos.y, data.widthTile, data.heightTile);
 //				dataCase.draw(p.source, m, null, null, r);
@@ -92,8 +94,10 @@ package org.baicaix.views {
 							verticalScrollPosition, 
 							width, height);
 //			_showRangeBitmap.bitmapData.copyPixels(_resourceBitmap.bitmapData, rect, DEFAULT_POINT);
-			_browser.x = horizontalScrollPosition;
-			_browser.y = verticalScrollPosition;
+			//保持相对位置，加入单元格的偏移
+			var offset : Point = _offsetUtil.getPixelOffset();
+			_browser.x = horizontalScrollPosition - offset.x;
+			_browser.y = verticalScrollPosition - offset.y;
 		}
 //			
 //		private function drawLine() : void {
@@ -161,8 +165,12 @@ package org.baicaix.views {
 //		}
 		
 		private function scrollMove(event : Event) : void {
-			copyPixel();
+			moveCamera();
 //			drawLine();
+		}
+		
+		public function get browser() : Browser {
+			return _browser;
 		}
 	}
 }
