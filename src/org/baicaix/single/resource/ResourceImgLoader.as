@@ -53,31 +53,40 @@ package org.baicaix.single.resource {
 		public function loadRes(index : int) : BitmapData {
 			return getResourceByIndex(index);
 		}
-
+		
+		private var copyRange : Rectangle = new Rectangle();
 		public function load(index : int, x : int, y : int) : BitmapData {
-			var copyRange : Rectangle = createResourceRange(index, x, y);
+			createResourceRange(index, x, y);
 			return getPieceOfResourceFromRange(copyRange, index);
 		}
 		
-		private function createResourceRange(index : int, x : int, y : int) : Rectangle {
-			var copyRange : Rectangle = new Rectangle(x * _cellWidth, y * _cellHeight, _cellWidth, _cellHeight);
+		private function createResourceRange(index : int, x : int, y : int) : void {
+			setposition(copyRange, x * _cellWidth, y * _cellHeight, _cellWidth, _cellHeight);
 			if(!sourceImageRange(getResourceByIndex(index)).containsRect(copyRange)) {
-				return DEFAULT_RESOURCE_RANGE;
-			} else {
-				return copyRange;
-			}
+				setposition(copyRange, DEFAULT_RESOURCE_RANGE.x, DEFAULT_RESOURCE_RANGE.y, 
+						DEFAULT_RESOURCE_RANGE.width, DEFAULT_RESOURCE_RANGE.height);
+			} 
 		}
 		
+		private function setposition(range : Rectangle, x : int, y : int, width : int, height : int) : void {
+			range.setEmpty();
+			range.offset(x, y);
+			range.inflate(width, height);
+		}
+		
+		private var srcImageRange : Rectangle = new Rectangle();
 		private function sourceImageRange(imageData : BitmapData) : Rectangle {
 			if(imageData == null) {
-				return DEFAULT_RESOURCE_RANGE;
+				setposition(srcImageRange, DEFAULT_RESOURCE_RANGE.x, DEFAULT_RESOURCE_RANGE.y, 
+						DEFAULT_RESOURCE_RANGE.width, DEFAULT_RESOURCE_RANGE.height);
 			} else {
-				return new Rectangle(0, 0, imageData.width, imageData.height);
+				setposition(srcImageRange, 0, 0, imageData.width, imageData.height);
 			}
+			return srcImageRange;
 		}
-
+		
+		private var copy : BitmapData = new BitmapData(_cellWidth, _cellHeight, true, 0x00000000);
 		private function getPieceOfResourceFromRange(copyRange : Rectangle, index : int) : BitmapData {
-			var copy : BitmapData = new BitmapData(_cellWidth, _cellHeight, true, 0x00000000);
 			var resource : BitmapData = getResourceByIndex(index);
 			if(resource != null) {
 				copy.copyPixels(resource, copyRange, DEFAULT_DRAW_TO_POINT);
