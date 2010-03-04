@@ -43,8 +43,8 @@ package org.baicaix.single.display {
 		
 		private var _resourceLoader : ResourceImgLoader;
 		
-		private var _typeLayer : Bitmap;
 		private var _canvasLayer : Bitmap;
+		private var _typeLayer : Bitmap;
 		private var _focusLayer : Bitmap;
 		
 		//------------------------------------
@@ -102,7 +102,6 @@ package org.baicaix.single.display {
 			//clear
 //			_canvasLayer.setPixel32(x, y, color);
 			//copy
-			var aa = _resourceLoader;
 			for each (var tile : Tile in _tiles) {
 				var res : BitmapData = _resourceLoader.load(tile.src, tile.srcX, tile.srcY);
 				_canvasLayer.bitmapData.copyPixels(res, 

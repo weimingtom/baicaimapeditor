@@ -24,7 +24,6 @@ package org.baicaix.single.display {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
 	/**
@@ -45,12 +44,13 @@ package org.baicaix.single.display {
 		private var _mapMnger : LayerManager;
 		
 		private var colRow : ColRow;
-		private var _lineLayer : Bitmap;
-		private var _typeLayer : Bitmap;
+		
 		private var _canvasLayer : Bitmap;
+		private var _typeLayer : Bitmap;
+		private var _lineLayer : Bitmap;
 		private var _focusLayer : Bitmap;
 		
-		public function Browser(camera : Camera, actualSize : Point, loader : ResourceImgLoader, Selector : Class) {
+		public function Browser(camera : Camera, loader : ResourceImgLoader, Selector : Class) {
 			
 			this.Selector = Selector;
 			this.resourceLoader = loader;
@@ -71,7 +71,7 @@ package org.baicaix.single.display {
 			_mapMnger.addEventListener(LayerEvent.LAYER_SELECT, onSelectLayer);
 			
 			createDemoLayer();
-			drawActualRange(actualSize);
+//			drawActualRange(actualSize);
 			createCellsBySize();
 		}
 		
@@ -89,12 +89,6 @@ package org.baicaix.single.display {
 			loadMap(map, 16 * cellWidth, 16 * cellHeight);
 		}
 
-		private function drawActualRange(actualSize : Point) : void {
-			this.graphics.lineStyle(0x00);
-			this.graphics.lineTo(actualSize.x * camera.cellWidth, actualSize.y * camera.cellHeight);
-			this.graphics.endFill();
-		}
-		
 		private function initEvent() : void {
 			camera.addEventListener(FlowEvent.GOTO_TOP, gotoTop);
 			camera.addEventListener(FlowEvent.GOTO_BOTTOM, gotoBottom);
@@ -122,28 +116,28 @@ package org.baicaix.single.display {
 		private function gotoTop(event : FlowEvent) : void {
 			var topRow : Array = colRow.bottomRowGotoTop();
 			for each (var cell : Cell in topRow) {
-				cell.setCellPosition(cell.x / camera.cellWidth, camera.cellPosLogicRange.top);
+				cell.setCellPosition(cell.logicX, camera.cellPosLogicRange.top-1);
 			}
 		}
 		
 		private function gotoBottom(event : FlowEvent) : void {
 			var bottomRow : Array = colRow.topRowGotoBottom();
 			for each (var cell : Cell in bottomRow) {
-				cell.setCellPosition(cell.x / camera.cellWidth, camera.cellPosLogicRange.bottom - 1);
+				cell.setCellPosition(cell.logicX, camera.cellPosLogicRange.bottom - 1);
 			}
 		}
 		
 		private function gotoLeft(event : FlowEvent) : void {
 			var leftCol : Array = colRow.rightColGotoLeft();
 			for each (var cell : Cell in leftCol) {
-				cell.setCellPosition(camera.cellPosLogicRange.left, cell.y / camera.cellHeight);
+				cell.setCellPosition(camera.cellPosLogicRange.left-1, cell.logicY);
 			}
 		}
 		
 		private function gotoRight(event : FlowEvent) : void {
 			var rightCol : Array = colRow.leftColGotoRight();
 			for each (var cell : Cell in rightCol) {
-				cell.setCellPosition(camera.cellPosLogicRange.right - 1, cell.y / camera.cellHeight);
+				cell.setCellPosition(camera.cellPosLogicRange.right - 1, cell.logicY);
 			}
 		}
 		
