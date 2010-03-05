@@ -1,0 +1,48 @@
+<languageVersion : 1.0;>
+
+kernel DrawlineFilter
+<   namespace : "org.baicaix.mapeditor";
+    vendor : "BaicaiX Studio";
+    version : 1;
+    description : "Draw line";
+>
+{
+    input image4 src;
+    output pixel4 dst;
+    parameter float cellWidth
+    <
+            minValue:0.0;
+            maxValue:100.0;
+            defaultValue:32.0;
+    >;
+
+    parameter float cellHeight
+    <
+            minValue:0.0;
+            maxValue:100.0;
+            defaultValue:32.0;
+    >;
+    
+    parameter pixel4 lineColor
+    <
+            minValue:pixel4(0, 0, 0, 0);
+            maxValue:pixel4(1, 1, 1, 1);
+            defaultValue:pixel4(0, 1, 0, 1);
+    >;
+
+    void
+    evaluatePixel()
+    {
+            float2 pos = outCoord();
+            if(mod(pos.x, cellWidth)<1.0 || mod(pos.y, cellHeight)<1.0)
+            {
+                dst = lineColor;
+            }
+            else 
+            {
+                dst = sampleLinear(src, pos);
+            }
+            //pos += float2(sin(pos.x * wave) * mult, sin(pos.y * wave) * mult);
+            //dst = sampleLinear(src, pos);
+    }
+}

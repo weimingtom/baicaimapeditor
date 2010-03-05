@@ -1,0 +1,75 @@
+<languageVersion : 1.0;>
+
+kernel DrawfocusFilter
+<   namespace : "org.baicaix.mapeditor";
+    vendor : "BaicaiX Studio";
+    version : 1;
+    description : "Draw line";
+>
+{
+    input image4 src;
+    output pixel4 dst;
+    parameter float cellWidth
+    <
+            minValue:0.0;
+            maxValue:100.0;
+            defaultValue:32.0;
+    >;
+
+    parameter float cellHeight
+    <
+            minValue:0.0;
+            maxValue:100.0;
+            defaultValue:32.0;
+    >;
+    
+    parameter pixel4 focusColor
+    <
+            minValue:pixel4(0, 0, 0, 0);
+            maxValue:pixel4(1, 1, 1, 1);
+            defaultValue:pixel4(1, .5, 0, 1);
+    >;
+    
+    
+    parameter float2 pos1
+    <
+            minValue:float2(0, 0);
+            maxValue:float2(100, 100);
+            defaultValue:float2(0, 0);
+    >;
+    
+    parameter float2 pos2
+    <
+            minValue:float2(0, 0);
+            maxValue:float2(100, 100);
+            defaultValue:float2(3, 4);
+    >;
+
+    void
+    evaluatePixel()
+    {
+            float2 pos = outCoord();
+            float2 fromPos = float2(min(pos1.x, pos2.x), min(pos1.y, pos2.y));
+            float2 toPos = float2(max(pos1.x, pos2.x), max(pos1.y, pos2.y));
+            
+            float2 fromPixel = float2(fromPos.x*cellWidth, fromPos.y*cellHeight);
+            float2 toPixel = float2(toPos.x*cellWidth, toPos.y*cellHeight);
+            
+            bool isout = pos.x>toPixel.x-2.0 || pos.y>toPixel.y-2.0
+                || pos.x<fromPixel.x+2.0 || pos.y<fromPixel.y+2.0;
+                
+            bool isin = pos.y > fromPixel.y && pos.x > fromPixel.x 
+                && pos.y < toPixel.y && pos.x < toPixel.x;
+            
+            if(isin && isout)
+            {
+                dst = focusColor;
+            }
+            else 
+            {
+                dst = sampleLinear(src, pos);
+            }
+            //pos += float2(sin(pos.x * wave) * mult, sin(pos.y * wave) * mult);
+            //dst = sampleLinear(src, pos);
+    }
+}
