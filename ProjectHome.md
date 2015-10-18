@@ -1,0 +1,1 @@
+Map data use json, and support resource like **.png/**.jpg/**.jpeg/**.gif
